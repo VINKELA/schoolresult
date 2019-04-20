@@ -109,9 +109,8 @@ def index():
         # if account is confirmed render this
         if(user[0]["confirmed"]== "true"):
             tables = database(str(0))
-            schoolClass = tables["classes"]
             rows = db.execute("SELECT * FROM main_table WHERE id=:id", id = session["user_id"])
-            classRows = db.execute("SELECT * FROM :classes ",classes = schoolClass)
+            classRows = db.execute("SELECT * FROM :settings ",settings = tables["settings"])
             # return render portfolio
             return render_template("portfolio.html", schoolInfo = rows, clas = classRows)
         # else if account is not confirmed render unconfirmed view
