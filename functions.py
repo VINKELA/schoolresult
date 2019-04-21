@@ -10,7 +10,7 @@ import string
 from flask_mail import Message, Mail
 
 
-# mail settings
+# mail session_data
 MAIL_SERVER = 'smtp.googlemail.com'
 MAIL_PORT = 465
 MAIL_USE_TLS = False
@@ -101,10 +101,10 @@ def grade(score):
 def database(id):
     tables = {}
     # format class tables names
-    school = db.execute("SELECT * FROM main_table WHERE id=:id", id=session["user_id"])
+    school = db.execute("SELECT * FROM school WHERE id=:id", id=session["user_id"])
     current_session = school[0]["current_session"]
     current_term = school[0]["current_term"]
-    tables["settings"] = "settings"+"_"+str(session["user_id"])+"_"+current_session
+    tables["session_data"] = "session_data"+"_"+str(session["user_id"])+"_"+current_session
     tables["class_id"] = id
     tables["school_id"] = session["user_id"]
     schoolId = session["user_id"]
@@ -119,7 +119,7 @@ def database(id):
     tables["mastersheet"] = "mastersheet"+"_"+classIdentifier
     tables["subject_position"] = "subject_position"+"_"+classIdentifier
     tables["grade"] = "grade"+"_"+classIdentifier
-    tables["result"] = "result"+"_"+str(current_term)+"_"+str(current_session)+"_"+str(tables["school_id"])
+    tables["class_term_data"] = "class_term_data"+"_"+str(current_term)+"_"+str(current_session)+"_"+str(tables["school_id"])
     return tables
 # makes the result of a single student given class and student id
 def make_student_result(student_id, class_id):
@@ -239,8 +239,8 @@ def render_class(class_id, error):
 
 def render_portfolio(school_id, error):
     tables = database(0)
-    rows = db.execute("SELECT * FROM main_table WHERE id = :school_id ",school_id = session["user_id"])
-    classrows = db.execute("SELECT * FROM :settings ", classes = tables["settings"])
+    rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
+    classrows = db.execute("SELECT * FROM :session_data ", classes = tables["session_data"])
     return render_template("portfolio.html",error = error, schoolInfo = rows, classData = classrows)
 
 def assign_student_position(class_id):
@@ -302,7 +302,7 @@ def term_tables(classid):
 	tables = database(classid)
 	db.execute("CREATE TABLE :classlist ('id' INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL, 'surname' TEXT,'firstname' TEXT,'othername' TEXT,'sex' TEXT, 'pin' TEXT)",classlist = tables["classlist"] )
 
-	db.execute("CREATE TABLE :classsubjects ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'name' TEXT, 'total_score' INTEGER DEFAULT 0,'ppass' INTEGER DEFAULT 0,'class_average' INTEGER DEFAULT 0,'no_of_A' INTEGER DEFAULT 0, no_of_B INTEGER DEFAULT 0, no_of_C INTEGER DEFAULT 0,no_of_D INTEGER DEFAULT 0,no_of_E INTEGER DEFAULT 0,no_of_F INTEGER DEFAULT 0)",classsubjects = tables["subjects"] )
+	db.execute("CREATE TABLE :classsubjects ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'name' TEXT, 'total_score' INTEGER DEFAULT 0,'ppass' INTEGER DEFAULT 0,'class_average' INTEGER DEFAULT 0,'no_of_A' INTEGER DEFAULT 0, no_of_B INTEGER DEFAULT 0, no_of_C INTEGER DEFAULT 0,no_of_D INTEGER DEFAULT 0,no_of_E INTEGER DEFAULT 0,no_of_F INTEGER DEFAULT 0,'no_failed' INTEGER DEFAULT 0,'no_passed' INTEGER DEFAULT 0,'teachers_initial' TEXT )",classsubjects = tables["subjects"] )
 
 	# create  catable
 	db.execute("CREATE TABLE :catable ('id' INTEGER PRIMARY KEY   NOT NULL)",catable = tables["ca"] )
@@ -317,7 +317,7 @@ def term_tables(classid):
 	db.execute("CREATE TABLE :examtable ('id' INTEGER PRIMARY KEY  NOT NULL)",examtable = tables["exam"] )
 
 	# create mastersheet
-	db.execute("CREATE TABLE :mastersheet ('id' INTEGER PRIMARY KEY  NOT NULL, 'total_score' INTEGER DEFAULT 0, 'average' INTEGER DEFAULT 0, 'passed' INTEGER DEFAULT 0, 'position' INTEGER )",mastersheet = tables["mastersheet"] )
+	db.execute("CREATE TABLE :mastersheet ('id' INTEGER PRIMARY KEY  NOT NULL, 'total_score' INTEGER DEFAULT 0, 'average' INTEGER DEFAULT 0, 'subject_passed' INTEGER DEFAULT 0,'subject_failed' INTEGER DEFAULT 0, 'position' INTEGER )",mastersheet = tables["mastersheet"] )
 
 	# create subject_position
 	db.execute("CREATE TABLE :subjectposition ('id' INTEGER PRIMARY KEY  NOT NULL)",subjectposition = tables['subject_position'] )
@@ -348,3 +348,7 @@ def drop_tables(classid):
 
 	db.execute("DROP TABLE :classlist ",classlist = tables["classlist"] )
 
+def passwordGen(stringLength=8):
+    """Generate a random string of fixed length """
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(stringLength))

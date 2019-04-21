@@ -48,70 +48,8 @@ addEventListener("load", function() {
 addEventListener("load", function()
 { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); }
 
-var myInput = document.getElementById("admin");
-var letter = document.getElementById("letter");
-var capital = document.getElementById("capital");
-var number = document.getElementById("number");
-var length = document.getElementById("length");
-var lowerCaseLetters = /[a-z]/g;
-var upperCaseLetters = /[A-Z]/g;
-var numbers = /[0-9]/g;
-
 var myInput2 = document.getElementById("psw");
 var length2 = document.getElementById("length2");
-
-
-
-
-// When the user clicks on the password field, show the message box
-myInput.onfocus = function() {
-  document.getElementById("message").style.display = "block";
-}
-
-// When the user clicks outside of the password field, hide the message box
-myInput.onblur = function() {
-  document.getElementById("message").style.display = "none";
-}
-
-
-// When the user starts to type something inside the password field
-myInput.onkeyup = function() {
-  // Validate lowercase letters
-  if(myInput.value.match(lowerCaseLetters)) {
-    letter.classList.remove("invalid");
-    letter.classList.add("valid");
-  } else {
-    letter.classList.remove("valid");
-    letter.classList.add("invalid");
-  }
-
-  // Validate capital letters
-  if(myInput.value.match(upperCaseLetters)) {
-    capital.classList.remove("invalid");
-    capital.classList.add("valid");
-  } else {
-    capital.classList.remove("valid");
-    capital.classList.add("invalid");
-  }
-
-  // Validate numbers
-  if(myInput.value.match(numbers)) {
-    number.classList.remove("invalid");
-    number.classList.add("valid");
-  } else {
-    number.classList.remove("valid");
-    number.classList.add("invalid");
-  }
-
-  // Validate length
-  if(myInput.value.length >= 8) {
-    length.classList.remove("invalid");
-    length.classList.add("valid");
-  } else {
-    length.classList.remove("valid");
-    length.classList.add("invalid");
-  }
-};
 
 
 
@@ -197,9 +135,6 @@ $(function() {
    else if($('input[name="confirmation"]').val() ==""){
     alert("you must provide a password");
   }
-   else if($('input[name="admin_confirmation"]').val() ==""){
-    alert("you must provide a password");
-  }
    else if($('#state').find(":selected").val() ==""){
     alert("you must provide state");
   }
@@ -208,33 +143,6 @@ $(function() {
   }
    else if($('input[name="password"]').val() != $('input[name="confirmation"]').val()){
     alert("password and confirmation do not match");
-  }
-  else if($('input[name="admin_password"]').val() != $('input[name="admin_password_confirmation"]').val()){
-    alert("admin password and confirmation do not match");
-  }
-    else if($('input[name="admin_password"]').val() == $('input[name="password"]').val()){
-    alert("your admin password must be different from staff password");
-  }
-
-    // Validate lowercase letters
- else if (!(myInput.value.match(lowerCaseLetters))) {
-    alert("admin password must contain lower case(small) letters");
-  }
-
-  // Validate capital letters
-  else if(!(myInput.value.match(upperCaseLetters))) {
-      alert("admin password must contain upper (capital) letters");
-
-  }
-
-  // Validate numbers
-  else if(!(myInput.value.match(numbers))) {
-    alert("admin password must contain numbers");
-  }
-
-  // Validate length
- else if(myInput.value.length < 8) {
-    alert("admin password must be up to 8 digits");
   }
       // Validate length
   else if(myInput2.value.length < 8) {

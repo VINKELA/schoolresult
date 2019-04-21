@@ -14,19 +14,9 @@
             <hr>
                  <h1 class="message green"> REGISTER FOR FREE!</h1>
             <hr>
-                <h1 class="message"> personal information</h1>
-          <span class="row">
-           <input class="col"  name="firstname" placeholder=" firstname" type="text" required="required"/>
-            <input  class ="col" name="surname" placeholder="surname" type="text" required="required"/>
-           <input class="col" name="othernames" placeholder="othername" type="text" required="required"/>
-           </span>
-           <input  name="email" placeholder="email" type="email" required="required"/>
-           <input  name="phone_number" placeholder="phone number" type="number" required="required"/>
-
-            <hr>
              <h1 class="message">School information</h1>
            <input  name="school_name" placeholder="school name" type="text" required="required"/ >
-
+            <input  name="email" placeholder="email" type="email" required="required"/>
             <span class="row">
                 <input class= "col"  name="address" placeholder="Address" type="text" required="required"/>
             </span>
@@ -100,7 +90,7 @@
                        </span>
 
             <hr>
-            <h1 class="message">Staff login details</h1>
+            <h1 class="message">login details</h1>
             <input class="form-control" name="username" placeholder="Username" type="text"/>
             <input placeholder="password" type="password" id="psw" name="password" pattern=".{8,}" title="Must contain at least 8 or more characters" required="required">
             <div id="message2">
@@ -108,22 +98,7 @@
               <p id="length2" class="invalid">Minimum <b>8 characters</b></p>
             </div>
 
-
-
             <input  name="confirmation" placeholder=" confirm Password" type="password" required="required"/>
-            <hr>
-            <h1 class="message">Admin Details</h1>
-
-            <input placeholder="admin password" type="password" id="admin" name="admin_password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required>
-            <div id="message">
-              <h3>AdminPassword must contain the following:</h3>
-              <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
-              <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
-              <p id="number" class="invalid">A <b>number</b></p>
-              <p id="length" class="invalid">Minimum <b>8 characters</b></p>
-            </div>
-
-            <input  name="admin_password_confirmation" placeholder="confirm admin Password" type="password" required="required"/>
 			<button type="submit" class="sign-in" id="submit_registration" value="Register">Register</button>
 			</div>
     </form>
