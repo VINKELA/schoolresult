@@ -302,7 +302,7 @@ def term_tables(classid):
 	tables = database(classid)
 	db.execute("CREATE TABLE :classlist ('id' INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL, 'surname' TEXT,'firstname' TEXT,'othername' TEXT,'sex' TEXT, 'pin' TEXT)",classlist = tables["classlist"] )
 
-	db.execute("CREATE TABLE :classsubjects ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'name' TEXT, 'total_score' INTEGER DEFAULT 0,'ppass' INTEGER DEFAULT 0,'class_average' INTEGER DEFAULT 0,'no_of_A' INTEGER DEFAULT 0, no_of_B INTEGER DEFAULT 0, no_of_C INTEGER DEFAULT 0,no_of_D INTEGER DEFAULT 0,no_of_E INTEGER DEFAULT 0,no_of_F INTEGER DEFAULT 0,'no_failed' INTEGER DEFAULT 0,'no_passed' INTEGER DEFAULT 0,'teachers_initial' TEXT )",classsubjects = tables["subjects"] )
+	db.execute("CREATE TABLE :classsubjects ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'name' TEXT, 'total_score' INTEGER DEFAULT 0,'ppass' INTEGER DEFAULT 0,'class_average' INTEGER DEFAULT 0,'no_of_A' INTEGER DEFAULT 0, no_of_B INTEGER DEFAULT 0, no_of_C INTEGER DEFAULT 0,no_of_D INTEGER DEFAULT 0,no_of_E INTEGER DEFAULT 0,no_of_F INTEGER DEFAULT 0,'no_failed' INTEGER DEFAULT 0,'no_passed' INTEGER DEFAULT 0,'teachers_name' TEXT ,'teachers_initial' TEXT )",classsubjects = tables["subjects"] )
 
 	# create  catable
 	db.execute("CREATE TABLE :catable ('id' INTEGER PRIMARY KEY   NOT NULL)",catable = tables["ca"] )
@@ -352,3 +352,6 @@ def passwordGen(stringLength=8):
     """Generate a random string of fixed length """
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(stringLength))
+def percent(first, second):
+	return (int(first)/int(second)) * 100
+

@@ -139,18 +139,6 @@ def register():
         if not request.form.get("school_name"):
             error = "you must provide school name"
             return render_template("register.html", error = error)
-        # Ensure address was submitted
-        if not request.form.get("address"):
-            error = "you must provide school address"
-            return render_template("register.html", error = error)
-        # Ensure city was submitted
-        if not request.form.get("city"):
-            error = "you must provide city"
-            return render_template("register.html", error = error)
-        # Ensure state was submitted
-        if not request.form.get("state"):
-            error = "you must provide school's state"
-            return render_template("register.html", error = error)
         # Ensure term was submitted
         if not request.form.get("term"):
             error = "you must provide current term"
@@ -198,7 +186,7 @@ def register():
         html = render_template('confirm_email.html', confirm_url=confirm_url, password = general_password)
         subject = "Please confirm your email"
         send_email(request.form.get("email"), subject, html, 'orjikalukelvin@gmail.com')
-        db.execute("INSERT INTO school (school_name, email,username, password,address,city,state,admin_password,current_session,current_term, registered_on) VALUES (:schoolname, :email, :username, :hash, :address, :city, :state, :adminPassword,:current_session,:term, :registered_on)", schoolname = request.form.get("school_name").upper(), email= request.form.get("email").lower(), username = request.form.get("username").lower(), hash = generate_password_hash(general_password),  address = request.form.get("address").upper(), city=request.form.get("city"), state=request.form.get("state"), adminPassword = generate_password_hash(request.form.get("password")),current_session = request.form.get("school_session"),term=request.form.get("term"), registered_on = datetime.datetime.now())
+        db.execute("INSERT INTO school (school_name, email,username, password,admin_password,current_session,current_term, registered_on) VALUES (:schoolname, :email, :username, :hash,  :adminPassword,:current_session,:term, :registered_on)", schoolname = request.form.get("school_name").upper(), email= request.form.get("email").lower(), username = request.form.get("username").lower(), hash = generate_password_hash(general_password), adminPassword = generate_password_hash(request.form.get("password")),current_session = request.form.get("school_session"),term=request.form.get("term"), registered_on = datetime.datetime.now())
         # Query database for username
         rows = db.execute("SELECT * FROM school WHERE username = :username",username=request.form.get("username").lower())
         # Remember which user has logged in
@@ -209,7 +197,7 @@ def register():
         db.execute("CREATE TABLE :classes ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'identifier' TEXT )", classes = tables["classes"])
         db.execute("CREATE TABLE :setting ('id' INTEGER PRIMARY KEY NOT NULL, 'classname' TEXT, 'grading_type' INTEGER, 'comment_lines' INTEGER, 'subject_position' INTEGER DEFAULT 1,'student_position' INTEGER DEFAULT 1, 'surname' TEXT, 'firstname' TEXT,'othername' TEXT,'password' TEXT,'section' TEXT, 'ca' INTEGER, 'test' INTEGER,'exam' INTEGER)", setting = tables["session_data"])
         # create result data
-        db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'form_remark' TEXT DEFAULT 0, 'principal_remark' TEXT DEFAULT 0,'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, no_of_failures INTEGER DEFAULT 0,'ppass' INTEGER DEFAULT 0)",result = tables["class_term_data"])
+        db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'form_remark' TEXT DEFAULT 0, 'principal_remark' TEXT DEFAULT 0,'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, no_of_failures INTEGER DEFAULT 0)",result = tables["class_term_data"])
 
         return render_template("unconfirmed.html", schoolInfo=rows)
     else:
@@ -398,7 +386,7 @@ def password_changed():
             error = "password and confirmation do not match"
             return render_template("password_changed", error = error, email = email)
         #change the password
-        db.execute("UPDATE school SET password = :password WHERE email=:email ",password = generate_password_hash(request.form.get("password")), email = email)
+        db.execute("UPDATE school SET admin_password = :password WHERE email=:email ",password = generate_password_hash(request.form.get("password")), email = email)
         error = 'You have changed your password.  Thanks!'
         session.clear()
         return render_template('login.html',error=error)
@@ -733,7 +721,7 @@ def submit_score():
 @login_required
 def submitted():
     tables = database(request.form.get("button"))
-    db.execute("INSERT INTO :subjects (name) VALUES (:subject) ",subjects = tables["subjects"], subject = subject_info["subject"])
+    db.execute("INSERT INTO :subjects (name, teachers_name) VALUES (:subject, :teacher) ",subjects = tables["subjects"], subject = subject_info["subject"], teacher=subject_info["subject_teacher"])
     subject_list = db.execute("SELECT * FROM :subject WHERE name=:subject_name", subject = tables["subjects"],subject_name = subject_info["subject"])
     db.execute("UPDATE :classresult SET noOfSubjects = noOfSubjects + 1 WHERE id= :class_id", classresult = tables["class_term_data"], class_id=tables["class_id"])
     subject_id = str(subject_list[0]["id"])
@@ -747,6 +735,8 @@ def submitted():
     rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
     class_info = db.execute("SELECT * FROM :classresult WHERE id=:class_id", classresult = tables["class_term_data"], class_id = tables["class_id"])
     subject_total = 0
+    term_failed = 0
+    term_passed = 0
     for  student in class_scores:
         subject_list = db.execute("SELECT * FROM :subject WHERE name=:subject_name", subject = tables["subjects"],subject_name = subject_info["subject"])
         student_row = db.execute("SELECT * FROM :master WHERE id=:student_id", master=tables["mastersheet"],student_id=student[0])
@@ -760,14 +750,15 @@ def submitted():
             total_score = total_score + int(student[4])
         if student[5]:
             total_score = total_score + int(student[5])
+
         db.execute("UPDATE :master SET :subject = :score WHERE id =:id", master = tables["mastersheet"], subject = subject_id,score =total_score, id = student[0])
-        if total_score > 40:
+
+        if int(total_score) < 40:
+            db.execute("UPDATE :master SET subject_failed = :value WHERE id=:id", master = tables["mastersheet"], value = int(subject_list[0]["no_failed"])+1, id = student[0])
+            db.execute("UPDATE :subject SET no_failed = :value WHERE id=:id", subject = tables["subjects"], value = int(subject_list[0]["no_failed"])+1, id = subject_id)
+        else:
             db.execute("UPDATE :master SET subject_passed = :value WHERE id=:id", master = tables["mastersheet"], value = int(student_row[0]["subject_passed"])+1, id = student[0])
             db.execute("UPDATE :subject SET no_passed = :value WHERE id=:id", subject = tables["subjects"], value = int(subject_list[0]["no_passed"])+1, id = subject_id)
-
-        else:
-            db.execute("UPDATE :master SET subject_failed = :value WHERE id=:id", master = tables["mastersheet"], value = int(subject_list[0]["no_failed"])+1, id = student[0])
-            db.execute("UPDATE :subject SET no_failed = :value WHERE id=:id", subject = tables["subjects"], value = int(student_row[0]["subject_failed"])+1, id = subject_id)
 
         no_of_grade = db.execute("SELECT * FROM :grade WHERE id=:student_id", grade=tables["grade"],student_id=student[0])
         new_total = student_row[0]["total_score"] + total_score
@@ -775,8 +766,11 @@ def submitted():
         subject_total = subject_total + total_score
         grade_col = "no_of_"+str(student_grade).upper()
         new_average = new_total / class_info[0]["noOfSubjects"]
-        if new_average > 40:
-            db.execute("UPDATE :result SET no_of_passes = no_of_passes + 1 WHERE id =:id", result = tables["class_term_data"], id = tables["class_id"])
+        if int(new_average) > 40:
+            term_passed = term_passed + 1
+        else:
+            term_failed = term_failed + 1
+
         db.execute("UPDATE :master SET total_score=:n_total WHERE id=:student_id", master = tables["mastersheet"], n_total = new_total, student_id = student[0])
         db.execute("UPDATE :master SET average = :n_average WHERE id=:student_id ", master = tables["mastersheet"],  n_average =new_average, student_id = student[0])
         db.execute("UPDATE :grades SET :subject = :subject_grade WHERE id =:id", grades = tables["grade"], subject = subject_id,subject_grade = grade(total_score), id = student[0])
@@ -784,6 +778,9 @@ def submitted():
         db.execute("UPDATE :subject_table SET :no_of_g = :no_subject  WHERE id =:id", subject_table = tables["subjects"], no_of_g = grade_col, no_subject = int(subject_list[0][grade_col]+1), id = subject_id)
     #sort students position
     assign_student_position(int(tables["class_id"]))
+    db.execute("UPDATE :result SET no_of_passes = :new_passes  WHERE id =:id", result = tables["class_term_data"],new_passes = term_passed, id = tables["class_id"])
+    db.execute("UPDATE :result SET no_of_failures = :new_fails  WHERE id =:id", result = tables["class_term_data"],new_fails = term_failed, id = tables["class_id"])
+
     classRows = db.execute("SELECT * FROM :session_data WHERE id=:id ",session_data = tables["session_data"], id =tables["class_id"])
     #sort subject position
     assign_subject_position(int(tables["class_id"]),subject_id)
@@ -792,6 +789,7 @@ def submitted():
     subject_average = subject_total / no_of_students
     db.execute("UPDATE :subject SET class_average = :n_average WHERE id=:id ", subject = tables["subjects"],  n_average =subject_average, id = subject_id)
     db.execute("UPDATE :subject SET total_score = :total WHERE id=:id ", subject = tables["subjects"],  total =subject_total, id = subject_id)
+    # calculate and insert ppass for subject and class and repair passed and failed for class 
     initial_array = str(subject_info["subject_teacher"]).split()
     teacher_initials = ""
     for name in initial_array:
@@ -800,7 +798,6 @@ def submitted():
         else:
             teacher_initials = teacher_initials+initials(name)
     db.execute("UPDATE :subject SET teachers_initial = :abbr WHERE id=:id ", subject = tables["subjects"],  abbr =teacher_initials, id = subject_id)
-
     # send email to admin about subject scoresheet
     html = render_template('new_score.html',subject = subject_info, class_info=classRows[0])
     subject = subject_info["subject"]+" scoreesheet submitted for  "+ classRows[0]["classname"]
