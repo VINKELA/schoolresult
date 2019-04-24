@@ -7,6 +7,7 @@
  <table class="table table-striped">
   <thead>
     <tr>
+      <th scope="col">NO</th>
       <th scope="col">NAME</th>
     <th scope="col">CA</th>
       <th scope="col">TEST</th>
@@ -21,7 +22,7 @@
         {% set total = student[4]|int + student[5]|int + student[3]|int %}
         {% set id = student["id"]|string %}
         {% set id = student["id"]|string %}
-
+            <td>{{loop.index}}.</td>
             <td>{{student[2]}} {{student[1]}}</td>
             <td>{{student[3]}}</td>
             <td>{{student[4]}}</td>

@@ -532,6 +532,7 @@ def createClass():
 @app.route("/confirm_classlist", methods=["POST"])
 @login_required
 def confirm_classlist():
+    all_students.clear()
     #declare an array of dicts
     tables = database(str(0))
     rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=session["user_id"])
@@ -662,7 +663,7 @@ def delete_school():
 @app.route("/submit_score", methods =["POST","GET"])
 @login_required
 def submit_score():
-    del class_scores[:]
+    class_scores.clear()
     tables = database(str(0))
 
     if request.method == "POST":
@@ -806,6 +807,7 @@ def submitted():
 @login_required
 def confirm_scoresheet():
     #declare an array of
+    class_scores.clear()
     tables = database(subject_info["class_id"])
     rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=session["user_id"])
     class_list = db.execute("SELECT * FROM :classlist", classlist = tables["classlist"])
@@ -903,10 +905,6 @@ def edit_scoresheet():
         return render_template("portfolio.html", schoolInfo = schoolrow, clas = classrow)
 
         
-        
-
-
-
 @app.route("/edited_scoresheet", methods=["POST"])
 def edited_scoresheet():
     array_id = str(request.form.get("edited_scoresheet")).split("_")
@@ -1093,7 +1091,7 @@ def student_added():
     # return classlist.html
     return render_template("portfolio.html", schoolInfo = rows, clas= classRows)
 
-@app.route("/edit_class", methods=["POST"])
+@app.route("/edit_class", methods=["GET"])
 def edit_class():
    class_id = request.form.get("edit_class")
    tables= database(class_id)
