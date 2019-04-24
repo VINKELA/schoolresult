@@ -11,23 +11,26 @@
     <th scope="col">CA</th>
       <th scope="col">TEST</th>
     <th scope="col">EXAM</th>
+      <th scope="col">TOTAL</th>
+
     </tr>
   </thead>
   <tbody>
 {% for student in students %}
+    <tr>
+        {% set total = student[4]|int + student[5]|int + student[3]|int %}
         {% set id = student["id"]|string %}
-        {% set cascore = "cascore"+ id %}
-        {% set testscore = "testscore"+ id%}
-        {% set examscore = "examscore"+ id%}
-            <td><input  class="col classlist"  value="{{student[1]}} {{student[2]}}" type="text" required="required" disabled/></td>
-            <td><input  class="col classlist"  value="{{student[3]}}" type="text" required="required" disabled/></td>
-            <td><input  class="col classlist"  value="{{student[4]}}" type="text" required="required" disabled/></td>
-            <td><input  class="col classlist"  value="{{student[5]}}" type="text" required="required" disabled/></td>
-        </tr>
-            <input  class="col classlist"  name="{{cascore}}" value="{{student[2]}}" type="hidden" required="required" />
-            <input  class="col classlist"  name="{{testscore}}" value="{{student[3]}}" type="hidden" required="required" />
-            <input  class="col classlist"  name="{{examscore}}" value="{{student[4]}}" type="hidden" required="required" />
+        {% set id = student["id"]|string %}
+
+            <td>{{student[2]}} {{student[1]}}</td>
+            <td>{{student[3]}}</td>
+            <td>{{student[4]}}</td>
+            <td>{{student[5]}}</td>
+            <td>{{total}}</td>
+    </tr>
 {% endfor %}
+      </tbody>
+
 </table>
 <div class="form-w3ls">
       <button class="sign-in" name="button" type="submit" value="{{class_id}}">Confirm</button>

@@ -89,6 +89,8 @@ info = {}
 subject_info = {}
 error = None
 class_scores = []
+all_students = []
+
 
 
 @app.route("/")
@@ -527,6 +529,27 @@ def createClass():
         schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = schoolId)
         return render_template("createClassForm.html",schoolInfo = schoolrow)
 
+@app.route("/confirm_classlist", methods=["POST"])
+@login_required
+def confirm_classlist():
+    #declare an array of dicts
+    tables = database(str(0))
+    rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=session["user_id"])
+    #fill classlist
+    g = int(info["noOfStudents"])
+    # each student will be an element of the array
+    for i in range(g):
+        surname = "s"+str(i)
+        firstname = "f"+str(i)
+        othername = "o"+str(i)
+        sex = "g"+str(i)
+        all_students.append((request.form.get(surname), request.form.get(firstname), request.form.get(othername), request.form.get(sex)))
+    #return classlist.html
+    return render_template("confirm_classlist.html",schoolInfo = rows, students= all_students )
+
+
+
+
 
 
 @app.route("/classCreated", methods=["POST"])
@@ -547,17 +570,8 @@ def classCreated():
     db.execute("INSERT INTO :session_data (id,surname,firstname,othername, classname, password,section,ca, test, exam) values (:id,:surname,:firstname,:othername,:className,:password,:section,:ca,:test,:exam)",session_data = tables["session_data"],id = classId, surname =  info["surname"],firstname =  info["firstname"],othername =  info["othername"], className = info["className"].lower(),password = generate_password_hash(info["password"]),section=info["section"],ca=info["ca_max"], test=info["test_max"], exam=info["exam_max"])
     term_tables(classId)
     tables = database(classId)
-    sort_names = []
     # fill classlist
-    g = int(info["noOfStudents"])
-    for i in range(g):
-        surname = "s"+str(i)
-        firstname = "f"+str(i)
-        othername = "o"+str(i)
-        sex = "g"+str(i)
-        print(request.form.get(surname))
-        sort_names.append((request.form.get(surname), request.form.get(firstname), request.form.get(othername), request.form.get(sex)))
-    sort_names = sorted(sort_names, key=itemgetter(0))
+    sort_names = sorted(all_students, key=itemgetter(0))
     for name in sort_names:
                 db.execute("INSERT INTO :classtable (surname, firstname, othername,sex) VALUES (:surname, :firstname, :othername,:sex) ",classtable = tables["classlist"], surname = name[0].upper(),firstname = name[1].upper(),othername = name[2].upper(),sex=name[3])
                 db.execute("INSERT INTO :catable DEFAULT VALUES ",catable = tables["ca"])
@@ -642,25 +656,6 @@ def delete_school():
     all_schools = db.execute("SELECT * FROM school")
     # display them in admin portfolio
     return render_template("admin_page.html", schoolInfo = all_schools)
-
-@app.route("/confirm_classlist", methods=["POST"])
-@login_required
-def confirm_classlist():
-    #declare an array of dicts
-    all_students = []
-    tables = database(str(0))
-    rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=session["user_id"])
-    #fill classlist
-    g = int(info["noOfStudents"])
-    # each student will be an element of the array
-    for i in range(g):
-        surname = "s"+str(i)
-        firstname = "f"+str(i)
-        othername = "o"+str(i)
-        sex = "g"+str(i)
-        all_students.append((request.form.get(surname), request.form.get(firstname), request.form.get(othername), request.form.get(sex)))
-    #return classlist.html
-    return render_template("confirm_classlist.html",schoolInfo = rows, students= all_students )
 
 
 
