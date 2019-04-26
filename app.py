@@ -988,7 +988,7 @@ def verify_scoresheet():
     
 @app.route("/verify_teacher", methods=["GET"])
 def verify_teacher():
-    array_id = request.args["edit_student"].split("_")
+    array_id = request.args.get("edit_student").split("_")
     student_id = int(array_id[0])
     class_id = int(array_id[1])
     tables= database(class_id)
@@ -1001,16 +1001,17 @@ def verify_teacher():
 def edit_student():
     password = request.form.get("password")
     array_id = str(request.form.get("edit_student")).split("_")
-    student_id = int(array_id[0])
-    class_id = int(array_id[1])
+    student_id = str(array_id[0])
+    class_id = str(array_id[1])
     tables= database(class_id)
-    classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["classes"], classId = tables["class_id"])
+    classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["session_data"], classId = tables["class_id"])
     schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
     if check_password_hash(classrow[0]["password"], password) or check_password_hash(schoolrow[0]["admin_password"], password ):
         studentrow = db.execute("SELECT * FROM :classlist WHERE id=:id", classlist=tables["classlist"], id=student_id)
         return render_template("edit_student.html",id=student_id, schoolInfo = schoolrow, classData=classrow,student=studentrow[0])
     else:
-        classrow = db.execute("SELECT * FROM :classes ", classes = tables["classes"])
+        flash('The password is incorrect or not admin password.', 'failure')
+        classrow = db.execute("SELECT * FROM :classes ", classes = tables["session_data"])
         return render_template("portfolio.html", schoolInfo = schoolrow, clas = classrow)
 
 
@@ -1026,7 +1027,7 @@ def edited_student():
     sex = "g"+str(student_id)
     db.execute("UPDATE :classlist SET surname = :surname, firstname=:firstname, othername=:othername, sex=:sex WHERE id =:student_id", classlist = tables["classlist"], surname = request.form.get(surname).upper(),firstname =request.form.get(firstname).upper(), othername = request.form.get(othername).upper(), sex=request.form.get(sex), student_id= student_id)
     rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
-    classrows = db.execute("SELECT * FROM :classes ", classes = tables["classes"])
+    classrows = db.execute("SELECT * FROM :classes ", classes = tables["session_data"])
     return render_template("portfolio.html", schoolInfo = rows, clas = classrows)
 
 @app.route("/unregister_student", methods=["POST"])
@@ -1036,18 +1037,17 @@ def unregister_student():
     class_id = int(array_id[1])
     tables= database(class_id)
     db.execute("DELETE  FROM :ca where id=:id", ca = tables["ca"], id=student_id)
+    db.execute("DELETE  FROM :grade where id=:id", ca = tables["grade"], id=student_id)
     db.execute("DELETE  FROM :test where id=:id", test = tables["test"], id=student_id)
     db.execute("DELETE  FROM :exam where id=:id", exam = tables["exam"], id=student_id)
     db.execute("DELETE  FROM :mastersheet where id=:id", mastersheet = tables["mastersheet"], id=student_id)
     db.execute("DELETE  FROM :subject_position where id=:id", subject_position = tables["subject_position"], id=student_id)
     db.execute("DELETE  FROM :result where id=:id", result= tables["result"], id=student_id)
     db.execute("DELETE  FROM :classlist where id=:id", classlist = tables["classlist"], id=student_id)
-    db.execute("UPDATE :classes SET no_of_students= no_of_students - 1 where id=:id",classes = tables["classes"], id=class_id)
-
-
+    db.execute("UPDATE :classes SET no_of_students= no_of_students - 1 where id=:id",classes = tables["class_term_data"], id=class_id)
 
     rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
-    classrows = db.execute("SELECT * FROM :classes ", classes = tables["classes"])
+    classrows = db.execute("SELECT * FROM :classes ", classes = tables["session_data"])
     return render_template("portfolio.html", schoolInfo = rows, clas = classrows)
 
 @app.route("/verify_add_student", methods=["POST"])

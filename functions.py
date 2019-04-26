@@ -223,6 +223,7 @@ def make_subject_result(subject_id, class_id):
     subject_average = subject_total / classroom[0]["no_of_students"]
     db.execute("UPDATE :subjects SET class_average = :average WHERE id = :id", subjects = tables["subjects"],  average = subject_average, id = subject_id )
 
+
 def render_class(class_id, error):
     tables = database(class_id)
     classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["classes"], classId = tables["class_id"])
@@ -291,8 +292,6 @@ def update_scores(class_id, subject_id, operation):
 
 		average = total / classrow[0]["no_of_subjects"]
 		db.execute("UPDATE :mastersheet SET total = :total, average = :average WHERE id=:id", mastersheet = tables["mastersheet"], total = total, average = average, id = student["id"])
-
-
 
 
 def random_string_generator(str_size, allowed_chars):
