@@ -22,8 +22,8 @@
       {%for data in clas%}
     <tr>
 <td><form action="/veiwclass" id="portfolio-form" method="post">
-  <button class="rcorners2" name = "veiw_class" value = "{{data["id"]}}" type="submit">{{data["classname"]}} <span name="edit_class" value = "{{data["id"]}}">
-    <a  href="/edit_class" >edit</a></span></button>
+  <button class="rcorners2" name = "veiw_class" value = "{{data["id"]}}" type="submit">{{data["classname"]}}
+    <a href="/edit_class?class_id={{data["id"]}}" >edit</a></button>
 </form> form-teacher: {{data["firstname"]}} {{data["surname"]}}</td>
     </tr>
     {% endfor %}

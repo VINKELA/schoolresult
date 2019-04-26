@@ -986,9 +986,9 @@ def verify_scoresheet():
     subjectrow = db.execute("SELECT * FROM :subjecttable WHERE id=:id",subjecttable = tables["subjects"], id=subject_id)
     return render_template("verify_scoresheet.html",sub_id=subject_id,  classData = classrow, schoolInfo=schoolrow)
     
-@app.route("/verify_teacher", methods=["POST"])
+@app.route("/verify_teacher", methods=["GET"])
 def verify_teacher():
-    array_id = str(request.form.get("edit_student")).split("_")
+    array_id = request.args["edit_student"].split("_")
     student_id = int(array_id[0])
     class_id = int(array_id[1])
     tables= database(class_id)
@@ -1086,16 +1086,14 @@ def student_added():
     db.execute("UPDATE :classes SET no_of_students = no_of_students + 1", classes =tables["classes"])
     rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=tables["school_id"])
     classRows = db.execute("SELECT * FROM :classes ",classes = tables["classes"])
-
-
     # return classlist.html
     return render_template("portfolio.html", schoolInfo = rows, clas= classRows)
 
 @app.route("/edit_class", methods=["GET"])
 def edit_class():
-   class_id = request.form.get("edit_class")
+   class_id = str(request.args.get("class_id"))
    tables= database(class_id)
-   classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["classes"], classId = class_id)
+   classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["session_data"], classId = class_id)
    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
    return render_template("verify_admin.html", classData = classrow, schoolInfo=schoolrow)
 
@@ -1104,14 +1102,14 @@ def edit_class():
 def verified_admin():        
     class_id = request.form.get("class_id")
     password = request.form.get("password")
-    tables= database(class_id)
-    classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["classes"], classId = tables["class_id"])
+    tables= database(str(class_id))
+    classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["session_data"], classId = class_id)
     schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
     if check_password_hash(schoolrow[0]["admin_password"], password ):
         return render_template("edit_class.html", schoolInfo = schoolrow, classData=classrow)
     else:
         rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
-        classrows = db.execute("SELECT * FROM :classes ", classes = tables["classes"])
+        classrows = db.execute("SELECT * FROM :classes ", classes = tables["class_term_data"])
         return render_template("portfolio.html", schoolInfo = rows, clas = classrows)
 
 @app.route("/edited_class", methods=["POST"])

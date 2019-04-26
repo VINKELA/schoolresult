@@ -55,6 +55,7 @@
             <span class="green">
             {% if session.user_id %}
             {{schoolInfo[0]["school_name"].upper()}}
+             <a href="/">edit</a>
             {% endif %}
             </span>
             <div class="collapse navbar-collapse" id="navbar">
@@ -67,9 +68,6 @@
                     </ul>
                     <ul class="navbar-nav ml-auto mt-2">
                         <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
-                    </ul>
-                    <ul class="navbar-nav ml-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/logout">setting</a></li>
                     </ul>
                 {% else %}
                      <ul class="navbar-nav ml-auto mt-2">
