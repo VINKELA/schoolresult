@@ -25,18 +25,26 @@
 
     <tr>
       <td>{{data["id"]}}</td>
-      <td>{{class_list[loop.index-1]["surname"]}} {{class_list[loop.index-1]["firstname"]}} {{class_list[loop.index-1]["othername"]}}<a href="/verify_teacher?edit_student={{button_id}}"> edit details</a></td>
+      <td>{{class_list[loop.index-1]["surname"]}} {{class_list[loop.index-1]["firstname"]}} {{class_list[loop.index-1]["othername"]}}<a href="/verify_teacher?edit_student={{button_id}}"> edit</a></td>
       <td><form method="post" action="/result_sheet"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}">VEIW RESULT</button>
 </form></td>
     </tr>
     {% endfor %}  
   </tbody>
   </table>
-  <div class="form-w3ls">
+<div class="form-w3ls row">
+    <div class="col">
 
     <form action ="/verify_add_student" method = "post">
         <button  type="submit" class="sign-in" name = "add_student" value = "{{classData[0]["id"]}}">add student</button>
   </form>
+</div>
+<div class="col">
+      <form action ="/" method = "post">
+        <button  type="submit" class="sign-in" name = "add_student" value = "{{classData[0]["id"]}}">customize result</button>
+  </form>
+</div>
+
   </div>
 
 
@@ -62,5 +70,16 @@
      {% endfor %}
      </tbody>
      </table>
+     <div class="row">
+       <div class="col">
+         <form action="/" method="post"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">MASTERSHEET </button>
+         </form>
+       </div>
+         <div class="col">
+         <form action="/" method="post"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">VEIW </button>
+         </form>
+       </div>
+
+     </div>
 
 {% endblock %}
