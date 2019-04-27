@@ -1058,10 +1058,8 @@ def unregister_student():
         #subtract students total from subjects total 
         db.execute("UPDATE :subjects SET total_score = :new WHERE id = :id", subjects=tables["subjects"], new= new_total , id =subject["id"]) 
         #recalculate subject average
-        new_average = new_total / int(class_details[0]["noOfStudents"]) -1
+        new_average = new_total / (int(class_details[0]["noOfStudents"]) -1)
         db.execute("UPDATE :subjects SET class_average = :new WHERE id = :id", subjects=tables["subjects"], new= new_average, id =subject["id"]) 
-        #recalculate subject positions
-        assign_subject_position(class_id, subject["id"])
 
     db.execute("DELETE  FROM :ca where id=:id", ca = tables["ca"], id=student_id)
     db.execute("DELETE  FROM :grades where id=:id", grades = tables["grade"], id=student_id)
@@ -1071,6 +1069,10 @@ def unregister_student():
     db.execute("DELETE  FROM :subject_position where id=:id", subject_position = tables["subject_position"], id=student_id)
     db.execute("DELETE  FROM :classlist where id=:id", classlist = tables["classlist"], id=student_id)
     db.execute("UPDATE :class_details SET noOfStudents= :new_no WHERE id=:id",class_details = tables["class_term_data"],new_no=int(class_details[0]["noOfStudents"]) - 1, id=class_id)
+    assign_student_position(class_id)
+    
+    for subject in subjects:
+        assign_subject_position(class_id, subject["id"])
     rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
     classrows = db.execute("SELECT * FROM :classes ", classes = tables["session_data"])
     return render_template("portfolio.html", schoolInfo = rows, clas = classrows)

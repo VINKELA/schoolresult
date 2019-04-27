@@ -7,24 +7,20 @@
 {% block main %}
 
  <table id="classview" class = "table table-striped">
-  <thead>
     <tr>
-      <th>NO</th>
-      <th colspan="2"><h1><b>{{classData[0]["classname"].upper()}} Students</b></h1></th>
+      <td>NO</td>
+      <td colspan="2"><h1><b>{{classData[0]["classname"].upper()}} Students</b></h1></td>
       {% set class_id = classData[0]["id"]|string %}
 
   </tr>
-  </thead>
 
   <tbody>
 
       {%for data in mastersheet%}
       {% set student_id = data["id"]|string %}
       {% set button_id = student_id+"_"+class_id %}
-
-
     <tr>
-      <td>{{data["id"]}}</td>
+      <td>{{loop.index}}</td>
       <td>{{class_list[loop.index-1]["surname"]}} {{class_list[loop.index-1]["firstname"]}} {{class_list[loop.index-1]["othername"]}}<a href="/verify_teacher?edit_student={{button_id}}"> edit</a></td>
       <td><form method="post" action="/result_sheet"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}">VEIW RESULT</button>
 </form></td>
