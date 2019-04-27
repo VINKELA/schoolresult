@@ -1036,16 +1036,41 @@ def unregister_student():
     student_id = int(array_id[0])
     class_id = int(array_id[1])
     tables= database(class_id)
+    #select all from grades for the student
+    student_grade = db.execute("SELECT * FROM :grades WHERE id=:id", grades=tables["grade"], id=student_id)
+    subjects = db.execute("SELECT * FROM :all_subjects", all_subjects = tables["subjects"])
+    totals = db.execute("SELECT * FROM :mastersheet WHERE id = :id", mastersheet= tables["mastersheet"], id=student_id)
+    class_details = db.execute("SELECT * FROM :class_table WHERE id=:id", class_table=tables["class_term_data"], id=class_id)
+    #for each subject in grades
+    for subject in subjects:
+        #get students grade in this subject
+        the_grade = student_grade[0][str(subject["id"])]
+        if the_grade == "F":
+            db.execute("UPDATE :subjects SET no_failed = :new WHERE id = :id", subjects=tables["subjects"], new = int(subject["no_failed"])-1, id =subject["id"] ) 
+        else:
+            db.execute("UPDATE :subjects SET no_passed = :new WHERE id = :id", subjects=tables["subjects"], new = int(subject["no_passed"])-1, id =subject["id"] ) 
+        #form the column string for no_of_column
+        the_column = "no_of_"+str(the_grade)
+        current = int(subject[the_column])
+        #subract 1 from that no_of_column in subjects
+        db.execute("UPDATE :subjects SET :no_of_grade = :new WHERE id = :id", subjects=tables["subjects"], no_of_grade=the_column,new=current -1, id =subject["id"] ) 
+        new_total = int(subject["total_score"]) - int(totals[0][str(subject["id"])])
+        #subtract students total from subjects total 
+        db.execute("UPDATE :subjects SET total_score = :new WHERE id = :id", subjects=tables["subjects"], new= new_total , id =subject["id"]) 
+        #recalculate subject average
+        new_average = new_total / int(class_details[0]["noOfStudents"]) -1
+        db.execute("UPDATE :subjects SET class_average = :new WHERE id = :id", subjects=tables["subjects"], new= new_average, id =subject["id"]) 
+        #recalculate subject positions
+        assign_subject_position(class_id, subject["id"])
+
     db.execute("DELETE  FROM :ca where id=:id", ca = tables["ca"], id=student_id)
-    db.execute("DELETE  FROM :grade where id=:id", ca = tables["grade"], id=student_id)
+    db.execute("DELETE  FROM :grades where id=:id", grades = tables["grade"], id=student_id)
     db.execute("DELETE  FROM :test where id=:id", test = tables["test"], id=student_id)
     db.execute("DELETE  FROM :exam where id=:id", exam = tables["exam"], id=student_id)
     db.execute("DELETE  FROM :mastersheet where id=:id", mastersheet = tables["mastersheet"], id=student_id)
     db.execute("DELETE  FROM :subject_position where id=:id", subject_position = tables["subject_position"], id=student_id)
-    db.execute("DELETE  FROM :result where id=:id", result= tables["result"], id=student_id)
     db.execute("DELETE  FROM :classlist where id=:id", classlist = tables["classlist"], id=student_id)
-    db.execute("UPDATE :classes SET no_of_students= no_of_students - 1 where id=:id",classes = tables["class_term_data"], id=class_id)
-
+    db.execute("UPDATE :class_details SET noOfStudents= :new_no WHERE id=:id",class_details = tables["class_term_data"],new_no=int(class_details[0]["noOfStudents"]) - 1, id=class_id)
     rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
     classrows = db.execute("SELECT * FROM :classes ", classes = tables["session_data"])
     return render_template("portfolio.html", schoolInfo = rows, clas = classrows)
