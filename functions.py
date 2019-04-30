@@ -65,8 +65,7 @@ def login_required(f):
 def initials (name):
     return name[0].upper()
 # returns the grade of any given score
-def grade(score):
-	grading_type="WAEC"
+def grade(score,grading_type="WAEC"):
 	score = int(score)
 	if grading_type == "WAEC":
 		if score < 40:
@@ -126,9 +125,9 @@ def make_student_result(student_id, class_id):
 	tables = database(class_id)
 	student = db.execute("SELECT * FROM :classlist WHERE id=:id", classlist = tables["classlist"], id=student_id)
 	student = student[0]
-	classroom = db.execute("SELECT * FROM :classes WHERE id=:class_id", classes = tables["classes"], class_id = class_id)
+	classroom = db.execute("SELECT * FROM :classes WHERE id=:class_id", classes = tables["class_term_data"], class_id = class_id)
 	subjects = db.execute("SELECT * FROM :subject", subject = tables["subjects"])
-	no_0f_subjects = classroom[0]["no_of_subjects"]
+	no_0f_subjects = classroom[0]["noOfStudents"]
 	total_score = 0
 	student_average = 0
 	for subject in subjects:
@@ -354,3 +353,74 @@ def passwordGen(stringLength=8):
 def percent(first, second):
 	return (int(first)/int(second)) * 100
 
+def remove_student(student_id, class_id,):
+	tables= database(class_id)
+	student_grade = db.execute("SELECT * FROM :grades WHERE id=:id", grades=tables["grade"], id=student_id)
+	subjects = db.execute("SELECT * FROM :all_subjects", all_subjects = tables["subjects"])
+	totals = db.execute("SELECT * FROM :mastersheet WHERE id = :id", mastersheet= tables["mastersheet"], id=student_id)
+	class_details = db.execute("SELECT * FROM :class_table WHERE id=:id", class_table=tables["class_term_data"], id=class_id)
+	#for each subject in grades
+	for subject in subjects:
+	#get students grade in this subject
+		the_grade = student_grade[0][str(subject["id"])]
+		if the_grade == "F":
+			db.execute("UPDATE :subjects SET no_failed = :new WHERE id = :id", subjects=tables["subjects"], new = int(subject["no_failed"])-1, id =subject["id"] ) 
+		else:
+			db.execute("UPDATE :subjects SET no_passed = :new WHERE id = :id", subjects=tables["subjects"], new = int(subject["no_passed"])-1, id =subject["id"] ) 
+	#form the column string for no_of_column
+		the_column = "no_of_"+str(the_grade)
+		current = int(subject[the_column])
+		#subract 1 from that no_of_column in subjects
+		db.execute("UPDATE :subjects SET :no_of_grade = :new WHERE id = :id", subjects=tables["subjects"], no_of_grade=the_column,new=current -1, id =subject["id"] ) 
+		new_total = int(subject["total_score"]) - int(totals[0][str(subject["id"])])
+		#subtract students total from subjects total 
+		db.execute("UPDATE :subjects SET total_score = :new WHERE id = :id", subjects=tables["subjects"], new= new_total , id =subject["id"]) 
+		#recalculate subject average
+		new_average = new_total / (int(class_details[0]["noOfStudents"]) -1)
+		db.execute("UPDATE :subjects SET class_average = :new WHERE id = :id", subjects=tables["subjects"], new= new_average, id =subject["id"]) 
+
+	db.execute("DELETE  FROM :ca where id=:id", ca = tables["ca"], id=student_id)
+	db.execute("DELETE  FROM :grades where id=:id", grades = tables["grade"], id=student_id)
+	db.execute("DELETE  FROM :test where id=:id", test = tables["test"], id=student_id)
+	db.execute("DELETE  FROM :exam where id=:id", exam = tables["exam"], id=student_id)
+	db.execute("DELETE  FROM :mastersheet where id=:id", mastersheet = tables["mastersheet"], id=student_id)
+	db.execute("DELETE  FROM :subject_position where id=:id", subject_position = tables["subject_position"], id=student_id)
+	db.execute("DELETE  FROM :classlist where id=:id", classlist = tables["classlist"], id=student_id)
+	db.execute("UPDATE :class_details SET noOfStudents= :new_no WHERE id=:id",class_details = tables["class_term_data"],new_no=int(class_details[0]["noOfStudents"]) - 1, id=class_id)
+	assign_student_position(class_id)
+
+	for subject in subjects:
+		assign_subject_position(class_id, subject["id"])
+
+
+
+def add_student(student_id, class_id):
+	tables= database(class_id)
+	student_grade = db.execute("SELECT * FROM :grades WHERE id=:id", grades=tables["grade"], id=student_id)
+	subjects = db.execute("SELECT * FROM :all_subjects", all_subjects = tables["subjects"])
+	totals = db.execute("SELECT * FROM :mastersheet WHERE id = :id", mastersheet= tables["mastersheet"], id=student_id)
+	class_details = db.execute("SELECT * FROM :class_table WHERE id=:id", class_table=tables["class_term_data"], id=class_id)
+	#for each subject in grades
+	for subject in subjects:
+		#get students grade in this subject
+		the_grade = student_grade[0][str(subject["id"])]
+		if the_grade == "F":
+			db.execute("UPDATE :subjects SET no_failed = :new WHERE id = :id", subjects=tables["subjects"], new = int(subject["no_failed"])+1, id =subject["id"] ) 
+		else:
+			db.execute("UPDATE :subjects SET no_passed = :new WHERE id = :id", subjects=tables["subjects"], new = int(subject["no_passed"])+1, id =subject["id"] ) 
+		#form the column string for no_of_column
+		the_column = "no_of_"+str(the_grade)
+		current = int(subject[the_column])
+		#subract 1 from that no_of_column in subjects
+		db.execute("UPDATE :subjects SET :no_of_grade = :new WHERE id = :id", subjects=tables["subjects"], no_of_grade=the_column,new=current + 1, id =subject["id"] ) 
+		new_total = int(subject["total_score"]) + int(totals[0][str(subject["id"])])
+		#subtract students total from subjects total 
+		db.execute("UPDATE :subjects SET total_score = :new WHERE id = :id", subjects=tables["subjects"], new= new_total , id =subject["id"]) 
+		#recalculate subject average
+		new_average = new_total / (int(class_details[0]["noOfStudents"]) + 1)
+		db.execute("UPDATE :subjects SET class_average = :new WHERE id = :id", subjects=tables["subjects"], new= new_average, id =subject["id"]) 
+
+	assign_student_position(class_id)
+
+	for subject in subjects:
+		assign_subject_position(class_id, subject["id"])

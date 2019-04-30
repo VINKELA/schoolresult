@@ -1,19 +1,11 @@
 {% extends "layout.html" %}
 
 {% block title %}
-  add student
+    upload scoresheet
 {% endblock %}
 
 {% block main %}
-<form action="/confirm_details" method="post">
-  <div class="form-w3ls">       
-     <input type="text"  placeholder="surname" name =  "surname">
-     <input type="text"  placeholder="firstname" name="firstname">
-      <input type="text"  placeholder="othernames" name="othername">
-
-      <label class="radio-inline"><input class = "col" type="radio" name="sex" value="female"> <h4> Female </h4> </label>
-      <label class="radio-inline"><input class = "col" type="radio" name="sex" value="male"> <h4> Male </h4> </label>
-  </div>
+<form action="/confirm_single_scoresheet" method="post">
  <table class="table table-sm">
   <thead>
     <tr>
@@ -25,6 +17,7 @@
   </thead>
   <tbody>
 {% for subject in subjects %}
+  <div class="form-row">
         {% set id = subject["id"]|string %}
         <div class="col">   <tr><td>{{subject["name"]}}</td></div>
         <div class="col">
@@ -38,6 +31,7 @@
                     </select>
                     <div class="arrow"></div></td>
          </div>
+
         <div class="col">
          {% set testscore = "testscore"+ id %}
                     <td><select name="{{testscore}}" id="test"  aria-required="true">
@@ -67,5 +61,4 @@
 
  <button class="sign-in" name="button" value="{{classInfo["id"]}}" type="submit">Submit</button></div>
  </form>
-
 {% endblock %}

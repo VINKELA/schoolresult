@@ -747,3 +747,10 @@ input > .scoresheet{
 #enter_classlist{
 	margin-top :80px;
 }
+
+#details{
+	text-align: center;
+	font-size: 20px;
+	letter-spacing: 5px;
+	padding: 10px;
+}
