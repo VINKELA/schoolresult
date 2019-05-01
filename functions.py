@@ -401,26 +401,39 @@ def add_student(student_id, class_id):
 	totals = db.execute("SELECT * FROM :mastersheet WHERE id = :id", mastersheet= tables["mastersheet"], id=student_id)
 	class_details = db.execute("SELECT * FROM :class_table WHERE id=:id", class_table=tables["class_term_data"], id=class_id)
 	#for each subject in grades
+	student_total = 0
+	passed = 0
+	failed = 0
+	new_total = 0
 	for subject in subjects:
 		#get students grade in this subject
+		student_total = student_total + int(totals[0][str(subject["id"])])
 		the_grade = student_grade[0][str(subject["id"])]
 		if the_grade == "F":
-			db.execute("UPDATE :subjects SET no_failed = :new WHERE id = :id", subjects=tables["subjects"], new = int(subject["no_failed"])+1, id =subject["id"] ) 
+			db.execute("UPDATE :subjects SET no_failed = :new WHERE id = :id", subjects=tables["subjects"], new = int(subject["no_failed"])+1, id =subject["id"] )
+			failed = failed + 1 
+
 		else:
 			db.execute("UPDATE :subjects SET no_passed = :new WHERE id = :id", subjects=tables["subjects"], new = int(subject["no_passed"])+1, id =subject["id"] ) 
+			passed = passed + 1
 		#form the column string for no_of_column
 		the_column = "no_of_"+str(the_grade)
 		current = int(subject[the_column])
 		#subract 1 from that no_of_column in subjects
 		db.execute("UPDATE :subjects SET :no_of_grade = :new WHERE id = :id", subjects=tables["subjects"], no_of_grade=the_column,new=current + 1, id =subject["id"] ) 
+		db.execute("UPDATE :grades SET :no_of_grade = :new WHERE id = :id", grades=tables["grade"], no_of_grade=the_column,new=int(student_grade[0][the_column]) + 1 , id =student_id ) 
+		db.execute("UPDATE :mastersheet SET subject_failed = :new WHERE id = :id", mastersheet=tables["mastersheet"], new = failed, id =student_id) 
+		db.execute("UPDATE :mastersheet SET subject_passed = :new WHERE id = :id", mastersheet=tables["mastersheet"], new = passed, id =student_id) 
+
 		new_total = int(subject["total_score"]) + int(totals[0][str(subject["id"])])
 		#subtract students total from subjects total 
 		db.execute("UPDATE :subjects SET total_score = :new WHERE id = :id", subjects=tables["subjects"], new= new_total , id =subject["id"]) 
 		#recalculate subject average
-		new_average = new_total / (int(class_details[0]["noOfStudents"]) + 1)
+		new_average = new_total / int(class_details[0]["noOfStudents"])
 		db.execute("UPDATE :subjects SET class_average = :new WHERE id = :id", subjects=tables["subjects"], new= new_average, id =subject["id"]) 
-
+	student_average = student_total/len(subjects)
+	db.execute("UPDATE :mastersheet SET average = :new WHERE id=:id", mastersheet=tables["mastersheet"], new=student_average, id=student_id)
+	db.execute("UPDATE :mastersheet SET total_score = :new WHERE id=:id", mastersheet=tables["mastersheet"], new=student_total, id=student_id)
 	assign_student_position(class_id)
-
 	for subject in subjects:
 		assign_subject_position(class_id, subject["id"])
