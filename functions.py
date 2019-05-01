@@ -1,6 +1,6 @@
 import requests
 from cs50 import SQL
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, flash
 from functools import wraps
 from operator import itemgetter, attrgetter
 from itsdangerous import URLSafeTimedSerializer
@@ -223,25 +223,26 @@ def make_subject_result(subject_id, class_id):
     db.execute("UPDATE :subjects SET class_average = :average WHERE id = :id", subjects = tables["subjects"],  average = subject_average, id = subject_id )
 
 
-def render_class(class_id, error):
+def render_class(class_id, error=None):
+    # format class tables names
     tables = database(class_id)
-    classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["classes"], classId = tables["class_id"])
-    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
-    carow = db.execute("SELECT * FROM :catable",catable = tables["ca"])
-    testrow = db.execute("SELECT * FROM :testtable",testtable = tables["test"])
-    examrow = db.execute("SELECT * FROM :examtable",examtable = tables["exam"])
+    #query database
+    classrow = db.execute("SELECT * FROM :session_data WHERE id = :classId", session_data = tables["session_data"], classId = tables["class_id"])
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = session["user_id"])
     subjectrow = db.execute("SELECT * FROM :subjecttable",subjecttable = tables["subjects"])
-    teachersrow = db.execute("SELECT * FROM :teacherstable", teacherstable= tables["teachers"])
     classlistrow = db.execute("SELECT * FROM :classlist",classlist = tables["classlist"])
-    mastersheet_rows = db.execute("SELECT * FROM :mastersheet", mastersheet = tables["mastersheet"])
-    subject_position_row = db.execute("SELECT * FROM :subject_position", subject_position = tables["subject_position"])
-    return render_template("classView.html",error = tables["error"],  schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow, teachersData = teachersrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
+    # render class veiw
+    if error:
+    	flash(error,'failure')
+    return render_template("classView.html", schoolInfo = schoolrow, classData = classrow, subjectData = subjectrow,class_list = classlistrow, error=error)
 
-def render_portfolio(school_id, error):
+def render_portfolio(error=None):
     tables = database(0)
     rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
     classrows = db.execute("SELECT * FROM :session_data ", classes = tables["session_data"])
-    return render_template("portfolio.html",error = error, schoolInfo = rows, classData = classrows)
+    if error:
+    	flash(error,'failure')
+    return render_template("portfolio.html", schoolInfo = rows, classData = classrows, error=error)
 
 def assign_student_position(class_id):
 	tables = database(class_id)
@@ -421,7 +422,10 @@ def add_student(student_id, class_id):
 		current = int(subject[the_column])
 		#subract 1 from that no_of_column in subjects
 		db.execute("UPDATE :subjects SET :no_of_grade = :new WHERE id = :id", subjects=tables["subjects"], no_of_grade=the_column,new=current + 1, id =subject["id"] ) 
-		db.execute("UPDATE :grades SET :no_of_grade = :new WHERE id = :id", grades=tables["grade"], no_of_grade=the_column,new=int(student_grade[0][the_column]) + 1 , id =student_id ) 
+		previous = db.execute("SELECT * FROM  :grades WHERE id = :id", grades=tables["grade"], id =student_id )
+		new_no = int(previous[0][the_column])  + 1
+		db.execute("UPDATE :grades SET :no_of_grade = :new  WHERE id = :id", grades=tables["grade"], no_of_grade=the_column,new=new_no, id =student_id ) 
+
 		db.execute("UPDATE :mastersheet SET subject_failed = :new WHERE id = :id", mastersheet=tables["mastersheet"], new = failed, id =student_id) 
 		db.execute("UPDATE :mastersheet SET subject_passed = :new WHERE id = :id", mastersheet=tables["mastersheet"], new = passed, id =student_id) 
 

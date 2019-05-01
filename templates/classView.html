@@ -16,12 +16,12 @@
 
   <tbody>
 
-      {%for data in mastersheet%}
+      {%for data in class_list%}
       {% set student_id = data["id"]|string %}
       {% set button_id = student_id+"_"+class_id %}
     <tr>
       <td>{{loop.index}}</td>
-      <td>{{class_list[loop.index-1]["surname"]}} {{class_list[loop.index-1]["firstname"]}} {{class_list[loop.index-1]["othername"]}}<a href="/verify_teacher?edit_student={{button_id}}"> edit</a></td>
+      <td>{{data["surname"]}} {{data["firstname"]}} {{data["othername"]}}<a href="/verify_teacher?edit_student={{button_id}}"> edit</a></td>
       <td><form method="post" action="/result_sheet"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}">VEIW RESULT</button>
 </form></td>
     </tr>

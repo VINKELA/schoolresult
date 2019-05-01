@@ -15,7 +15,7 @@ from requests.models import Response
 
 from operator import itemgetter, attrgetter
 
-from functions import apology, login_required, database, random_string_generator, render_portfolio, term_tables, drop_tables, grade, assign_student_position, assign_subject_position, passwordGen, initials, add_student, remove_student
+from functions import apology, login_required, database, random_string_generator, render_portfolio, term_tables, drop_tables, grade, assign_student_position, assign_subject_position, passwordGen, initials, add_student, remove_student, render_class, render_portfolio
 
 # Configure application
 app = Flask(__name__)
@@ -112,11 +112,7 @@ def index():
         session["user_id"] = user[0]["id"]
         # if account is confirmed render this
         if(user[0]["confirmed"]== "true"):
-            tables = database(str(0))
-            rows = db.execute("SELECT * FROM school WHERE id=:id", id = session["user_id"])
-            classRows = db.execute("SELECT * FROM :session_data ",session_data = tables["session_data"])
-            # return render portfolio
-            return render_template("portfolio.html", schoolInfo = rows, clas = classRows)
+            return render_portfolio()
         # else if account is not confirmed render unconfirmed view
         else:
             return redirect('/unconfirmed')
@@ -590,10 +586,8 @@ def classCreated():
     html = render_template('new_class.html',classInfo = classRow)
     subject = classRow[0]["classname"]+" created for  "+ classRow[0]["section"]+" section"
     send_email(rows[0]["email"], subject, html, 'classclass_term_dataest@gmail.com')
-
     # return classlist.html
-    return render_template("portfolio.html", schoolInfo = rows, clas= classRows)
-
+    return render_class(classId)
 
 @app.route("/how_to_use", methods=["GET"])
 def how_to_use():
@@ -801,9 +795,9 @@ def submitted():
     subject = subject_info["subject"]+" scoreesheet submitted for  "+ classRows[0]["classname"]
     send_email(rows[0]["email"], subject, html, 'classresultest@gmail.com')
     classRows = db.execute("SELECT * FROM :session_data ",session_data = tables["session_data"])
-    flash(subject_info["subject"]+" scoresheet submitted successfully",'sucess')
+    error = subject_info["subject"]+" scoresheet submitted successfully"
     # return classlist.html
-    return render_template("portfolio.html", schoolInfo = rows, clas= classRows)
+    return render_class(tables["class_id"],error)
 
 @app.route("/confirm_scoresheet", methods=["POST"])
 @login_required
@@ -826,20 +820,7 @@ def confirm_scoresheet():
 @app.route("/veiwclass", methods=["post", "get"])
 @login_required
 def veiwclass():
-    # format class tables names
-    tables = database(request.form.get("veiw_class"))
-    #query database
-    classrow = db.execute("SELECT * FROM :session_data WHERE id = :classId", session_data = tables["session_data"], classId = tables["class_id"])
-    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = session["user_id"])
-    carow = db.execute("SELECT * FROM :catable",catable = tables["ca"])
-    testrow = db.execute("SELECT * FROM :testtable",testtable = tables["test"])
-    examrow = db.execute("SELECT * FROM :examtable",examtable = tables["exam"])
-    subjectrow = db.execute("SELECT * FROM :subjecttable",subjecttable = tables["subjects"])
-    classlistrow = db.execute("SELECT * FROM :classlist",classlist = tables["classlist"])
-    mastersheet_rows = db.execute("SELECT * FROM :mastersheet", mastersheet = tables["mastersheet"])
-    subject_position_row = db.execute("SELECT * FROM :subject_position", subject_position = tables["subject_position"])
-    # render class veiw
-    return render_template("classView.html", schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
+    return render_class(request.form.get("veiw_class"))
 
 
 @app.route("/scoresheet", methods=["POST"])
@@ -903,8 +884,8 @@ def edit_scoresheet():
         subject_position_row = db.execute("SELECT * FROM :subject_position", subject_position = tables["subject_position"])
         return render_template("edit_scoresheet.html",sub_id=subject_id, schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow, teachersData = teachersrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
     else:
-        classrow = db.execute("SELECT * FROM :classes ", classes = tables["classes"])
-        return render_template("portfolio.html", schoolInfo = schoolrow, clas = classrow)
+        error = "admin or class password incorrect"
+        return render_class(class_id, error)
 
         
 @app.route("/edited_scoresheet", methods=["POST"])
@@ -939,9 +920,7 @@ def edited_scoresheet():
         db.execute("UPDATE :testtable SET :subject = :score WHERE id =:id", testtable = test_table, subject = subject_row[0]["name"],score =test_score, id = student["id"])
         db.execute("UPDATE :examtable SET :subject = :score WHERE id =:id", examtable = exam_table, subject = subject_row[0]["name"],score =exam_score, id = student["id"])
     
-    rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
-    classrows = db.execute("SELECT * FROM :classes ", classes = classes)
-    return render_template("portfolio.html", schoolInfo = rows, clas = classrows)
+    return render_class(class_id)
 
 
 
@@ -973,9 +952,7 @@ def delete_scoresheet():
     db.execute("DELETE FROM :subject WHERE id=:id", subjects=subject_table, id=subject_row[0]["id"])
     db.execute("UPDATE :classes set no_of_subjects = no_of_subjects - 1 WHERE id=:id", classes=classes, id=class_id)
     
-    rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
-    classrows = db.execute("SELECT * FROM :classes ", classes = classes)
-    return render_template("portfolio.html", schoolInfo = rows, clas = classrows)
+    return render_class(class_id)
 
 @app.route("/verify_scoresheet", methods=["POST"])
 def verify_scoresheet():
@@ -1012,9 +989,8 @@ def edit_student():
         studentrow = db.execute("SELECT * FROM :classlist WHERE id=:id", classlist=tables["classlist"], id=student_id)
         return render_template("edit_student.html",id=student_id, schoolInfo = schoolrow, classData=classrow,student=studentrow[0])
     else:
-        flash('The password is incorrect or not admin password.', 'failure')
-        classrow = db.execute("SELECT * FROM :classes ", classes = tables["session_data"])
-        return render_template("portfolio.html", schoolInfo = schoolrow, clas = classrow)
+        error= ' The admin or class password is incorrect.'
+        return render_class(class_id, error)
 
 
 @app.route("/edited_student", methods=["POST"])
@@ -1030,7 +1006,7 @@ def edited_student():
     db.execute("UPDATE :classlist SET surname = :surname, firstname=:firstname, othername=:othername, sex=:sex WHERE id =:student_id", classlist = tables["classlist"], surname = request.form.get(surname).upper(),firstname =request.form.get(firstname).upper(), othername = request.form.get(othername).upper(), sex=request.form.get(sex), student_id= student_id)
     rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
     classrows = db.execute("SELECT * FROM :classes ", classes = tables["session_data"])
-    return render_template("portfolio.html", schoolInfo = rows, clas = classrows)
+    return render_class(class_id)
 
 @app.route("/unregister_student", methods=["POST"])
 def unregister_student():
@@ -1041,7 +1017,7 @@ def unregister_student():
     remove_student(student_id, class_id)
     rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
     classrows = db.execute("SELECT * FROM :classes ", classes = tables["session_data"])
-    return render_template("portfolio.html", schoolInfo = rows, clas = classrows)
+    return render_class(class_id)
 
 @app.route("/verify_add_student", methods=["POST"])
 def verify_add_student():
@@ -1067,7 +1043,7 @@ def verified_add_student():
         return render_template("add_student.html", schoolInfo = schoolrow,clas=classRows,subjects = subject, classInfo=class_info[0])
     else:
         classrow = db.execute("SELECT * FROM :classes ", classes = tables["classes"])
-        return render_template("portfolio.html", schoolInfo = schoolrow, classData = classrow)
+        return render_class(class_id)
  
 @app.route("/confirm_details", methods=["POST"])
 def confirm_details():
@@ -1115,16 +1091,22 @@ def student_added():
     new = int(term_data[0]["noOfStudents"]) + 1
     db.execute("UPDATE :term_data SET noOfStudents = :no_of_students WHERE id=:id", term_data =tables["class_term_data"], no_of_students = new, id=class_id)
     for subject in single_subject:
-        db.execute("UPDATE :ca SET :col=:subject_score WHERE id=:id",ca = tables["ca"], col=str(subject["id"]), subject_score = int(subject["ca"]),id=student_id)
-        db.execute("UPDATE :test SET :col=:subject_score WHERE id=:id",test = tables["test"], col=str(subject["id"]), subject_score = int(subject["test"]),id=student_id)
-        db.execute("UPDATE :exam SET :col=:subject_score WHERE id=:id", exam = tables["exam"], col=str(subject["id"]), subject_score = int(subject["exam"]),id=student_id )
-        db.execute("UPDATE :grades SET :col=:subject_grade WHERE id=:id", grades = tables["grade"], col=str(subject["id"]), subject_grade = grade(int(subject["exam"])+int(subject["test"])+int(subject["ca"])),id=student_id )
-        db.execute("UPDATE :mastersheet SET :col=:subject_score WHERE id=:id",mastersheet = tables["mastersheet"], col=str(subject["id"]), subject_score = int(subject["ca"])+int(subject["test"])+int(subject["exam"]), id=student_id)
+        ntotal = 0
+        db.execute("UPDATE :ca SET :col=:subject_score WHERE id=:id",ca = tables["ca"], col=str(subject["id"]), subject_score = subject["ca"],id=student_id)
+        db.execute("UPDATE :test SET :col=:subject_score WHERE id=:id",test = tables["test"], col=str(subject["id"]), subject_score = subject["test"],id=student_id)
+        db.execute("UPDATE :exam SET :col=:subject_score WHERE id=:id", exam = tables["exam"], col=str(subject["id"]), subject_score = subject["exam"],id=student_id )
+        if subject["ca"]:
+            ntotal = ntotal + int(subject["ca"])
+        if subject["test"]:
+            ntotal = ntotal + int(subject["test"])
+        if subject["exam"]:
+            ntotal = ntotal + int(subject["exam"])
+        db.execute("UPDATE :mastersheet SET :col=:subject_score WHERE id=:id",mastersheet = tables["mastersheet"], col=str(subject["id"]), subject_score = ntotal, id=student_id)
+        db.execute("UPDATE :grades SET :col=:subject_grade WHERE id=:id", grades = tables["grade"], col=str(subject["id"]), subject_grade = grade(ntotal),id=student_id )
+
     add_student(student_id, class_id)
-    rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=tables["school_id"])
-    classRows = db.execute("SELECT * FROM :classes ",classes = tables["classes"])
     # return classlist.html
-    return render_template("portfolio.html", schoolInfo = rows, clas= classRows)
+    return render_class(class_id)
 
 @app.route("/edit_class", methods=["GET"])
 def edit_class():
@@ -1145,9 +1127,7 @@ def verified_admin():
     if check_password_hash(schoolrow[0]["admin_password"], password ):
         return render_template("edit_class.html", schoolInfo = schoolrow, classData=classrow)
     else:
-        rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
-        classrows = db.execute("SELECT * FROM :classes ", classes = tables["class_term_data"])
-        return render_template("portfolio.html", schoolInfo = rows, clas = classrows)
+        return render_class(class_id)
 
 @app.route("/edited_class", methods=["POST"])
 def edited_class():
