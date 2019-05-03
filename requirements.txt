@@ -58,4 +58,47 @@
   </div>
         <button  type="submit" class="sign-in" name = "result" value = "{{classData[0]["id"]}}">make result</button>
   </form>
-{% endblock %}
+{% endblock 
+
+
+$(function() {
+    $('#verify_student').bind('click', function() {
+  // Stop form from submitting normally
+  event.preventDefault();
+
+  if($('#password').val() ==""){
+    alert("provide admin or class password");
+  }
+
+  else{
+      $.post( $SCRIPT_ROOT + '/verify_password',{
+        password: $('#password').val(),class_id: $('#verify_student').val()
+      }, function(data) {
+          if (data == "false")
+          {alert("password incorrect,password must be admin or class password")}
+          else{$("#add_student").submit();
+};
+      });};
+      });
+});
+
+
+$(function() {
+    $('#add_button').bind('click', function() {
+  // Stop form from submitting normally
+  event.preventDefault();
+
+
+  if($('#surname').val() ==""){
+    alert("provide the student's surname");
+  }
+
+  else if($('#firstname').val() ==""){
+    alert("provide the student's surname");
+  }
+
+  else{
+        $("#add_student_form").submit();
+      }
+      });
+});

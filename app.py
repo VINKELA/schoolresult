@@ -253,6 +253,22 @@ def subject_check():
     else:
         return "true"
 
+
+
+@app.route("/editclass_check", methods=["POST"])
+def editclass_check():
+    class_id = str(request.form.get("class_id"))
+    password = request.form.get("password")
+    tables = database(class_id)
+    # Query database for username
+    class_row = db.execute("SELECT * FROM :session_data WHERE id =:id", session_data = tables["session_data"], id=class_id)
+    rows = db.execute("SELECT * FROM school WHERE id =:id", id=session["user_id"])
+    if not check_password_hash(rows[0]["admin_password"],password) and not check_password_hash(class_row[0]["password"],password ):
+        return "false"
+    else:
+        return "true"
+
+
 @app.route("/username_check", methods=["POST"])
 def register_check():
     if request.method == "POST":
@@ -545,10 +561,6 @@ def confirm_classlist():
         all_students.append((request.form.get(surname), request.form.get(firstname), request.form.get(othername), request.form.get(sex)))
     #return classlist.html
     return render_template("confirm_classlist.html",schoolInfo = rows, students= all_students )
-
-
-
-
 
 
 @app.route("/classCreated", methods=["POST"])
@@ -965,23 +977,12 @@ def verify_scoresheet():
     subjectrow = db.execute("SELECT * FROM :subjecttable WHERE id=:id",subjecttable = tables["subjects"], id=subject_id)
     return render_template("verify_scoresheet.html",sub_id=subject_id,  classData = classrow, schoolInfo=schoolrow)
     
-@app.route("/verify_teacher", methods=["GET"])
-def verify_teacher():
-    array_id = request.args.get("edit_student").split("_")
-    student_id = int(array_id[0])
-    class_id = int(array_id[1])
-    tables= database(class_id)
-    classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["classes"], classId = tables["class_id"])
-    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
-    classlist = db.execute("SELECT * FROM :classlist WHERE id=:id",classlist = tables["classlist"], id=student_id)
-    return render_template("verify_teacher.html",id=student_id,  classData = classrow, schoolInfo=schoolrow)
     
 @app.route("/edit_student", methods=["POST"])
 def edit_student():
     password = request.form.get("password")
-    array_id = str(request.form.get("edit_student")).split("_")
-    student_id = str(array_id[0])
-    class_id = str(array_id[1])
+    student_id = request.form.get("student_id")
+    class_id = request.form.get("class_id")
     tables= database(class_id)
     classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["session_data"], classId = tables["class_id"])
     schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
@@ -992,15 +993,23 @@ def edit_student():
         error= ' The admin or class password is incorrect.'
         return render_class(class_id, error)
 
-
 @app.route("/edited_student", methods=["POST"])
 def edited_student():
-    array_id = str(request.form.get("edit_student")).split("_")
-    student_id = int(array_id[0])
-    class_id = int(array_id[1])
+    student_id = request.form.get("student_id")
+    class_id = request.form.get("class_id")
     tables= database(class_id)
     surname = "s"+str(student_id)
+    if not request.form.get(surname):
+        error= "provide surname"
+        studentrow = db.execute("SELECT * FROM :classlist WHERE id=:id", classlist=tables["classlist"], id=student_id)
+        flash(error,'success')
+        return render_template("edit_student.html",id=student_id, schoolInfo = schoolrow, classData=classrow,student=studentrow[0])
     firstname = "f"+str(student_id)
+    if not request.form.get(firstname):
+        error= "provide firstname"
+        studentrow = db.execute("SELECT * FROM :classlist WHERE id=:id", classlist=tables["classlist"], id=student_id)
+        flash(error,'success')
+        return render_template("edit_student.html",id=student_id, schoolInfo = schoolrow, classData=classrow,student=studentrow[0])
     othername = "o"+str(student_id)
     sex = "g"+str(student_id)
     db.execute("UPDATE :classlist SET surname = :surname, firstname=:firstname, othername=:othername, sex=:sex WHERE id =:student_id", classlist = tables["classlist"], surname = request.form.get(surname).upper(),firstname =request.form.get(firstname).upper(), othername = request.form.get(othername).upper(), sex=request.form.get(sex), student_id= student_id)
@@ -1010,18 +1019,18 @@ def edited_student():
 
 @app.route("/unregister_student", methods=["POST"])
 def unregister_student():
-    array_id = str(request.form.get("unregister_student")).split("_")
-    student_id = int(array_id[0])
-    class_id = int(array_id[1])
+    student_id = request.form.get("student_id")
+    class_id = request.form.get("class_id")
     tables= database(class_id)
     remove_student(student_id, class_id)
     rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
     classrows = db.execute("SELECT * FROM :classes ", classes = tables["session_data"])
-    return render_class(class_id)
+    error="student deleted successfully"
+    return render_class(class_id,error)
 
 @app.route("/verify_add_student", methods=["POST"])
 def verify_add_student():
-   class_id = str(request.form.get("add_student"))
+   class_id = request.form.get("class_id")
    tables= database(class_id)
    classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["classes"], classId = tables["class_id"])
    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
@@ -1030,30 +1039,56 @@ def verify_add_student():
 
 @app.route("/verified_add_student", methods=["POST"])
 def verified_add_student():
+    class_id = request.form.get("class_id")
+    tables = database(class_id)
     password = request.form.get("password")
-    class_id = request.form.get("verify_add_student")
-    tables= database(class_id)
     schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
     classRows = db.execute("SELECT * FROM :class_data WHERE id=:id ",class_data = tables["session_data"], id=class_id)
     class_info = db.execute("SELECT * FROM :classes WHERE id=:id",classes=tables["classes"], id=class_id)
     #select all the subjects
     subject = db.execute("SELECT * FROM :class_subjects",class_subjects = tables["subjects"] )
     # return classlist.html
+    if not password:
+        error = "provide admin or class password"
+        flash(error,'success')
+        return render_template("verify_add_student.html", classData = classrow, schoolInfo=schoolrow)
+
     if check_password_hash(classRows[0]["password"], password) or check_password_hash(schoolrow[0]["admin_password"], password):
         return render_template("add_student.html", schoolInfo = schoolrow,clas=classRows,subjects = subject, classInfo=class_info[0])
     else:
         classrow = db.execute("SELECT * FROM :classes ", classes = tables["classes"])
-        return render_class(class_id)
+        error = "admin or class password incorrect"
+        return render_class(class_id, error)
  
 @app.route("/confirm_details", methods=["POST"])
 def confirm_details():
     single_details.clear()
     single_subject.clear()
-    class_id = request.form.get("button")
+    class_id = request.form.get("class_id")
     tables= database(class_id)
     class_session = db.execute("SELECT * FROM :class_s WHERE id=:id", class_s = tables["session_data"], id= class_id )
     single_details["class_id"] = class_id
     single_details["class_name"] = class_session[0]["classname"]
+    if not request.form.get("surname"):
+        error = "you must provide students surname"
+        schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+        classRows = db.execute("SELECT * FROM :class_data WHERE id=:id ",class_data = tables["session_data"], id=class_id)
+        class_info = db.execute("SELECT * FROM :classes WHERE id=:id",classes=tables["classes"], id=class_id)
+        #select all the subjects
+        subject = db.execute("SELECT * FROM :class_subjects",class_subjects = tables["subjects"] )
+        flash(error,'success')
+        return render_template("add_student.html", schoolInfo = schoolrow,clas=classRows,subjects = subject, classInfo=class_info[0])
+
+
+    if not request.form.get("firstname"):
+        error = "you must provide students firstname"
+        schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+        classRows = db.execute("SELECT * FROM :class_data WHERE id=:id ",class_data = tables["session_data"], id=class_id)
+        class_info = db.execute("SELECT * FROM :classes WHERE id=:id",classes=tables["classes"], id=class_id)
+        #select all the subjects
+        subject = db.execute("SELECT * FROM :class_subjects",class_subjects = tables["subjects"] )
+        flash(error,'success')
+        return render_template("add_student.html", schoolInfo = schoolrow,clas=classRows,subjects = subject, classInfo=class_info[0])
     single_details["surname"] = request.form.get("surname")
     single_details["firstname"] = request.form.get("firstname")
     single_details["othername"] = request.form.get("othername")

@@ -407,7 +407,6 @@ def add_student(student_id, class_id):
 	failed = 0
 	new_total = 0
 	for subject in subjects:
-		#get students grade in this subject
 		student_total = student_total + int(totals[0][str(subject["id"])])
 		the_grade = student_grade[0][str(subject["id"])]
 		if the_grade == "F":

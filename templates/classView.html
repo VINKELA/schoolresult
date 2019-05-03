@@ -32,7 +32,8 @@
     <div class="col">
 
     <form action ="/verify_add_student" method = "post">
-        <button  type="submit" class="sign-in" name = "add_student" value = "{{classData[0]["id"]}}">add student</button>
+      <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
+        <button  type="submit" class="sign-in"  >add student</button>
   </form>
 </div>
 <div class="col">
