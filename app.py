@@ -1199,3 +1199,11 @@ def delete_class():
     classrows = db.execute("SELECT * FROM :classes ", classes = tables["classes"])
     return render_template("portfolio.html", schoolInfo = rows, clas = classrows)
 
+@app.route("/verify_edit_student", methods=["GET"])
+def verify_edit_student():
+   class_id = request.args.get("class_id")
+   student_id = request.args.get("student_id")
+   tables= database(class_id)
+   classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["classes"], classId = tables["class_id"])
+   schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+   return render_template("verify_teacher.html", classData = classrow, schoolInfo=schoolrow, id = student_id)

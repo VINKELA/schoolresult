@@ -5,7 +5,9 @@
 result sheet
 {% block main %}
 <div id="resultsheet">
-<h1>{{class_list[0]["surname"]}} {{class_list[0]["firstname"]}} {{class_list[0]["othername"]}}  class: {{classData[0]["classname"]}}</h1>
+<span id="result_details"><p>name: {{class_list[0]["surname"]}} {{class_list[0]["firstname"]}} {{class_list[0]["othername"]}}</p>  
+<P>class: {{classData[0]["classname"]}}</P>
+<P>gender: {{class_list[0]["sex"]}}</P></span>
    <table class = "table table-striped">
      <thead>
        <th>no</th>

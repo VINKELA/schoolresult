@@ -26,6 +26,9 @@ edit student details
 <div class="row">
 <div class="col">
   <div class="col"></div><button  class="sign-in" type="submit"  id="edit_student_button">Submit</button></div>
+  <input type="hidden" name="student_id" value="{{student_id}}"/>
+  <input type="hidden" name="class_id" value="{{classData[0]["id"]}}"/> 
+
  </form>
  <form action="/unregister_student" method="post"><div class="col"><button name="unregister_student" class="sign-in" type="submit">DELETE STUDENT</button></div>
   <input type="hidden" name="student_id" value="{{student_id}}"/>

@@ -670,6 +670,11 @@ input > .scoresheet{
 #resultsheet{
 	margin-top:10px;
 }
+#result_details{
+	text-align: left;
+	letter-spacing: 5px;
+	font-size: 20px;
+}
 
 #footer{
 	background-color: #a0da4f;

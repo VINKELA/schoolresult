@@ -2,7 +2,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-verify scoresheet
+verify teacher
 {% endblock %}
 
 {% block main %}
@@ -13,10 +13,8 @@ verify scoresheet
 
 <form action="/edit_student" method="post" id="verify_teacher_form">            
 <input type="password" name="password" id="password"placeholder="password" />
-<input type="hidden" name="class_id" id="id" 
-value="{{class_id}}"/>
-<input type="hidden" name="student_id"
-value="{{student_id}}"/>
+<input type="hidden" name="class_id" id="id" value="{{class_id}}"/>
+<input type="hidden" name="student_id" value="{{student_id}}"/>
 
 <button class="sign-in" id="verify_teacher">VERIFY </button>
 </form>

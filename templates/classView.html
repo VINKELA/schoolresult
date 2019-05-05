@@ -21,7 +21,7 @@
       {% set button_id = student_id+"_"+class_id %}
     <tr>
       <td>{{loop.index}}</td>
-      <td>{{data["surname"]}} {{data["firstname"]}} {{data["othername"]}}<a href="/verify_teacher?edit_student={{button_id}}"> edit</a></td>
+      <td>{{data["surname"]}} {{data["firstname"]}} {{data["othername"]}}<a href="/verify_edit_student?student_id={{student_id}}&&class_id={{class_id}}"> edit</a></td>
       <td><form method="post" action="/result_sheet"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}">VEIW RESULT</button>
 </form></td>
     </tr>

@@ -434,9 +434,10 @@ def add_student(student_id, class_id):
 		#recalculate subject average
 		new_average = new_total / int(class_details[0]["noOfStudents"])
 		db.execute("UPDATE :subjects SET class_average = :new WHERE id = :id", subjects=tables["subjects"], new= new_average, id =subject["id"]) 
-	student_average = student_total/len(subjects)
-	db.execute("UPDATE :mastersheet SET average = :new WHERE id=:id", mastersheet=tables["mastersheet"], new=student_average, id=student_id)
-	db.execute("UPDATE :mastersheet SET total_score = :new WHERE id=:id", mastersheet=tables["mastersheet"], new=student_total, id=student_id)
-	assign_student_position(class_id)
-	for subject in subjects:
-		assign_subject_position(class_id, subject["id"])
+	if len(subjects) > 	0:
+		student_average = student_total/len(subjects)
+		db.execute("UPDATE :mastersheet SET average = :new WHERE id=:id", mastersheet=tables["mastersheet"], new=student_average, id=student_id)
+		db.execute("UPDATE :mastersheet SET total_score = :new WHERE id=:id", mastersheet=tables["mastersheet"], new=student_total, id=student_id)
+		assign_student_position(class_id)
+		for subject in subjects:
+			assign_subject_position(class_id, subject["id"])

@@ -3,7 +3,7 @@ $(function() {
   // Stop form from submitting normally
   event.preventDefault();
   if($('#password').val() == ""){
-    alert("you must provide a username");
+    alert("provide password");
   }
 
  else{
