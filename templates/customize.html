@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{{classData[0]["classname"]}}
+{% endblock %}
+
+{% block main %}
+<form>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>setting</th>
+            <th>value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                add school email
+            </td>
+            <td>
+                <input type="checkbox" name="email" id="email">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                cascore
+            </td>
+            <td>
+                <input type="checkbox" name="ca" id="ca">
+            </td>
+        </tr>
+        <tr>
+            <td>testscore</td>
+            <td><input type="checkbox" name="test" id="test"></td>
+        </tr>
+        <tr>
+            <td>examscore</td>
+            <td><input type="checkbox" name="exam" id="exam"></td>
+        </tr>
+        <tr>
+            <td>class average for each subject</td>
+            <td><input type="checkbox" name="" id=""></td>
+        </tr>
+        <tr>
+            <td>subject position</td>
+            <td><input type="checkbox" name="" id=""></td>
+        </tr>
+        <tr>
+            <td>grade</td>
+            <td><input type="checkbox" name="" id=""></td>
+        </tr>
+        <tr>
+            <td>teachers initials</td>
+            <td><input type="checkbox" name="" id=""></td>
+        </tr>
+        <tr>
+                <td>total score</td>
+                <td><input type="checkbox" name="" id=""></td>
+            </tr>
+        <tr>
+            <td>average score</td>
+            <td><input type="checkbox" name="" id=""></td>
+        </tr>
+        <tr>
+            <td>position</td>
+            <td><input type="checkbox" name="" id=""></td>
+        </tr>
+        <tr>
+            <td>no of students in class</td>
+            <td><input type="checkbox" name="" id=""></td>
+        </tr>
+        <tr>
+            <td>general behaivour box</td>
+            <td><input type="checkbox" name="" id=""></td>
+        </tr>
+        <tr>
+            <td>psychomotor box</td>
+            <td><input type="checkbox" name="" id=""></td>
+        </tr>
+        <tr>
+            <td>comment line for teacher</td>
+            <td><input type="checkbox" name="" id=""></td>
+        </tr>
+            
+        <tr>
+            <td>comment line for principal</td>
+            <td><input type="checkbox" name="" id=""></td>
+        </tr>
+        <tr>
+            <td>teachers signature</td>
+            <td><input type="checkbox" name="" id=""></td>
+        </tr>
+               
+        <tr>
+                <td>principal signature</td>
+                <td><input type="checkbox" name="" id=""></td>
+        </tr>
+        <tr>
+                <td>choose text color</td>
+                <td><select aria-required="true">
+                    <option>black</option>
+                    <option>white</option>
+                    <option>blue</option>
+                    <option >red</option>
+                    </select>
+                    <div class="arrow"></div>
+                </td>
+                   </tr>
+        <tr>
+                <td>choose line color</td>
+                <td><select aria-required="true">
+                        <option>black</option>
+                        <option>white</option>
+                        <option>blue</option>
+                        <option >red</option>
+                        </select>
+                        <div class="arrow"></div>
+                </td>
+        </tr>
+        <tr>
+                <td>use red color to mark failure</td>
+                <td><input type="checkbox" name="" id=""></td>
+        </tr>
+        <tr>
+                <td>use green color to mark success</td>
+                <td><input type="checkbox" name="" id=""></td>
+        </tr>
+    </tbody>
+</table>
+<div class="form-w3ls">
+
+        <button class="sign-in"  type="submit">Submit</button></div>
+</form>
+{% endblock %}
+
+

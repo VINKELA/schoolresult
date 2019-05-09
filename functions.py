@@ -239,7 +239,7 @@ def render_class(class_id, error=None):
 def render_portfolio(error=None):
     tables = database(0)
     rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
-    classrows = db.execute("SELECT * FROM :session_data ", classes = tables["session_data"])
+    classrows = db.execute("SELECT * FROM :session_data ", session_data = tables["session_data"])
     if error:
     	flash(error,'failure')
     return render_template("portfolio.html", schoolInfo = rows, classData = classrows, error=error)

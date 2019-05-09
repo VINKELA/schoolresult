@@ -185,7 +185,10 @@ def register():
         confirm_url = url_for('confirm_email', token=token, _external=True)
         html = render_template('confirm_email.html', confirm_url=confirm_url, password = general_password)
         subject = "Please confirm your email"
-        send_email(request.form.get("email"), subject, html, 'orjikalukelvin@gmail.com')
+        try:
+            send_email(request.form.get("email"), subject, html, 'orjikalukelvin@gmail.com')
+        except Exception as e:
+            print(e)
         db.execute("INSERT INTO school (school_name, email,username, password,admin_password,current_session,current_term, registered_on) VALUES (:schoolname, :email, :username, :hash,  :adminPassword,:current_session,:term, :registered_on)", schoolname = request.form.get("school_name").upper(), email= request.form.get("email").lower(), username = request.form.get("username").lower(), hash = generate_password_hash(general_password), adminPassword = generate_password_hash(request.form.get("password")),current_session = request.form.get("school_session"),term=request.form.get("term"), registered_on = datetime.datetime.now())
         # Query database for username
         rows = db.execute("SELECT * FROM school WHERE username = :username",username=request.form.get("username").lower())
@@ -238,7 +241,10 @@ def resend_confirmation():
     confirm_url = url_for('confirm_email', token=token, _external=True)
     html = render_template('confirm_email.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
-    send_email(user[0]["email"], subject, html,'classresultest@gmail.com')
+    try:
+        send_email(user[0]["email"], subject, html,'classresultest@gmail.com')
+    except Exception as e:
+        print(e)
     flash('A new confirmation email has been sent.', 'success')
     return redirect('/unconfirmed')
 
@@ -377,7 +383,10 @@ def change_password():
         confirm_url = url_for('password_changed', token=token, _external=True)
         html = render_template('password.html', confirm_url=confirm_url)
         subject = "change password"
-        send_email(request.form.get("email"), subject, html, 'classresultest@gmail.com')
+        try:
+            send_email(request.form.get("email"), subject, html, 'classresultest@gmail.com')
+        except Exception as e:
+            print(e)
         error = "follow the link sent to "+request.form.get("email") +" to change password"
         return render_template("login.html", error=error)
     else:
@@ -597,7 +606,10 @@ def classCreated():
     # send email to admin about subject scoresheet
     html = render_template('new_class.html',classInfo = classRow)
     subject = classRow[0]["classname"]+" created for  "+ classRow[0]["section"]+" section"
-    send_email(rows[0]["email"], subject, html, 'classclass_term_dataest@gmail.com')
+    try:
+        send_email(rows[0]["email"], subject, html, 'classclass_term_dataest@gmail.com')
+    except Exception as e:
+        print(e)
     # return classlist.html
     return render_class(classId)
 
@@ -805,7 +817,10 @@ def submitted():
     # send email to admin about subject scoresheet
     html = render_template('new_score.html',subject = subject_info, class_info=classRows[0])
     subject = subject_info["subject"]+" scoreesheet submitted for  "+ classRows[0]["classname"]
-    send_email(rows[0]["email"], subject, html, 'classresultest@gmail.com')
+    try:
+        send_email(rows[0]["email"], subject, html, 'classresultest@gmail.com')
+    except Exception as e:
+        print(e)
     classRows = db.execute("SELECT * FROM :session_data ",session_data = tables["session_data"])
     error = subject_info["subject"]+" scoresheet submitted successfully"
     # return classlist.html
@@ -1027,6 +1042,39 @@ def unregister_student():
     classrows = db.execute("SELECT * FROM :classes ", classes = tables["session_data"])
     error="student deleted successfully"
     return render_class(class_id,error)
+
+@app.route("/verify_customize", methods=["POST"])
+def verify_customize():
+   class_id = request.form.get("class_id")
+   tables= database(class_id)
+   classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["classes"], classId = tables["class_id"])
+   schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+   return render_template("verify_customize.html", classData = classrow, schoolInfo=schoolrow)
+
+@app.route("/verified_customize", methods=["POST"])
+def verified_customize():
+    class_id = request.form.get("class_id")
+    tables = database(class_id)
+    password = request.form.get("password")
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+    classRows = db.execute("SELECT * FROM :class_data WHERE id=:id ",class_data = tables["session_data"], id=class_id)
+    class_info = db.execute("SELECT * FROM :classes WHERE id=:id",classes=tables["classes"], id=class_id)
+    #select all the subjects
+    subject = db.execute("SELECT * FROM :class_subjects",class_subjects = tables["subjects"] )
+    # return classlist.html
+    if not password:
+        error = "provide admin or class password"
+        flash(error,'success')
+        return render_template("verify_customize.html", classData = classrow, schoolInfo=schoolrow)
+
+    if check_password_hash(classRows[0]["password"], password) or check_password_hash(schoolrow[0]["admin_password"], password):
+        return render_template("customize.html", schoolInfo = schoolrow,classData=classRows,subjects = subject, classInfo=class_info[0])
+    else:
+        classrow = db.execute("SELECT * FROM :classes ", classes = tables["classes"])
+        error = "admin or class password incorrect"
+        return render_class(class_id, error)
+
+
 
 @app.route("/verify_add_student", methods=["POST"])
 def verify_add_student():

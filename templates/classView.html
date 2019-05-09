@@ -37,8 +37,9 @@
   </form>
 </div>
 <div class="col">
-      <form action ="/" method = "post">
-        <button  type="submit" class="sign-in" name = "customize_result" value = "{{classData[0]["id"]}}">customize result</button>
+      <form action ="/verify_customize" method = "post">
+        <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
+        <button  type="submit" class="sign-in">customize result</button>
   </form>
 </div>
 
@@ -67,16 +68,9 @@
      {% endfor %}
      </tbody>
      </table>
-     <div class=" form-w3ls row">
-       <div class="col">
+     <div class=" form-w3ls">
          <form action="/" method="post"><button class="sign-in" name="scoresheet" value="{{scoresheet_id}}">MASTERSHEET </button>
          </form>
-       </div>
-         <div class="col">
-         <form action="/" method="post"><button class="sign-in" name="scoresheet" value="{{scoresheet_id}}">VEIW </button>
-         </form>
-       </div>
-
      </div>
 
 {% endblock %}
