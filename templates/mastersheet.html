@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{{classData[0]["classname"]}}
+{% endblock %}
+
+{% block main %}
+
+ <table id="classview" class = "table table-sm">
+  <thead>
+    <tr>
+      <th>NO</th>
+      <th><h1><b>{{classData[0]["classname"].upper()}}</b></h1></th>
+    
+      {%for subject in subjectData%}<th colspan="5" scope ="col">{{subject["name"].upper()}}</th>{%endfor%}
+      <th>TOTAL</th>
+      <th>AVERAGE</th>
+      <th>POSITION</th>
+
+
+
+  </tr>
+  </thead>
+      
+  <tbody>
+       <tr>
+      <td colspan="2"></td>
+      {%for subject in subjectData%}<td>CA</td><td>TEST</td><td>EXAM</td><td>TOTAL</td><td>POSITION</td>{%endfor%}
+      <td colspan="3"></td>
+    </tr>
+      {%for data in mastersheet%}
+    <tr>
+      <td>{{data["id"]}}</td>
+      <td>{{class_list[data["id"]-1]["surname"]}} {{class_list[data["id"]-1]["firstname"]}} {{class_list[data["id"]-1]["othername"]}}</td>
+      {% for  subject in subjectData%}
+      {%set subject_id = subject["id"]|string%}
+      <td>{{caData[data["id"]-1][subject_id]}}</td>
+      <td>{{testData[data["id"]-1][subject_id]}}</td>
+      <td>{{examData[data["id"]-1][subject_id]}}</td>
+      <td>{{data[subject_id]}}</td>
+      <td>{{subject_position[data["id"]-1][subject_id]}}</td>
+      {%endfor%}
+      <td>{{data["total_score"]}}</td>
+      <td>{{data["average"]}}</td>
+      <td>{{data["position"]}}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+     <td colspan="2"></td>
+     {%for subject in subjectData%}
+     <td colspan="5">class average: {{subject["class_average"]}} </td>
+     {%endfor%}
+   </tr>
+  </tbody>
+  </table>
+ 
+{% endblock %}

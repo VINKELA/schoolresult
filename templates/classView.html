@@ -69,8 +69,11 @@
      </tbody>
      </table>
      <div class=" form-w3ls">
-         <form action="/" method="post"><button class="sign-in" name="scoresheet" value="{{scoresheet_id}}">MASTERSHEET </button>
-         </form>
+      <form action ="/mastersheet" method = "post">
+        <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
+        <button class="sign-in" type="submit">MASTERSHEET </button>
+      </form>
+
      </div>
 
 {% endblock %}

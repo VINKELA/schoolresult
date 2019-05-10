@@ -1255,3 +1255,21 @@ def verify_edit_student():
    classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["classes"], classId = tables["class_id"])
    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
    return render_template("verify_teacher.html", classData = classrow, schoolInfo=schoolrow, id = student_id)
+
+@app.route("/mastersheet", methods=["POST"])
+@login_required
+def mastersheet():
+    class_id = request.form.get("class_id")
+    tables = database(class_id)
+    classrow = db.execute("SELECT * FROM :session_data WHERE id = :classId", session_data = tables["session_data"], classId = tables["class_id"])
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = session["user_id"])
+    subjectrow = db.execute("SELECT * FROM :subjecttable",subjecttable = tables["subjects"])
+    classlistrow = db.execute("SELECT * FROM :classlist",classlist = tables["classlist"])
+    carow = db.execute("SELECT * FROM :ca",ca = tables["ca"])
+    testrow = db.execute("SELECT * FROM :te",te = tables["test"])
+    examrow = db.execute("SELECT * FROM :ex",ex = tables["exam"])
+    mastersheet_rows = db.execute("SELECT * FROM :master", master= tables["mastersheet"])
+    subject_p = db.execute("SELECT * FROM :subjectposition", subjectposition = tables["subject_position"])
+    return render_template("mastersheet.html",caData = carow, testData = testrow, examData = examrow, classData = classrow, schoolInfo = schoolrow, subjectData=subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position= subject_p)
+
+
