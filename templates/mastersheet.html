@@ -29,16 +29,18 @@
       <td colspan="3"></td>
     </tr>
       {%for data in mastersheet%}
+      {%set index =  loop.index - 1%}
+
     <tr>
       <td>{{data["id"]}}</td>
-      <td>{{class_list[data["id"]-1]["surname"]}} {{class_list[data["id"]-1]["firstname"]}} {{class_list[data["id"]-1]["othername"]}}</td>
+      <td>{{class_list[index]["surname"]}} {{class_list[index]["firstname"]}} {{class_list[index]["othername"]}}</td>
       {% for  subject in subjectData%}
       {%set subject_id = subject["id"]|string%}
-      <td>{{caData[data["id"]-1][subject_id]}}</td>
-      <td>{{testData[data["id"]-1][subject_id]}}</td>
-      <td>{{examData[data["id"]-1][subject_id]}}</td>
+      <td>{{caData[index][subject_id]}}</td>
+      <td>{{testData[index][subject_id]}}</td>
+      <td>{{examData[index][subject_id]}}</td>
       <td>{{data[subject_id]}}</td>
-      <td>{{subject_position[data["id"]-1][subject_id]}}</td>
+      <td>{{subject_position[index][subject_id]}}</td>
       {%endfor%}
       <td>{{data["total_score"]}}</td>
       <td>{{data["average"]}}</td>
