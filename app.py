@@ -780,7 +780,7 @@ def submitted():
         new_total = student_row[0]["total_score"] + total_score
         student_grade = grade(total_score)
         subject_total = subject_total + total_score
-        grade_col = "no_of_"+str(student_grade).upper()
+        grade_col = "no_of_"+str(student_grade[0]).upper()
         new_average = new_total / class_info[0]["noOfSubjects"]
         if int(new_average) > 40:
             term_passed = term_passed + 1

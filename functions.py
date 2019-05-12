@@ -65,22 +65,28 @@ def login_required(f):
 def initials (name):
     return name[0].upper()
 # returns the grade of any given score
-def grade(score,grading_type="WAEC"):
+def grade(score,grading_type="WAEC",a_min=False, a_max=False,b_min=False,b_max=False,c_min=False,c_max=False,d_max=False,d_min=False,e_max=False,e_min=False):
 	score = int(score)
 	if grading_type == "WAEC":
 		if score < 40:
-			score_grade = "F"
+			score_grade = "F9"
 		elif score > 39 and score < 46:
-			score_grade = "E"
-		elif score > 44 and score < 51:
-			score_grade = "D"
-		elif score > 49 and score < 61:
-			score_grade = "C"
-		elif score > 59 and score < 75:
-			score_grade = "B"
+			score_grade = "E8"
+		elif score > 44 and score < 50:
+			score_grade = "D7"
+		elif score > 49 and score < 55:
+			score_grade = "C6"
+		elif score > 54 and score < 60:
+			score_grade = "C5"
+		elif score > 59 and score < 65:
+			score_grade = "C4"
+		elif score > 64 and score < 70:
+			score_grade = "B3"
+		elif score > 69 and score < 75:
+			score_grade = "B2"
 		else:
-			score_grade = "A"
-	else:
+			score_grade = "A1"
+	elif grading_type == "SUBEB":
 		if score < 29:
 			score_grade = "F"
 		elif score > 29 and score < 40:
@@ -93,7 +99,21 @@ def grade(score,grading_type="WAEC"):
 			score_grade = "B"
 		else:
 			score_grade = "A"
-
+	else:
+		if score > (e_min - 1) and score < (e_max + 1):
+			score_grade = "E"
+		if score > (d_min - 1) and score < (d_max + 1):
+			score_grade ="D"
+		if score > (c_min -1) and score < (c_max + 1):
+			score_grade = "C"
+		if score > (b_min - 1) and score < (b_max + 1):
+			score_grade = "B"
+		if score > (a_min - 1) and score < (a_max + 1):
+			score_grade = "A"
+		if score < e_min:
+			score_grade = "F"
+		else:
+			score_grade = "Non"
 	return score_grade
 
 # forms the result data given the id of the class
@@ -134,7 +154,7 @@ def make_student_result(student_id, class_id):
 		sub_total =  db.execute("SELECT * FROM :mastersheet WHERE id=:id ",mastersheet = tables["mastersheet"], id = student_id)
 		sub_total = int(sub_total[str(subject['id'])])
 		if sub_total:
-			sub_grade = grade(sub_total)
+			sub_grade = grade(sub_total[0])
 			db.execute("UPDATE :grade SET :subject =:sub_grade WHERE id = :id ", grade = tables["grade"], subject = str(subject["id"]), sub_grade = sub_total, id = student_id)
 
 			if sub_grade ==  "A":
@@ -193,23 +213,23 @@ def make_subject_result(subject_id, class_id):
     		total = db.execute("SELECT * FROM :mastersheet WHERE id=:id", mastersheet = tables["mastersheet"], id = student["id"])
     		total = total[0][subject_col]
     		sub_grade = grade(total)
-    		if total < 40:
+    		if sub_grade[0] == "F":
     			db.execute("UPDATE :subject SET no_of_fails = no_of_fails + 1", subject = tables["subjects"])
     		else:
     			db.execute("UPDATE :subject SET no_of_pass = no_of_pass + 1", subject = tables["subjects"])
-    		if sub_grade ==  "A":
+    		if sub_grade[0] ==  "A":
     			db.execute("UPDATE :subject SET :no_of_grade =:no_of_grade + 1 WHERE id = :id ", subject = tables["subjects"], no_of_grade = "no_of_A",  id = subject_id)
-    		elif sub_grade ==  "B":
+    		elif sub_grade[0] ==  "B":
     			db.execute("UPDATE :subject SET :no_of_grade =:no_of_grade + 1 WHERE id = :id ", subject = tables["subjects"], no_of_grade = "no_of_B",  id = subject_id)
-    		elif sub_grade ==  "C":
+    		elif sub_grade[0] ==  "C":
     			db.execute("UPDATE :subject SET :no_of_grade =:no_of_grade + 1 WHERE id = :id ", subject = tables["subjects"], no_of_grade = "no_of_C",  id = subject_id)
-    		elif sub_grade ==  "D":
+    		elif sub_grade[0] ==  "D":
     			#increase no of D for student
     			db.execute("UPDATE :subject SET :no_of_grade =:no_of_grade + 1 WHERE id = :id ", subject = tables["subjects"], no_of_grade = "no_of_D",  id = subject_id)
-    		elif sub_grade ==  "E":
+    		elif sub_grade[0] ==  "E":
     			#increase no of E for student
     			db.execute("UPDATE :subject SET :no_of_grade =:no_of_grade + 1 WHERE id = :id ", subject = tables["subjects"], no_of_grade = "no_of_E",  id = subject_id)
-    		elif sub_grade ==  "F":
+    		elif sub_grade[0] ==  "F":
     			db.execute("UPDATE :subject SET :no_of_grade =:no_of_grade + 1 WHERE id = :id ", subject = tables["subjects"], no_of_grade = "no_of_F",  id = subject_id)
     		i = i + 1
     subject_row = db.execute("SELECT * FROM :subject WHERE id = :id", subject = tables["subjects"], id = subject_id)
@@ -364,12 +384,12 @@ def remove_student(student_id, class_id,):
 	for subject in subjects:
 	#get students grade in this subject
 		the_grade = student_grade[0][str(subject["id"])]
-		if the_grade == "F":
+		if the_grade[0] == "F":
 			db.execute("UPDATE :subjects SET no_failed = :new WHERE id = :id", subjects=tables["subjects"], new = int(subject["no_failed"])-1, id =subject["id"] ) 
 		else:
 			db.execute("UPDATE :subjects SET no_passed = :new WHERE id = :id", subjects=tables["subjects"], new = int(subject["no_passed"])-1, id =subject["id"] ) 
 	#form the column string for no_of_column
-		the_column = "no_of_"+str(the_grade)
+		the_column = "no_of_"+str(the_grade[0])
 		current = int(subject[the_column])
 		#subract 1 from that no_of_column in subjects
 		db.execute("UPDATE :subjects SET :no_of_grade = :new WHERE id = :id", subjects=tables["subjects"], no_of_grade=the_column,new=current -1, id =subject["id"] ) 
@@ -394,7 +414,6 @@ def remove_student(student_id, class_id,):
 		assign_subject_position(class_id, subject["id"])
 
 
-
 def add_student(student_id, class_id):
 	tables= database(class_id)
 	student_grade = db.execute("SELECT * FROM :grades WHERE id=:id", grades=tables["grade"], id=student_id)
@@ -408,7 +427,7 @@ def add_student(student_id, class_id):
 	new_total = 0
 	for subject in subjects:
 		student_total = student_total + int(totals[0][str(subject["id"])])
-		the_grade = student_grade[0][str(subject["id"])]
+		the_grade = student_grade[0][str(subject["id"])][0]
 		if the_grade == "F":
 			db.execute("UPDATE :subjects SET no_failed = :new WHERE id = :id", subjects=tables["subjects"], new = int(subject["no_failed"])+1, id =subject["id"] )
 			failed = failed + 1 
