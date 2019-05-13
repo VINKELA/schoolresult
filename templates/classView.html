@@ -22,7 +22,7 @@
     <tr>
       <td>{{loop.index}}</td>
       <td>{{data["surname"]}} {{data["firstname"]}} {{data["othername"]}}<a href="/verify_edit_student?student_id={{student_id}}&&class_id={{class_id}}"> edit</a></td>
-      <td><form method="post" action="/result_sheet"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}" target="_blank">VEIW RESULT</button>
+      <td><form method="post" action="/result_sheet" target="_blank"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}" target="_blank">VEIW RESULT</button>
 </form></td>
     </tr>
     {% endfor %}  
@@ -63,13 +63,13 @@
 
      <td>{{subject["name"].upper()}}</td>
      <td>{{ "%.2f"|format(subject["class_average"]|float) }}</td>
-     <td><form action="/scoresheet" method="post"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">VEIW </button></form></td>
+     <td><form action="/scoresheet" method="post" target="_blank"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">VEIW </button></form></td>
      </tr>
      {% endfor %}
      </tbody>
      </table>
      <div class=" form-w3ls">
-      <form action ="/mastersheet" method = "post">
+      <form action ="/mastersheet" method = "post" target="_blank">
         <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
         <button class="sign-in" type="submit">MASTERSHEET </button>
       </form>

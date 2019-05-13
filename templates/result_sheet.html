@@ -1,10 +1,7 @@
 
 <!DOCTYPE html>
-
 <html lang="en">
-
     <head>
-
         <!-- Required meta tags -->
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
@@ -20,11 +17,9 @@
         <!-- documentation at http://getbootstrap.com/docs/4.0/, alternative themes at https://bootswatch.com/4-alpha/ -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet"/>
           <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-          <link rel="stylesheet" href="/resources/demos/style.css">
           <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
           <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-        <link href="/static/css/styles.css" rel="stylesheet" media="all"/>
         <script src="/static/js/script.js"/></script>
 
         <link href="//fonts.googleapis.com/css?family=Old+Standard+TT:400,400i,700" rel="stylesheet">
@@ -43,34 +38,30 @@
 
         <!-- Custom Theme files -->
         <title>CLASS RESULT</title>
-
     </head>
-
-
 <body>
-<div id="resultsheet">
-<span id="result_details"><p>name: {{class_list[0]["surname"]}} {{class_list[0]["firstname"]}} {{class_list[0]["othername"]}}</p>  
-<P>class: {{classData[0]["classname"]}}</P>
-<P>gender: {{class_list[0]["sex"]}}</P></span>
+  <h4>{{schoolInfo[0]["school_name"].upper()}}</h4>
+<h6><p>NAME: {{class_list[0]["surname"].upper()}} {{class_list[0]["firstname"].upper()}} {{class_list[0]["othername"].upper()}}</p></h6>  
+<h6><P>CLASS: {{classData[0]["classname"].upper()}}</P></h6>
+<h6><P>GENDER: {{class_list[0]["sex"].upper()}}</P></h6>
+<h6><p>TERM: {{schoolInfo[0]["current_term"].upper()}}</p></h6>
+<h6><p>SESSION: {{schoolInfo[0]["current_session"].upper()}}</p></h6>
    <table class = "table table-striped">
      <thead>
-       <th>no</th>
-        <th>subject</th>
-        <th>ca</th>
-        <th>test</th>
-        <th>exam</th>
-        <th>total</th>
-        <th>grade</th>
-        <th>subject position</th>
+       <th>NO</th>
+        <th>SUBJECT</th>
+        <th>CA</th>
+        <th>TEST</th>
+        <th>EXAM</th>
+        <th>TOTAL</th>
+        <th>GRRADE</th>
+        <th>SUBJECT POSITION</th>
      </thead>
      <tbody>
      {% for subject in subjectData%}
      {% set subject_id = subject["id"]|string %}
-
-
      <tr>
      <td>{{loop.index}}</td>
-
      <td>{{subject["name"].upper()}}</td>
      <td>{{caData[0][subject_id]}}</td>
      <td>{{testData[0][subject_id]}}</td>
@@ -78,18 +69,12 @@
      <td>{{mastersheet[0][subject_id]}}</td>
      <td>{{gradeRows[0][subject_id]}}</td>
      <td>{{subject_position[0][subject_id]}}</td>
-
-
      </tr>
      {% endfor %}
-     <tr>
-         <td colspan="8">TOTAL:&nbsp; {{mastersheet[0]["total_score"]}} &nbsp;&nbsp;&nbsp;&nbsp; AVERAGE:&nbsp;{{ "%.2f"|format(mastersheet[0]["average"]|float) }} </td>
-     </tr>
-     <tr>
-         <td colspan="8"><h1>position:&nbsp;&nbsp;{{mastersheet[0]["position"]}} &nbsp;&nbsp;out of&nbsp;&nbsp; {{resultData["noOfStudents"]}}<P></P>&nbsp;&nbsp;NO OF SUBJECTS PASSED:&nbsp;&nbsp;&nbsp;{{mastersheet[0]["subject_passed"]}}&nbsp;&nbsp;&nbsp;NO OF SUBJECTS FAILED:&nbsp;&nbsp;&nbsp;{{mastersheet[0]["subject_failed"]}}</P><p>&nbsp;&nbsp;&nbsp;&nbsp;NO OF A'S&nbsp;&nbsp;{{gradeRows[0]["no_of_A"]}}&nbsp;&nbsp;NUMBER OF B'S: {{gradeRows[0]["no_of_B"]}}&nbsp;&nbsp;NUMBER OF C'S: {{gradeRows[0]["no_of_C"]}}&nbsp;&nbsp;NUMBER OF D'S: {{gradeRows[0]["no_of_D"]}}&nbsp;&nbsp;NUMBER OF E'S: {{gradeRows[0]["no_of_E"]}}&nbsp;&nbsp;NUMBER OF F'S: {{gradeRows[0]["no_of_F"]}}</p></h1>
-</td>
-     </tr>
      </tbody>
      </table>
-     </div>
-  </body>
+      <p>TOTAL SCORE: {{mastersheet[0]["total_score"]}}  AVERAGE: {{ "%.2f"|format(mastersheet[0]["average"]|float) }}</p> 
+        <p> POSITION: {{mastersheet[0]["position"]}} out of {{resultData["noOfStudents"]}}</p> 
+        <p> NUMBER OF SUBJECTS PASSED: {{mastersheet[0]["subject_passed"]}} NUMBER OF SUBJECTS FAILED: {{mastersheet[0]["subject_failed"]}}</p> 
+        <p>NUMBER OF A'S {{gradeRows[0]["no_of_A"]}}  NUMBER OF B'S: {{gradeRows[0]["no_of_B"]}} NUMBER OF C'S: {{gradeRows[0]["no_of_C"]}}  NUMBER OF D'S: {{gradeRows[0]["no_of_D"]}} NUMBER OF E'S: {{gradeRows[0]["no_of_E"]}} NUMBER OF F'S: {{gradeRows[0]["no_of_F"]}}</p>
+    </body>
