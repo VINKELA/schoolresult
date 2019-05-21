@@ -1,11 +1,10 @@
 {% extends "layout.html" %}
-
 {% block title %}
 {{classData[0]["classname"]}}
 {% endblock %}
-
 {% block main %}
-<form>
+<form method="POST" action="/customize">
+<input type="hidden" value="{{class_setting["id"]}}" name="class_id"/>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -16,147 +15,427 @@
     <tbody>
             <tr>
                     <td>choose grading type</td>
-                    <td><select aria-required="true">
+                    <td><select aria-required="true" name="grading_type" value="{{class_setting["grading_type"]}}">
                             <option>waec</option>
                             <option>subeb</option>
-                            <option>customize</option>
                             </select>
                             <div class="arrow"></div>
                     </td>
             </tr>
-        
+            <tr>
+                <td>background color</td>
+                <td><input name="background_color" type="color" value="{{class_setting["background_color"]}}"></td>
+            </tr>
+            <tr>
+                    <td>choose text color</td>
+                    <td>
+                        <input name="text_color" type="color" value="{{class_setting["text_color"]}}">
+                    </td>
+            </tr>
+            <tr>
+                    <td>line color</td>
+                    <td>
+                        <input name="line_color" type="color" value="{{class_setting["line_color"]}}">
+                    </td>
+            </tr>
+            <tr>
+                    <td>use color to mark failure</td>
+                    <td><input type="color" name="failure" value="{{class_setting["failure"]}}"></td>
+            </tr>
+            <tr>
+                    <td>use green color to mark success</td>
+                    <td><input type="color" name="success" value="{{class_setting["success"]}}"></td>
+            </tr>
+    
+            <tr>
+                <td>letter heading position</td>
+                <td><select aria-required="true" name="ld_position" value="{{class_setting["ld_position"]}}">
+                        <option>center</option>
+                        <option>left</option>
+                        <option>right</option>
+                        </select>
+                        <div class="arrow"></div>
+                </td>
+        </tr>
+
         <tr>
             <td>
-                add school email
+                letter heading font
             </td>
             <td>
-                <input type="checkbox" name="email" id="email">
+                <input type="number"  min="0" name="l_font" value="{{class_setting["l_font"]}}" >
             </td>
         </tr>
+        <tr>
+            <td>
+                letter heading font weight
+            </td>
+            <td>
+                <input type="number"  min="0" name="l_weight" value="{{class_setting["l_weight"]}}" >
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                letter heading color
+            </td>
+            <td>
+                <input type="color"   name="l_color" value="{{class_setting["l_color"]}}">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                letter heading font-size
+            </td>
+            <td>
+                <input type="number"  min="0" name="l_font-size" value="{{class_setting["l_fontsize"]}}" >
+            </td>
+        </tr>
+        <tr>
+            <td>
+                school details font
+            </td>
+            <td>
+                <input type="number"  min="0" name="sd_font" value="{{class_setting["sd_font"]}}" >
+            </td>
+        </tr>
+        <tr>
+            <td>
+                school details color
+            </td>
+            <td>
+                <input type="color"   name="sd_color" value="{{class_setting["sd_color"]}}">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                school details font-size
+            </td>
+            <td>
+                <input type="number"  min="0" name="sd_font-size" value="{{class_setting["sd_fontsize"]}}">
+            </td>
+        </tr>
+
+        <tr>
+            <td>school details position</td>
+            <td><select aria-required="true" name="sd_position" value="{{class_setting["sd_position"]}}">
+                    <option>center</option>
+                    <option>left</option>
+                    <option>right</option>
+                    </select>
+                    <div class="arrow"></div>
+            </td>
+    </tr>
+    <tr>
+        <td>
+            add school email
+        </td>
+        <td>
+            <input type="text"  name="sd_email" value="{{class_setting["sd_email"]}}">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            use admin email
+        </td>
+        <td>
+            <input type="checkbox"  name="admin_email" value="{{class_setting["admin_email"]}}">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            add address
+        </td>
+        <td>
+            <input type="text"  name="address" value="{{class_setting["address"]}}">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            add P.O BOX
+        </td>
+        <td>
+            <input type="text"  name="po_box" value="{{class_setting["po_box"]}}">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            add phone numbers
+        </td>
+        <td>
+            <input type="text"  name="phone" value="{{class_setting["phone"]}}">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            next term
+        </td>
+        <td>
+            <input type="date"  name="next_term" value="{{class_setting["next"]}}">
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            other information
+        </td>
+        <td>
+            <input type="text" " name="sd_other" value="{{class_setting["sd_other"]}}">
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            student details font
+        </td>
+        <td>
+            <input type="number"  min="0" name="std_font" value="{{class_setting["std_font"]}}">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            student details color
+        </td>
+        <td>
+            <input type="color"   name="std_color" value="{{class_setting["std_color"]}}">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            student details font-size
+        </td>
+        <td>
+            <input type="number"  min="0" name="std_font-size" value="{{class_setting["std_fontsize"]}}">
+        </td>
+    </tr>
+
+    <tr>
+        <td>student details position</td>
+        <td><select aria-required="true" name="std_position" value="{{class_setting["std_position"]}}">
+                <option>center</option>
+                <option>left</option>
+                <option>right</option>
+                </select>
+                <div class="arrow"></div>
+        </td>
+</tr>
+<tr>
+    <td>table type</td>
+    <td><select aria-required="true" name="table_type" value="{{class_setting["table_type"]}}">
+            <option>small </option>
+            <option>big</option>
+            <option>supper small</option>
+            </select>
+            <div class="arrow"></div>
+    </td>
+</tr>
+
         <tr>
             <td>
                 cascore
             </td>
             <td>
+                {%if class_setting["ca"]== 1%}
+                <input type="checkbox" name="ca" id="ca" value="{{class_setting["ca"]}}" checked>
+                {%else%}
                 <input type="checkbox" name="ca" id="ca">
+                {%endif%}
             </td>
         </tr>
         <tr>
             <td>testscore</td>
+            {%if class_setting["test"]== 1%}
+
+            <td><input type="checkbox" name="test" id="test" value="{{class_setting["test"]}}" checked></td>
+            {%else%}
             <td><input type="checkbox" name="test" id="test"></td>
+            {%endif%}
+
         </tr>
+        <tr>
+            <td>
+                combined test and ca as total ca
+            </td>
+            <td>
+                {%if class_setting["combined"]== 1%}
+
+                <input type="checkbox" name="combined" id="subject_comment" value="{{class_setting["combined"]}}" checked >
+                {%else%}
+
+                <input type="checkbox" name="combined" id="subject_comment">
+                {%endif%}
+
+            </td>
+        </tr>
+
         <tr>
             <td>examscore</td>
+            {%if class_setting["exam"]== 1%}
+            <td><input type="checkbox" name="exam" id="exam" value="{{class_setting["exam"]}}" checked></td>
+            {%else%}
             <td><input type="checkbox" name="exam" id="exam"></td>
+            {%endif%}
+
         </tr>
         <tr>
+            <td>subject_total</td>
+            {%if class_setting["subject_total"]== 1%}
+
+            <td><input type="checkbox" name="subject_total" id="subject_total" value="{{class_setting["subject_total"]}}" checked></td>
+            {%else%}
+
+            <td><input type="checkbox" name="subject_total" id="subject_total"></td>
+            {%endif%}
+
+        </tr>
+
+        <tr>
             <td>class average for each subject</td>
-            <td><input type="checkbox" name="" id=""></td>
+            {%if class_setting["class_average"]== 1%}
+            <td><input type="checkbox" name="class_average" value="{{class_setting["class_average"]}}" checked></td>
+            {%else%}
+            <td><input type="checkbox" name="class_average"></td>
+            {%endif%}
+
         </tr>
         <tr>
             <td>subject position</td>
-            <td><input type="checkbox" name="" id=""></td>
+            {%if class_setting["subject_position"]== 1%}
+            <td><input type="checkbox" name="subject_position" value="{{class_setting["subject_position"]}}" checked></td>
+            {%else%}
+            <td><input type="checkbox" name="subject_position"></td>
+            {%endif%}
+
         </tr>
         <tr>
             <td>grade</td>
-            <td><input type="checkbox" name="" id=""></td>
+            {%if class_setting["grade"]== 1%}
+            <td><input type="checkbox" name="grade" value="{{class_setting["grade"]}}" checked ></td>
+            {%else%}
+            <td><input type="checkbox" name="grade"></td>
+            {%endif%}
+
         </tr>
         <tr>
+            <td>subject comment</td>
+            {%if class_setting["subject_comment"]== 1%}
+            <td><input type="checkbox" name="subject_comment" value="{{class_setting["subject_comment"]}}" checked></td>
+            {%else%}
+            <td><input type="checkbox" name="subject_comment"></td>
+            {%endif%}
+
+        </tr>
+
+        <tr>
             <td>teachers initials</td>
-            <td><input type="checkbox" name="" id=""></td>
+            {%if class_setting["teachers_initials"]== 1%}
+            <td><input type="checkbox" name="teachers_initials" id="" value="{{class_setting["teachers_initials"]}}" checked></td>
+            {%else%}
+            <td><input type="checkbox" name="teachers_initials" id=""></td>
+            {%endif%}
+
         </tr>
         <tr>
                 <td>total score</td>
-                <td><input type="checkbox" name="" id=""></td>
+                {%if class_setting["total_score"]== 1%}
+                <td><input type="checkbox" name="total_score" id="" value="{{class_setting["total_score"]}}" checked></td>
+                {%else%}
+                <td><input type="checkbox" name="total_score" id=""></td>
+                {%endif%}
+
             </tr>
         <tr>
             <td>average score</td>
-            <td><input type="checkbox" name="" id=""></td>
+            {%if class_setting["average"]== 1%}
+            <td><input type="checkbox" name="average_score" id="" value="{{class_setting["average"]}}" checked></td>
+            {%else%}
+            <td><input type="checkbox" name="average_score" id=""></td>
+            {%endif%}
+
         </tr>
         <tr>
             <td>position</td>
-            <td><input type="checkbox" name="" id=""></td>
+            {%if class_setting["position"]== 1%}
+            <td><input type="checkbox" name="position" id="" value="{{class_setting["position"]}}" checked ></td>
+            {%else%}
+            <td><input type="checkbox" name="position" id=""></td>
+            {%endif%}
+
         </tr>
         <tr>
-            <td>no of students in class</td>
-            <td><input type="checkbox" name="" id=""></td>
+            <td>behaviour </td>
+            {%if class_setting["behaviour_box"]== 1%}
+            <td><input type="checkbox" name="behave" id="" value="{{class_setting["behaviour_box"]}}" checked></td>
+            {%else%}
+            <td><input type="checkbox" name="behave" id=""></td>
+            {%endif%}
+
         </tr>
-        <tr>
-            <td>general behaivour box</td>
-            <td><input type="checkbox" name="" id=""></td>
-        </tr>
+
         <tr>
             <td>psychomotor box</td>
-            <td><input type="checkbox" name="" id=""></td>
+            {%if class_setting["psychomotor_box"]== 1%}
+            <td><input type="checkbox" name="psychomotor_box" id="" value="{{class_setting["psychomotor_box"]}}" checked></td>
+            {%else%}
+            <td><input type="checkbox" name="psychomotor_box" id=""></td>
+            {%endif%}
+
         </tr>
         <tr>
-            <td>comment line for teacher</td>
-            <td><input type="checkbox" name="" id=""></td>
+            <td>number of comment line for teacher</td>
+            <td><input type="number" min="0"  name="teachers_line" id="" value="{{class_setting["teachers_line"]}}" ></td>
         </tr>
-            
         <tr>
-            <td>comment line for principal</td>
-            <td><input type="checkbox" name="" id=""></td>
+            <td>number of comment line for principal</td>
+            <td><input type="number" min="0"  name="principal_line" id="" value="{{class_setting["principal_line"]}}"></td>
         </tr>
         <tr>
             <td>teachers signature</td>
-            <td><input type="checkbox" name="" id=""></td>
+            {%if class_setting["teachers_signature"]== 1%}
+            <td><input type="checkbox" name="teachers_signature" id="" value="{{class_setting["teachers_signature"]}}" checked></td>
+            {%else%}
+            <td><input type="checkbox" name="teachers_signature" id="" ></td>
+            {%endif%}
+
         </tr>
                
         <tr>
                 <td>principal signature</td>
-                <td><input type="checkbox" name="" id=""></td>
-        </tr>
-        <tr>
-            <td>background</td>
-            <td><input type="color"></td>
-        </tr>
+                {%if class_setting["principal_signature"]== 1%}
+                <td><input type="checkbox" name="principal_signature" id="" value="{{class_setting["principal_signature"]}}" checked></td>
+                {%else%}
+                <td><input type="checkbox" name="principal_signature" id="" ></td>
+                {%endif%}
 
-        <tr>
-                <td>choose text color</td>
-                <td><select aria-required="true">
-                    <option>black</option>
-                    <option>white</option>
-                    <option>blue</option>
-                    <option >red</option>
-                    </select>
-                    <div class="arrow"></div>
-                </td>
-                   </tr>
-        <tr>
-                <td>choose line color</td>
-                <td><select aria-required="true">
-                        <option>black</option>
-                        <option>white</option>
-                        <option>blue</option>
-                        <option >red</option>
-                        </select>
-                        <div class="arrow"></div>
-                </td>
         </tr>
         <tr>
-            <td>choose grading type</td>
-            <td><select aria-required="true">
-                    <option>waec</option>
-                    <option>subeb</option>
-                    <option>customize</option>
-                    </select>
-                    <div class="arrow"></div>
-            </td>
+            <td>number of subjects passed and those failed</td>
+            {%if class_setting["pandf"]== 1%}
+            <td><input type="checkbox" name="pandf" id="" value="{{class_setting["pandf"]}}" checked></td>
+            {%else%}
+            <td><input type="checkbox" name="pandf" id=""></td>
+            {%endif%}
+
     </tr>
+    <tr>
+        <td>grade summary</td>
+        {%if class_setting["grade_summary"]== 1%}
+        <td><input type="checkbox" name="grade_summary" id="" value="{{class_setting["grade_summary"]}}" checked></td>
+        {%else%}
+        <td><input type="checkbox" name="grade_summary" id=""  ></td>
+        {%endif%}
 
-        <tr>
-                <td>use red color to mark failure</td>
-                <td><input type="checkbox" name="" id=""></td>
-        </tr>
-        <tr>
-                <td>use green color to mark success</td>
-                <td><input type="checkbox" name="" id=""></td>
-        </tr>
+</tr>
     </tbody>
 </table>
-<div class="form-w3ls">
-
+<div class="row">
+<div class="form-w3ls col">
         <button class="sign-in"  type="submit">Submit</button></div>
 </form>
+<div class="form-w3ls col">
+  <form>  <button class="sign-in"  type="submit">Back</button></form>
+</div>
+</form>
+
+</div>
 {% endblock %}

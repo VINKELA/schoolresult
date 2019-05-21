@@ -197,8 +197,6 @@ def make_student_result(student_id, class_id):
 		db.execute("UPDATE :result_data SET no_students_failed = no_students_failed + 1 WHERE id = :id ", classes = tables["result"],  id = class_id)
 
 
-
-
 def make_subject_result(subject_id, class_id):
     tables = database(class_id)
     subject_col = str(subject_id)
@@ -298,20 +296,6 @@ def assign_subject_position(class_id, subject_id):
 			db.execute("UPDATE :positIon_table SET :subject = :position    WHERE id =:id", positIon_table = tables["subject_position"],subject = subject,  position = j, id = person["id"])
 		i = i + 1
 		previous = person[subject]
-
-def update_scores(class_id, subject_id, operation):
-	tables = database(subject_id)
-	subject = str(subject_id)
-	mastersheet_scores = db.execute("SELECT * FROM :mastersheet", mastersheet = tables["mastersheet"] )
-	classrow = db.execute("SELECT * FROM :classes WHERE id=:class_id", classes = tables["classes"], class_id = class_id )
-	for student in mastersheet_scores:
-		if operation == "ADD":
-			total = student["total"] + student["subject"]
-		else:
-			total = student["total"] - student["subject"]
-
-		average = total / classrow[0]["no_of_subjects"]
-		db.execute("UPDATE :mastersheet SET total = :total, average = :average WHERE id=:id", mastersheet = tables["mastersheet"], total = total, average = average, id = student["id"])
 
 
 def random_string_generator(str_size, allowed_chars):

@@ -35,27 +35,64 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-
+        <style>
+              #letter_heading{
+                      text-align: {{result["ld_position"]}};
+                      margin: 10px;
+                      color: {{result["l_color"]}}
+              }  
+        </style>
         <!-- Custom Theme files -->
         <title>CLASS RESULT</title>
     </head>
 <body>
+  <div id="letter_heading">
   <h4>{{schoolInfo[0]["school_name"].upper()}}</h4>
+</div>
+<div id="school_details">
+        <h6><p>TERM: {{schoolInfo[0]["current_term"].upper()}}</p></h6>
+      <h6><p>SESSION: {{schoolInfo[0]["current_session"].upper()}}</p></h6>
+</div>
+      
+<div id="student_details">
 <h6><p>NAME: {{class_list[0]["surname"].upper()}} {{class_list[0]["firstname"].upper()}} {{class_list[0]["othername"].upper()}}</p></h6>  
 <h6><P>CLASS: {{classData[0]["classname"].upper()}}</P></h6>
 <h6><P>GENDER: {{class_list[0]["sex"].upper()}}</P></h6>
-<h6><p>TERM: {{schoolInfo[0]["current_term"].upper()}}</p></h6>
-<h6><p>SESSION: {{schoolInfo[0]["current_session"].upper()}}</p></h6>
-   <table class = "table table-striped">
+</div>
+<div id="table">
+   <table class = "table table-sm">
      <thead>
        <th>NO</th>
         <th>SUBJECT</th>
+{%if result["ca"] == 1 %}
         <th>CA</th>
+{%endif%}
+{%if result["test"] == 1 %}
         <th>TEST</th>
+{%endif%}
+{%if result["exam"] == 1 %}
         <th>EXAM</th>
+{%endif%}
+{%if result["subject_total"] == 1 %}
         <th>TOTAL</th>
-        <th>GRRADE</th>
+{%endif%}
+{%if result["grade"] == 1 %}
+        <th>GRADE</th>
+{%endif%}
+{%if result["subject_position"] == 1 %}
         <th>SUBJECT POSITION</th>
+{%endif%}
+{%if result["class_average"] == 1 %}
+        <th>average</th>
+{%endif%}
+
+{%if result["subject_comment"] == 1 %}
+        <th>COMMENT</th>
+{%endif%}
+{%if result["teachers_initials"] == 1 %}
+<th>INITIALS</th>
+{%endif%}
+
      </thead>
      <tbody>
      {% for subject in subjectData%}
@@ -63,18 +100,90 @@
      <tr>
      <td>{{loop.index}}</td>
      <td>{{subject["name"].upper()}}</td>
+     {%if result["ca"] == 1 %}
      <td>{{caData[0][subject_id]}}</td>
+     {%endif%}
+     {%if result["test"] == 1 %}
      <td>{{testData[0][subject_id]}}</td>
+     {%endif%}
+     {%if result["exam"] == 1 %}
      <td>{{examData[0][subject_id]}}</td>
+     {%endif%}
+     {%if result["subject_total"] == 1 %}
      <td>{{mastersheet[0][subject_id]}}</td>
+     {%endif%}
+     {%if result["grade"] == 1 %}
      <td>{{gradeRows[0][subject_id]}}</td>
+     {%endif%}
+     {%if result["subject_position"] == 1 %}
      <td>{{subject_position[0][subject_id]}}</td>
-     </tr>
+     {%endif%}
+     {%if result["class_average"] == 1 %}
+        <td>{{"%.2f"|format(subject["class_average"]|float)}} </td>
+        {%endif%}
+     {%if result["subject_comment"] == 1 %}
+     <td></td>
+     {%endif%}
+     {%if result["teachers_initials"] == 1 %}
+        <td>{{subject["teachers_initial"]}}</td>
+        {%endif%}
+     </tr>  
      {% endfor %}
      </tbody>
      </table>
-      <p>TOTAL SCORE: {{mastersheet[0]["total_score"]}}  AVERAGE: {{ "%.2f"|format(mastersheet[0]["average"]|float) }}</p> 
-        <p> POSITION: {{mastersheet[0]["position"]}} out of {{resultData["noOfStudents"]}}</p> 
+ </div>
+ <div id="result_summary">
+ {%if result["total_score"] == 1 %}
+      <p>TOTAL SCORE: {{mastersheet[0]["total_score"]}}</p>
+{%endif%}
+
+{%if result["average"] == 1 %}
+      <p>AVERAGE: {{ "%.2f"|format(mastersheet[0]["average"]|float) }}</p> 
+{%endif%}
+
+{%if result["position"] == 1 %}
+        <p> POSITION: {{mastersheet[0]["position"]}} out of {{result["noOfStudents"]}}</p> 
+ {%endif%}
+
+{%if result["pandf"] == 1 %}
         <p> NUMBER OF SUBJECTS PASSED: {{mastersheet[0]["subject_passed"]}} NUMBER OF SUBJECTS FAILED: {{mastersheet[0]["subject_failed"]}}</p> 
-        <p>NUMBER OF A'S {{gradeRows[0]["no_of_A"]}}  NUMBER OF B'S: {{gradeRows[0]["no_of_B"]}} NUMBER OF C'S: {{gradeRows[0]["no_of_C"]}}  NUMBER OF D'S: {{gradeRows[0]["no_of_D"]}} NUMBER OF E'S: {{gradeRows[0]["no_of_E"]}} NUMBER OF F'S: {{gradeRows[0]["no_of_F"]}}</p>
-    </body>
+{%endif%}
+</div>
+<div id="grade_summary">
+{%if result["grade_summary"] == 1 %}
+        <p>NUMBER OF A'S: {{gradeRows[0]["no_of_A"]}}  NUMB>ER OF B'S: {{gradeRows[0]["no_of_B"]}}</p> 
+        <p>NUMBER OF C'S: {{gradeRows[0]["no_of_C"]}}  NUMBER OF D'S: {{gradeRows[0]["no_of_D"]}}</p>
+        <p> NUMBER OF E'S: {{gradeRows[0]["no_of_E"]}} NUMBER OF F'S: {{gradeRows[0]["no_of_F"]}}</p>
+{%endif%}
+</div>
+<div class="row">
+{%if result["psychomotor_box"] == 1 %}
+<div class="col">psychomotor  box goes</div>
+{%endif%}
+{%if result["behaviour_box"] == 1 %}
+<div class="col">behaviour  box goes</div>
+{%endif%}
+</div>
+<div id="comment_lines">
+{%if result["teachers_line"] != 0 %}
+{%for i in range(result["teachers_line"]|int)%}
+draw lines
+{%endfor%}
+{%endif%}
+{%if result["principal_line"] != 0 %}
+{%for i in range(result["principal_line"]|int)%}
+draw lines
+{%endfor%}
+{%endif%}
+</div>
+<div id="signature_lines" >
+{%if result["teachers_signature"] == 1 %}
+teacheres signature 
+{%endif%}
+{%if result["principal_signature"] == 1 %}
+principals signature
+{%endif%}
+</div>
+
+      </div>
+  </body>
