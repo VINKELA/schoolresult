@@ -1298,8 +1298,8 @@ def customize():
     if request.form.get("ld_position") and request.form.get("ld_position") != setting["ld_position"]:
         db.execute("UPDATE :settings SET ld_position = :ld_position WHERE id=:id", settings = tables["class_term_data"], ld_position = request.form.get("ld_position"), id=class_id)
 
-    if request.form.get("l_font") and request.form.get("ld_font") != setting["ld_font"]:
-        db.execute("UPDATE :settings SET ld_font = :ld_font WHERE id=:id", settings = tables["class_term_data"], ld_font = request.form.get("ld_font"), id=class_id)
+    if request.form.get("l_font") and request.form.get("l_font") != setting["l_font"]:
+        db.execute("UPDATE :settings SET l_font = :ld_font WHERE id=:id", settings = tables["class_term_data"], ld_font = request.form.get("l_font"), id=class_id)
 
     if request.form.get("l_color") and request.form.get("l_color") != setting["l_color"]:
         db.execute("UPDATE :settings SET l_color = :ld_color WHERE id=:id", settings = tables["class_term_data"], ld_color = request.form.get("l_color"), id=class_id)

@@ -36,11 +36,29 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
         <style>
-              #letter_heading{
-                      text-align: {{result["ld_position"]}};
-                      margin: 10px;
-                      color: {{result["l_color"]}}
-              }  
+        body{
+                margin: 10px
+        }
+        #letter_heading{
+                text-align: {{result["ld_position"]}};
+                color: {{result["l_color"]}};
+                text-decoration: none;
+                text-transform: uppercase;
+                letter-spacing: -3px;
+                line-height: 1.8;
+                text-direction: rtl;
+                word-spacing: 10px;
+                text-shadow: 3px 2px {{result["l_color"]}};
+                font-family: "{{result["l_font"]}}", "Times New Roman", Garamond, "Bookman Old Style",Georgia;
+                font-style: oblique;
+                font-size: 2.5em;
+                font-weight: bold;
+        }  
+        
+        table, td, th{
+                border: 1px, solid, black;
+        }
+
         </style>
         <!-- Custom Theme files -->
         <title>CLASS RESULT</title>
@@ -59,8 +77,8 @@
 <h6><P>CLASS: {{classData[0]["classname"].upper()}}</P></h6>
 <h6><P>GENDER: {{class_list[0]["sex"].upper()}}</P></h6>
 </div>
-<div id="table">
-   <table class = "table table-sm">
+<div id="table_area">
+   <table>
      <thead>
        <th>NO</th>
         <th>SUBJECT</th>
@@ -70,6 +88,10 @@
 {%if result["test"] == 1 %}
         <th>TEST</th>
 {%endif%}
+{%if result["combined"] == 1 %}
+        <th>CA TOTAL</th>
+{%endif%}
+
 {%if result["exam"] == 1 %}
         <th>EXAM</th>
 {%endif%}
@@ -106,6 +128,10 @@
      {%if result["test"] == 1 %}
      <td>{{testData[0][subject_id]}}</td>
      {%endif%}
+     {%if result["combined"] == 1 %}
+     <td>{{ testData[0][subject_id]|int +caData[0][subject_id]|int}}</td>
+     {%endif%}
+
      {%if result["exam"] == 1 %}
      <td>{{examData[0][subject_id]}}</td>
      {%endif%}
@@ -151,7 +177,7 @@
 </div>
 <div id="grade_summary">
 {%if result["grade_summary"] == 1 %}
-        <p>NUMBER OF A'S: {{gradeRows[0]["no_of_A"]}}  NUMB>ER OF B'S: {{gradeRows[0]["no_of_B"]}}</p> 
+        <p>NUMBER OF A'S: {{gradeRows[0]["no_of_A"]}}  NUMBER OF B'S: {{gradeRows[0]["no_of_B"]}}</p> 
         <p>NUMBER OF C'S: {{gradeRows[0]["no_of_C"]}}  NUMBER OF D'S: {{gradeRows[0]["no_of_D"]}}</p>
         <p> NUMBER OF E'S: {{gradeRows[0]["no_of_E"]}} NUMBER OF F'S: {{gradeRows[0]["no_of_F"]}}</p>
 {%endif%}
@@ -170,7 +196,7 @@
 draw lines
 {%endfor%}
 {%endif%}
-{%if result["principal_line"] != 0 %}
+{%if result["principal_line"]|int != 0 %}
 {%for i in range(result["principal_line"]|int)%}
 draw lines
 {%endfor%}

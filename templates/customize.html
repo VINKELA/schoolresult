@@ -8,21 +8,14 @@
 <table class="table table-striped">
     <thead>
         <tr>
+            <th></th>
             <th>setting</th>
             <th>value</th>
         </tr>
     </thead>
     <tbody>
             <tr>
-                    <td>choose grading type</td>
-                    <td><select aria-required="true" name="grading_type" value="{{class_setting["grading_type"]}}">
-                            <option>waec</option>
-                            <option>subeb</option>
-                            </select>
-                            <div class="arrow"></div>
-                    </td>
-            </tr>
-            <tr>
+                <td rowspan="5">background</td>
                 <td>background color</td>
                 <td><input name="background_color" type="color" value="{{class_setting["background_color"]}}"></td>
             </tr>
@@ -48,11 +41,13 @@
             </tr>
     
             <tr>
+                <td rowspan="5"> customize letter heading</td>
                 <td>letter heading position</td>
-                <td><select aria-required="true" name="ld_position" value="{{class_setting["ld_position"]}}">
+                <td><select  name="ld_position" value="{{class_setting["ld_position"]}}">
                         <option>center</option>
                         <option>left</option>
                         <option>right</option>
+                        <option>justified</option>
                         </select>
                         <div class="arrow"></div>
                 </td>
@@ -63,7 +58,56 @@
                 letter heading font
             </td>
             <td>
-                <input type="number"  min="0" name="l_font" value="{{class_setting["l_font"]}}" >
+                <select  name="l_font" >
+                        <option selected="selected" disabled="">{{class_setting["l_font"]}}</option>
+                        <option>Arial</option> 
+                        <option>Arial Black</option>
+                        <option>Arial Narrow</option>
+                        <option>Arial Rounded MT Bold</option>
+                        <option>Avant Garde</option>
+                       <option> Calibri</option>
+                        <option>Candara</option>
+                        <option>Century Gothic</option>
+                        <option>Franklin Gothic Medium</option>
+                        <option>Futura</option>
+                        <option>Geneva</option>
+                        <option>Gill Sans</option>
+                        <option>Helvetica</option>
+                        <option>Impact</option>
+                        <option>Lucida Grande</option>
+                        <option>Optima</option>
+                        <option>Segoe UI</option>
+                        <option>Tahoma</option>
+                        <option>Trebuchet MS</option>
+                        <option>Verdana</option>
+                        <option>Big Caslon</option>
+                        <option>Bodoni MT</option>
+                        <option>Book Antiqua</option>
+                        <option>Calisto MT</option>
+                        <option>Cambria</option>
+                        <option>Didot</option>
+                        <option>Garamond</option>
+                        <option>Georgia</option>
+                        <option>Goudy Old Style</option>
+                        <option>Hoefler Text</option>
+                        <option>Lucida Bright</option>
+                        <option>Palatino</option>
+                        <option>Perpetua</option>
+                        <option>Rockwell</option>
+                        <option>Rockwell Extra Bold</option>
+                        <option>Baskerville</option>
+                        <option>Times New Roman</option>
+                        <option>Consolas</option>
+                        <option>Courier New</option>
+                        <option>Lucida Console</option>
+                        <option>Lucida Sans Typewriter</option>
+                        <option>Monaco</option>
+                        <option>Andale Mono</option>
+                        <option>Fantasy</option>
+                        <option>Copperplate</option>
+                        <option>Papyrus</option>
+                        <option>Brush Script MT</option>
+                        
             </td>
         </tr>
         <tr>
@@ -92,6 +136,7 @@
             </td>
         </tr>
         <tr>
+            <td rowspan="11">school detail and other information</td>
             <td>
                 school details font
             </td>
@@ -185,6 +230,7 @@
     </tr>
 
     <tr>
+        <td rowspan="4">student details</td>
         <td>
             student details font
         </td>
@@ -220,6 +266,7 @@
         </td>
 </tr>
 <tr>
+    <td rowspan="11">Result Table</td>
     <td>table type</td>
     <td><select aria-required="true" name="table_type" value="{{class_setting["table_type"]}}">
             <option>small </option>
@@ -336,6 +383,7 @@
 
         </tr>
         <tr>
+            <td rowspan="11">Result summary</td>
                 <td>total score</td>
                 {%if class_setting["total_score"]== 1%}
                 <td><input type="checkbox" name="total_score" id="" value="{{class_setting["total_score"]}}" checked></td>
