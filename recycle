@@ -51,3 +51,4 @@
                     <div class="arrow"></div>
                 </span>
            </span>
+3px 2px {{result["l_color"]}}

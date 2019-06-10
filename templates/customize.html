@@ -15,7 +15,7 @@
     </thead>
     <tbody>
             <tr>
-                <td rowspan="5">background</td>
+                <td rowspan="5">Background</td>
                 <td>background color</td>
                 <td><input name="background_color" type="color" value="{{class_setting["background_color"]}}"></td>
             </tr>
@@ -41,13 +41,13 @@
             </tr>
     
             <tr>
-                <td rowspan="5"> customize letter heading</td>
+                <td rowspan="5"> Customize Letter-heading</td>
                 <td>letter heading position</td>
                 <td><select  name="ld_position" value="{{class_setting["ld_position"]}}">
-                        <option>center</option>
-                        <option>left</option>
-                        <option>right</option>
-                        <option>justified</option>
+                        <option  {%if class_setting["ld_position"]=="center"%} selected="selected" {%endif%}> center</option>
+                        <option  {%if class_setting["ld_position"]=="left"%} selected="selected" {%endif%} >left</option>
+                        <option  {%if class_setting["ld_position"]=="right"%} selected="selected"{%endif%}>right</option>
+                        <option  {%if class_setting["ld_position"]=="justified"%} selected="selected"{%endif%}>justified</option>
                         </select>
                         <div class="arrow"></div>
                 </td>
@@ -115,7 +115,13 @@
                 letter heading font weight
             </td>
             <td>
-                <input type="number"  min="0" name="l_weight" value="{{class_setting["l_weight"]}}" >
+                    <select name="l_weight"  value="{{class_setting["l_weight"]}} aria-required="true">
+                            <option  value="" selected="" disabled="">choose font weight</option>
+                              {%for i in range(100)%}
+                                    <option  value="{{i+1}}">{{i+1}}</option>
+                               {%endfor%}
+                            </select>
+                            <div class="arrow"></div>
             </td>
         </tr>
 
@@ -131,9 +137,16 @@
             <td>
                 letter heading font-size
             </td>
-            <td>
-                <input type="number"  min="0" name="l_font-size" value="{{class_setting["l_fontsize"]}}" >
-            </td>
+                    <td>
+                            <select name="l_font-size"  value="{{class_setting["l_fontsize"]}}" aria-required="true">
+                                    <option  value="" selected="" disabled="">choose font weight</option>
+                                      {%for i in range(100)%}
+                                            <option  value="{{i+1}}">{{i+1}}</option>
+                                       {%endfor%}
+                                    </select>
+                                    <div class="arrow"></div>
+                    </td>
+        
         </tr>
         <tr>
             <td rowspan="11">school detail and other information</td>

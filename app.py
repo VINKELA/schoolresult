@@ -200,7 +200,7 @@ def register():
         db.execute("CREATE TABLE :classes ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'identifier' TEXT )", classes = tables["classes"])
         db.execute("CREATE TABLE :setting ('id' INTEGER PRIMARY KEY NOT NULL, 'classname' TEXT, 'grading_type' INTEGER, 'comment_lines' INTEGER,'student_position' INTEGER DEFAULT 1, 'surname' TEXT, 'firstname' TEXT,'othername' TEXT,'password' TEXT,'section' TEXT, 'ca' INTEGER, 'test' INTEGER,'exam' INTEGER)", setting = tables["session_data"])
         # create result data
-        db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, 'no_of_failures' INTEGER DEFAULT 0, 'grading_type' TEXT DEFAULT 'waec','background_color' TEXT DEFAULT 'black','text_color' TEXT DEFAULT 'black','line_color' TEXT DEFAULT 'black','failure' TEXT DEFAULT 'red','success' TEXT DEFAULT 'blue','ld_position' TEXT DEFAULT 'center','l_font' TEXT DEFAULT 'ariel','l_weight' TEXT DEFAULT '10px','l_color' TEXT DEFAULT 'black','l_fontsize' TEXT DEFAULT '14px','sd_font' TEXT DEFAULT '14px','sd_color' TEXT DEFAULT 'black','sd_fontsize' TEXT DEFAULT '14px','sd_position' TEXT DEFAULT 'center','sd_email' TEXT, 'address' TEXT,'po_box' TEXT,'phone' TEXT,'next_term' TEXT,'sd_other' TEXT,'std_color' TEXT DEFAULT 'black','std_font' TEXT DEFAULT '12px','std_fontsize' TEXT DEFAULT '12px','std_position' TEXT DEFAULT 'left','table_type' TEXT DEFAULT 'striped','ca' INTEGER DEFAULT 1,'test' INTEGER DEFAULT 1,'exam' INTEGER DEFAULT 1,'combined' INTEGER DEFAULT 1,'subject_total' INTEGER DEFAULT 1,'class_average' INTEGER DEFAULT 1,'subject_position' INTEGER DEFAULT 1,'grade' INTEGER DEFAULT 1,'subject_comment' INTEGER DEFAULT 1,'teachers_initials' INTEGER DEFAULT 1,'total_score' INTEGER DEFAULT 1,'average' INTEGER DEFAULT 1,'position' INTEGER DEFAULT 1,'behaviour_box' INTEGER DEFAULT 1,'psychomotor_box' INTEGER DEFAULT 1,'teachers_line' INTEGER DEFAULT 0,'principal_line' INTEGER DEFAULT 0,'teachers_signature' INTEGER DEFAULT 1,'principal_signature' INTEGER DEFAULT 1,'pandf' INTEGER DEFAULT 1,'grade_summary' INTEGER DEFAULT 1)",result = tables["class_term_data"])
+        db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, 'no_of_failures' INTEGER DEFAULT 0, 'grading_type' TEXT DEFAULT 'waec','background_color' TEXT DEFAULT 'white','text_color' TEXT DEFAULT 'black','line_color' TEXT DEFAULT 'black','failure' TEXT DEFAULT 'red','success' TEXT DEFAULT 'blue','ld_position' TEXT DEFAULT 'center','l_font' TEXT DEFAULT 'ariel','l_weight' TEXT DEFAULT '10px','l_color' TEXT DEFAULT 'black','l_fontsize' TEXT DEFAULT '14px','sd_font' TEXT DEFAULT '14px','sd_color' TEXT DEFAULT 'black','sd_fontsize' TEXT DEFAULT '14px','sd_position' TEXT DEFAULT 'center','sd_email' TEXT, 'address' TEXT,'po_box' TEXT,'phone' TEXT,'next_term' TEXT,'sd_other' TEXT,'std_color' TEXT DEFAULT 'black','std_font' TEXT DEFAULT '12px','std_fontsize' TEXT DEFAULT '12px','std_position' TEXT DEFAULT 'left','table_type' TEXT DEFAULT 'striped','ca' INTEGER DEFAULT 1,'test' INTEGER DEFAULT 1,'exam' INTEGER DEFAULT 1,'combined' INTEGER DEFAULT 1,'subject_total' INTEGER DEFAULT 1,'class_average' INTEGER DEFAULT 1,'subject_position' INTEGER DEFAULT 1,'grade' INTEGER DEFAULT 1,'subject_comment' INTEGER DEFAULT 1,'teachers_initials' INTEGER DEFAULT 1,'total_score' INTEGER DEFAULT 1,'average' INTEGER DEFAULT 1,'position' INTEGER DEFAULT 1,'behaviour_box' INTEGER DEFAULT 1,'psychomotor_box' INTEGER DEFAULT 1,'teachers_line' INTEGER DEFAULT 0,'principal_line' INTEGER DEFAULT 0,'teachers_signature' INTEGER DEFAULT 1,'principal_signature' INTEGER DEFAULT 1,'pandf' INTEGER DEFAULT 1,'grade_summary' INTEGER DEFAULT 1)",result = tables["class_term_data"])
 
         return render_template("unconfirmed.html", schoolInfo=rows)
     else:
@@ -1280,10 +1280,11 @@ def customize():
     tables = database(class_id)
     current_settings = db.execute("SELECT * FROM :settings WHERE id = :id", settings = tables["class_term_data"], id=class_id)
     setting = current_settings[0]
-    if  request.form.get("grading_type") != setting["grading_type"] :
-        db.execute("UPDATE :settings SET grading_type = :grading_type WHERE id=:id", settings= tables["class_term_data"], grading_type = request.form.get("grading_type"), id=class_id)
+    if  request.form.get("background_color") != setting["background_color"] :
+        db.execute("UPDATE :settings SET background_color = :background_color WHERE id=:id", settings= tables["class_term_data"], background_color = request.form.get("background_color"), id=class_id)
+
     
-    if request.form.get("line_color") and request.form.get("line_color") != setting["line_color"]:
+    if request.form.get("line_color") != setting["line_color"]:
         db.execute("UPDATE :settings SET line_color = :line_color WHERE id=:id", settings = tables["class_term_data"], line_color = request.form.get("line_color"), id=class_id)
     
     if request.form.get("text_color") and request.form.get("text_color") != setting["text_color"]:
@@ -1304,8 +1305,8 @@ def customize():
     if request.form.get("l_color") and request.form.get("l_color") != setting["l_color"]:
         db.execute("UPDATE :settings SET l_color = :ld_color WHERE id=:id", settings = tables["class_term_data"], ld_color = request.form.get("l_color"), id=class_id)
    
-    if request.form.get("l_font-size") and request.form.get("l_font-size") != setting["l_font-size"]:
-        db.execute("UPDATE :settings SET l_fontsize = :l_fontsize WHERE id=:id", settings = tables["class_term_data"], ld_fontsize = request.form.get("l_font-size"), id=class_id)
+    if request.form.get("l_font-size") and request.form.get("l_font-size") != setting["l_fontsize"]:
+        db.execute("UPDATE :settings SET l_fontsize = :l_fontsize WHERE id=:id", settings = tables["class_term_data"], l_fontsize = request.form.get("l_font-size"), id=class_id)
 
     if request.form.get("sd_font") and request.form.get("sd_font") != setting["sd_font"]:
         db.execute("UPDATE :settings SET sd_font = :sd_font WHERE id=:id", settings = tables["class_term_data"], sd_font = request.form.get("sd_font"), id=class_id)

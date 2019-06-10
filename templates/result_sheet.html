@@ -37,7 +37,14 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
         <style>
         body{
-                margin: 10px
+                margin: 10px;
+                background-color: {{result["background_color"]}};
+                color: {{result["text_color"]}};
+
+        }
+        .signature{
+                border: 0;
+                border-bottom: 1px solid {{result["line_color"]}}
         }
         #letter_heading{
                 text-align: {{result["ld_position"]}};
@@ -48,7 +55,7 @@
                 line-height: 1.8;
                 text-direction: rtl;
                 word-spacing: 10px;
-                text-shadow: 3px 2px {{result["l_color"]}};
+                text-shadow: none;
                 font-family: "{{result["l_font"]}}", "Times New Roman", Garamond, "Bookman Old Style",Georgia;
                 font-style: oblique;
                 font-size: 2.5em;
@@ -56,7 +63,9 @@
         }  
         
         table, td, th{
-                border: 1px, solid, black;
+                border: 1px;
+                border-block-color: black;
+                border-block-style: solid;
         }
 
         </style>
@@ -78,7 +87,7 @@
 <h6><P>GENDER: {{class_list[0]["sex"].upper()}}</P></h6>
 </div>
 <div id="table_area">
-   <table>
+   <table class="table table-striped">
      <thead>
        <th>NO</th>
         <th>SUBJECT</th>
@@ -202,12 +211,17 @@ draw lines
 {%endfor%}
 {%endif%}
 </div>
-<div id="signature_lines" >
+<div id="signature_lines" class="row" >
 {%if result["teachers_signature"] == 1 %}
-teacheres signature 
+<div class="col">
+teacheres signature <input type="text" class="signature" disabled>
+</div> 
 {%endif%}
 {%if result["principal_signature"] == 1 %}
-principals signature
+<div class="col">
+principals signature <input type="text" class="signature" disabled>
+</div>
+
 {%endif%}
 </div>
 
