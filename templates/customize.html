@@ -15,7 +15,7 @@
     </thead>
     <tbody>
             <tr>
-                <td rowspan="5">Background</td>
+                <td rowspan="4">Background</td>
                 <td>background color</td>
                 <td><input name="background_color" type="color" value="{{class_setting["background_color"]}}"></td>
             </tr>
@@ -32,16 +32,64 @@
                     </td>
             </tr>
             <tr>
-                    <td>use color to mark failure</td>
-                    <td><input type="color" name="failure" value="{{class_setting["failure"]}}"></td>
+                <td>
+                    background font
+                </td>
+                <td>
+                    <select  name="background_font" >
+                            <option selected="selected" disabled="">{{class_setting["background_font"]}}</option>
+                            <option>Arial</option> 
+                            <option>Arial Black</option>
+                            <option>Arial Narrow</option>
+                            <option>Arial Rounded MT Bold</option>
+                            <option>Avant Garde</option>
+                           <option> Calibri</option>
+                            <option>Candara</option>
+                            <option>Century Gothic</option>
+                            <option>Franklin Gothic Medium</option>
+                            <option>Futura</option>
+                            <option>Geneva</option>
+                            <option>Gill Sans</option>
+                            <option>Helvetica</option>
+                            <option>Impact</option>
+                            <option>Lucida Grande</option>
+                            <option>Optima</option>
+                            <option>Segoe UI</option>
+                            <option>Tahoma</option>
+                            <option>Trebuchet MS</option>
+                            <option>Verdana</option>
+                            <option>Big Caslon</option>
+                            <option>Bodoni MT</option>
+                            <option>Book Antiqua</option>
+                            <option>Calisto MT</option>
+                            <option>Cambria</option>
+                            <option>Didot</option>
+                            <option>Garamond</option>
+                            <option>Georgia</option>
+                            <option>Goudy Old Style</option>
+                            <option>Hoefler Text</option>
+                            <option>Lucida Bright</option>
+                            <option>Palatino</option>
+                            <option>Perpetua</option>
+                            <option>Rockwell</option>
+                            <option>Rockwell Extra Bold</option>
+                            <option>Baskerville</option>
+                            <option>Times New Roman</option>
+                            <option>Consolas</option>
+                            <option>Courier New</option>
+                            <option>Lucida Console</option>
+                            <option>Lucida Sans Typewriter</option>
+                            <option>Monaco</option>
+                            <option>Andale Mono</option>
+                            <option>Fantasy</option>
+                            <option>Copperplate</option>
+                            <option>Papyrus</option>
+                            <option>Brush Script MT</option>
+                            
+                </td>
             </tr>
             <tr>
-                    <td>use green color to mark success</td>
-                    <td><input type="color" name="success" value="{{class_setting["success"]}}"></td>
-            </tr>
-    
-            <tr>
-                <td rowspan="5"> Customize Letter-heading</td>
+                <td rowspan="6"> Customize Letter-heading</td>
                 <td>letter heading position</td>
                 <td><select  name="ld_position" value="{{class_setting["ld_position"]}}">
                         <option  {%if class_setting["ld_position"]=="center"%} selected="selected" {%endif%}> center</option>
@@ -116,10 +164,20 @@
             </td>
             <td>
                     <select name="l_weight"  value="{{class_setting["l_weight"]}} aria-required="true">
-                            <option  value="" selected="" disabled="">choose font weight</option>
-                              {%for i in range(100)%}
-                                    <option  value="{{i+1}}">{{i+1}}</option>
-                               {%endfor%}
+                        <option selected="selected" disabled="">{{class_setting["l_weight"]}}</option>
+                        <option>Bold</option> 
+                        <option>normal</option>
+                        <option>bolder</option>
+                        <option>lighter</option>
+                        <option>100</option>
+                       <option>200</option>
+                       <option>400</option>
+                       <option>600</option>
+                       <option>700</option>
+                       <option>800</option>
+                       <option>900</option>
+
+
                             </select>
                             <div class="arrow"></div>
             </td>
@@ -134,14 +192,27 @@
             </td>
         </tr>
         <tr>
+                <td>
+                    add text shadow to header
+                </td>
+                <td>
+                    {%if class_setting["shadow"]== 'on'%}
+                    <input type="checkbox" name="shadow" id="shadow"  checked>
+                    {%else%}
+                    <input type="checkbox" name="shadow"   id="shadow">
+                    {%endif%}
+                </td>
+            </tr>
+    
+        <tr>
             <td>
                 letter heading font-size
             </td>
                     <td>
-                            <select name="l_font-size"  value="{{class_setting["l_fontsize"]}}" aria-required="true">
-                                    <option  value="" selected="" disabled="">choose font weight</option>
+                            <select name="l_font-size"   aria-required="true">
+                                    <option  value="" selected="" disabled="">{{class_setting["l_fontsize"]}}</option>
                                       {%for i in range(100)%}
-                                            <option  value="{{i+1}}">{{i+1}}</option>
+                                            <option  value="{{i+1}}px">{{i+1}}px</option>
                                        {%endfor%}
                                     </select>
                                     <div class="arrow"></div>
@@ -154,7 +225,56 @@
                 school details font
             </td>
             <td>
-                <input type="number"  min="0" name="sd_font" value="{{class_setting["sd_font"]}}" >
+                <select  name="sd_font" >
+                        <option selected="selected" disabled="">{{class_setting["sd_font"]}}</option>
+                        <option>Arial</option> 
+                        <option>Arial Black</option>
+                        <option>Arial Narrow</option>
+                        <option>Arial Rounded MT Bold</option>
+                        <option>Avant Garde</option>
+                       <option> Calibri</option>
+                        <option>Candara</option>
+                        <option>Century Gothic</option>
+                        <option>Franklin Gothic Medium</option>
+                        <option>Futura</option>
+                        <option>Geneva</option>
+                        <option>Gill Sans</option>
+                        <option>Helvetica</option>
+                        <option>Impact</option>
+                        <option>Lucida Grande</option>
+                        <option>Optima</option>
+                        <option>Segoe UI</option>
+                        <option>Tahoma</option>
+                        <option>Trebuchet MS</option>
+                        <option>Verdana</option>
+                        <option>Big Caslon</option>
+                        <option>Bodoni MT</option>
+                        <option>Book Antiqua</option>
+                        <option>Calisto MT</option>
+                        <option>Cambria</option>
+                        <option>Didot</option>
+                        <option>Garamond</option>
+                        <option>Georgia</option>
+                        <option>Goudy Old Style</option>
+                        <option>Hoefler Text</option>
+                        <option>Lucida Bright</option>
+                        <option>Palatino</option>
+                        <option>Perpetua</option>
+                        <option>Rockwell</option>
+                        <option>Rockwell Extra Bold</option>
+                        <option>Baskerville</option>
+                        <option>Times New Roman</option>
+                        <option>Consolas</option>
+                        <option>Courier New</option>
+                        <option>Lucida Console</option>
+                        <option>Lucida Sans Typewriter</option>
+                        <option>Monaco</option>
+                        <option>Andale Mono</option>
+                        <option>Fantasy</option>
+                        <option>Copperplate</option>
+                        <option>Papyrus</option>
+                        <option>Brush Script MT</option>
+                        
             </td>
         </tr>
         <tr>
@@ -295,8 +415,8 @@
                 cascore
             </td>
             <td>
-                {%if class_setting["ca"]== 1%}
-                <input type="checkbox" name="ca" id="ca" value="{{class_setting["ca"]}}" checked>
+                {%if class_setting["ca"]== 'on'%}
+                <input type="checkbox" name="ca" id="ca" value="on" checked>
                 {%else%}
                 <input type="checkbox" name="ca" id="ca">
                 {%endif%}
@@ -304,9 +424,9 @@
         </tr>
         <tr>
             <td>testscore</td>
-            {%if class_setting["test"]== 1%}
+            {%if class_setting["test"]== 'on'%}
 
-            <td><input type="checkbox" name="test" id="test" value="{{class_setting["test"]}}" checked></td>
+            <td><input type="checkbox" name="test" id="test" value="on" checked></td>
             {%else%}
             <td><input type="checkbox" name="test" id="test"></td>
             {%endif%}
@@ -317,9 +437,9 @@
                 combined test and ca as total ca
             </td>
             <td>
-                {%if class_setting["combined"]== 1%}
+                {%if class_setting["combined"]== 'on'%}
 
-                <input type="checkbox" name="combined" id="subject_comment" value="{{class_setting["combined"]}}" checked >
+                <input type="checkbox" name="combined" id="subject_comment" value="on" checked >
                 {%else%}
 
                 <input type="checkbox" name="combined" id="subject_comment">
@@ -330,8 +450,8 @@
 
         <tr>
             <td>examscore</td>
-            {%if class_setting["exam"]== 1%}
-            <td><input type="checkbox" name="exam" id="exam" value="{{class_setting["exam"]}}" checked></td>
+            {%if class_setting["exam"]== 'on'%}
+            <td><input type="checkbox" name="exam" id="exam"  checked></td>
             {%else%}
             <td><input type="checkbox" name="exam" id="exam"></td>
             {%endif%}
@@ -339,9 +459,9 @@
         </tr>
         <tr>
             <td>subject_total</td>
-            {%if class_setting["subject_total"]== 1%}
+            {%if class_setting["subject_total"]== 'on'%}
 
-            <td><input type="checkbox" name="subject_total" id="subject_total" value="{{class_setting["subject_total"]}}" checked></td>
+            <td><input type="checkbox" name="subject_total" id="subject_total" checked></td>
             {%else%}
 
             <td><input type="checkbox" name="subject_total" id="subject_total"></td>
@@ -351,8 +471,8 @@
 
         <tr>
             <td>class average for each subject</td>
-            {%if class_setting["class_average"]== 1%}
-            <td><input type="checkbox" name="class_average" value="{{class_setting["class_average"]}}" checked></td>
+            {%if class_setting["class_average"]== 'on'%}
+            <td><input type="checkbox" name="class_average"  checked></td>
             {%else%}
             <td><input type="checkbox" name="class_average"></td>
             {%endif%}
@@ -360,8 +480,8 @@
         </tr>
         <tr>
             <td>subject position</td>
-            {%if class_setting["subject_position"]== 1%}
-            <td><input type="checkbox" name="subject_position" value="{{class_setting["subject_position"]}}" checked></td>
+            {%if class_setting["subject_position"]== 'on' %}
+            <td><input type="checkbox" name="subject_position"  checked></td>
             {%else%}
             <td><input type="checkbox" name="subject_position"></td>
             {%endif%}
@@ -369,8 +489,8 @@
         </tr>
         <tr>
             <td>grade</td>
-            {%if class_setting["grade"]== 1%}
-            <td><input type="checkbox" name="grade" value="{{class_setting["grade"]}}" checked ></td>
+            {%if class_setting["grade"]== 'on' %}
+            <td><input type="checkbox" name="grade"  checked ></td>
             {%else%}
             <td><input type="checkbox" name="grade"></td>
             {%endif%}
@@ -378,8 +498,8 @@
         </tr>
         <tr>
             <td>subject comment</td>
-            {%if class_setting["subject_comment"]== 1%}
-            <td><input type="checkbox" name="subject_comment" value="{{class_setting["subject_comment"]}}" checked></td>
+            {%if class_setting["subject_comment"]== 'on' %}
+            <td><input type="checkbox" name="subject_comment"  checked></td>
             {%else%}
             <td><input type="checkbox" name="subject_comment"></td>
             {%endif%}
@@ -388,8 +508,8 @@
 
         <tr>
             <td>teachers initials</td>
-            {%if class_setting["teachers_initials"]== 1%}
-            <td><input type="checkbox" name="teachers_initials" id="" value="{{class_setting["teachers_initials"]}}" checked></td>
+            {%if class_setting["teachers_initials"]== 'on' %}
+            <td><input type="checkbox" name="teachers_initials" id=""  checked></td>
             {%else%}
             <td><input type="checkbox" name="teachers_initials" id=""></td>
             {%endif%}
@@ -398,8 +518,8 @@
         <tr>
             <td rowspan="11">Result summary</td>
                 <td>total score</td>
-                {%if class_setting["total_score"]== 1%}
-                <td><input type="checkbox" name="total_score" id="" value="{{class_setting["total_score"]}}" checked></td>
+                {%if class_setting["total_score"]== 'on' %}
+                <td><input type="checkbox" name="total_score" id=""  checked></td>
                 {%else%}
                 <td><input type="checkbox" name="total_score" id=""></td>
                 {%endif%}
@@ -407,8 +527,8 @@
             </tr>
         <tr>
             <td>average score</td>
-            {%if class_setting["average"]== 1%}
-            <td><input type="checkbox" name="average_score" id="" value="{{class_setting["average"]}}" checked></td>
+            {%if class_setting["average"]== 'on' %}
+            <td><input type="checkbox" name="average_score" id=""  checked></td>
             {%else%}
             <td><input type="checkbox" name="average_score" id=""></td>
             {%endif%}
@@ -416,8 +536,8 @@
         </tr>
         <tr>
             <td>position</td>
-            {%if class_setting["position"]== 1%}
-            <td><input type="checkbox" name="position" id="" value="{{class_setting["position"]}}" checked ></td>
+            {%if class_setting["position"] == 'on' %}
+            <td><input type="checkbox" name="position" id=""  checked ></td>
             {%else%}
             <td><input type="checkbox" name="position" id=""></td>
             {%endif%}
@@ -425,8 +545,8 @@
         </tr>
         <tr>
             <td>behaviour </td>
-            {%if class_setting["behaviour_box"]== 1%}
-            <td><input type="checkbox" name="behave" id="" value="{{class_setting["behaviour_box"]}}" checked></td>
+            {%if class_setting["behaviour_box"] == 'on' %}
+            <td><input type="checkbox" name="behave" id=""  checked></td>
             {%else%}
             <td><input type="checkbox" name="behave" id=""></td>
             {%endif%}
@@ -435,8 +555,8 @@
 
         <tr>
             <td>psychomotor box</td>
-            {%if class_setting["psychomotor_box"]== 1%}
-            <td><input type="checkbox" name="psychomotor_box" id="" value="{{class_setting["psychomotor_box"]}}" checked></td>
+            {%if class_setting["psychomotor_box"]== 'on' %}
+            <td><input type="checkbox" name="psychomotor_box" id=""  checked></td>
             {%else%}
             <td><input type="checkbox" name="psychomotor_box" id=""></td>
             {%endif%}
@@ -448,12 +568,12 @@
         </tr>
         <tr>
             <td>number of comment line for principal</td>
-            <td><input type="number" min="0"  name="principal_line" id="" value="{{class_setting["principal_line"]}}"></td>
+            <td><input type="number" min="0"  name="principal_line" id="" ></td>
         </tr>
         <tr>
             <td>teachers signature</td>
-            {%if class_setting["teachers_signature"]== 1%}
-            <td><input type="checkbox" name="teachers_signature" id="" value="{{class_setting["teachers_signature"]}}" checked></td>
+            {%if class_setting["teachers_signature"]== 'on'%}
+            <td><input type="checkbox" name="teachers_signature" id=""  checked></td>
             {%else%}
             <td><input type="checkbox" name="teachers_signature" id="" ></td>
             {%endif%}
@@ -462,7 +582,7 @@
                
         <tr>
                 <td>principal signature</td>
-                {%if class_setting["principal_signature"]== 1%}
+                {%if class_setting["principal_signature"]== 'on'%}
                 <td><input type="checkbox" name="principal_signature" id="" value="{{class_setting["principal_signature"]}}" checked></td>
                 {%else%}
                 <td><input type="checkbox" name="principal_signature" id="" ></td>
@@ -471,7 +591,7 @@
         </tr>
         <tr>
             <td>number of subjects passed and those failed</td>
-            {%if class_setting["pandf"]== 1%}
+            {%if class_setting["pandf"]== 'on'%}
             <td><input type="checkbox" name="pandf" id="" value="{{class_setting["pandf"]}}" checked></td>
             {%else%}
             <td><input type="checkbox" name="pandf" id=""></td>
@@ -480,7 +600,7 @@
     </tr>
     <tr>
         <td>grade summary</td>
-        {%if class_setting["grade_summary"]== 1%}
+        {%if class_setting["grade_summary"]== 'on'%}
         <td><input type="checkbox" name="grade_summary" id="" value="{{class_setting["grade_summary"]}}" checked></td>
         {%else%}
         <td><input type="checkbox" name="grade_summary" id=""  ></td>

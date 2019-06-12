@@ -37,10 +37,11 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
         <style>
         body{
-                margin: 10px;
+                margin: 25px;
                 background-color: {{result["background_color"]}};
                 color: {{result["text_color"]}};
-
+                font-style: {{result["background_font"]}};
+                font-family: "{{result["background_font"]}}", "Times New Roman", Garamond, "Bookman Old Style",Georgia;
         }
         .signature{
                 border: 0;
@@ -55,16 +56,17 @@
                 line-height: 1.8;
                 text-direction: rtl;
                 word-spacing: 10px;
-                text-shadow: none;
-                font-family: "{{result["l_font"]}}", "Times New Roman", Garamond, "Bookman Old Style",Georgia;
-                font-style: oblique;
-                font-size: 2.5em;
-                font-weight: bold;
+                {%if result["shadow"] == 'on' %}
+                text-shadow: 3px 2px black;
+                {%endif%}
+                font-style: {{result["l_font"]}};
+                font-size: {{result["l_fontsize"]}};
+                font-weight: {{result["l_weight"]}}
         }  
         
         table, td, th{
                 border: 1px;
-                border-block-color: black;
+                border-block-color: rgb(0, 0, 0);
                 border-block-style: solid;
         }
 
@@ -74,7 +76,7 @@
     </head>
 <body>
   <div id="letter_heading">
-  <h4>{{schoolInfo[0]["school_name"].upper()}}</h4>
+  {{schoolInfo[0]["school_name"].upper()}}
 </div>
 <div id="school_details">
         <h6><p>TERM: {{schoolInfo[0]["current_term"].upper()}}</p></h6>
@@ -91,36 +93,36 @@
      <thead>
        <th>NO</th>
         <th>SUBJECT</th>
-{%if result["ca"] == 1 %}
+{%if result["ca"] == 'on' %}
         <th>CA</th>
 {%endif%}
-{%if result["test"] == 1 %}
+{%if result["test"] == 'on' %}
         <th>TEST</th>
 {%endif%}
-{%if result["combined"] == 1 %}
+{%if result["combined"] == 'on' %}
         <th>CA TOTAL</th>
 {%endif%}
 
-{%if result["exam"] == 1 %}
+{%if result["exam"] == 'on' %}
         <th>EXAM</th>
 {%endif%}
-{%if result["subject_total"] == 1 %}
+{%if result["subject_total"] == 'on' %}
         <th>TOTAL</th>
 {%endif%}
-{%if result["grade"] == 1 %}
+{%if result["grade"] == 'on' %}
         <th>GRADE</th>
 {%endif%}
-{%if result["subject_position"] == 1 %}
+{%if result["subject_position"] == 'on' %}
         <th>SUBJECT POSITION</th>
 {%endif%}
-{%if result["class_average"] == 1 %}
+{%if result["class_average"] == 'on' %}
         <th>average</th>
 {%endif%}
 
-{%if result["subject_comment"] == 1 %}
+{%if result["subject_comment"] == 'on' %}
         <th>COMMENT</th>
 {%endif%}
-{%if result["teachers_initials"] == 1 %}
+{%if result["teachers_initials"] == 'on' %}
 <th>INITIALS</th>
 {%endif%}
 
@@ -131,35 +133,35 @@
      <tr>
      <td>{{loop.index}}</td>
      <td>{{subject["name"].upper()}}</td>
-     {%if result["ca"] == 1 %}
+     {%if result["ca"] == 'on' %}
      <td>{{caData[0][subject_id]}}</td>
      {%endif%}
-     {%if result["test"] == 1 %}
+     {%if result["test"] == 'on' %}
      <td>{{testData[0][subject_id]}}</td>
      {%endif%}
-     {%if result["combined"] == 1 %}
+     {%if result["combined"] == 'on' %}
      <td>{{ testData[0][subject_id]|int +caData[0][subject_id]|int}}</td>
      {%endif%}
 
-     {%if result["exam"] == 1 %}
+     {%if result["exam"] == 'on' %}
      <td>{{examData[0][subject_id]}}</td>
      {%endif%}
-     {%if result["subject_total"] == 1 %}
+     {%if result["subject_total"] == 'on' %}
      <td>{{mastersheet[0][subject_id]}}</td>
      {%endif%}
-     {%if result["grade"] == 1 %}
+     {%if result["grade"] == 'on' %}
      <td>{{gradeRows[0][subject_id]}}</td>
      {%endif%}
-     {%if result["subject_position"] == 1 %}
+     {%if result["subject_position"] == 'on' %}
      <td>{{subject_position[0][subject_id]}}</td>
      {%endif%}
-     {%if result["class_average"] == 1 %}
+     {%if result["class_average"] == 'on' %}
         <td>{{"%.2f"|format(subject["class_average"]|float)}} </td>
         {%endif%}
-     {%if result["subject_comment"] == 1 %}
+     {%if result["subject_comment"] == 'on' %}
      <td></td>
      {%endif%}
-     {%if result["teachers_initials"] == 1 %}
+     {%if result["teachers_initials"] == 'on' %}
         <td>{{subject["teachers_initial"]}}</td>
         {%endif%}
      </tr>  
@@ -168,56 +170,46 @@
      </table>
  </div>
  <div id="result_summary">
- {%if result["total_score"] == 1 %}
+ {%if result["total_score"] == 'on' %}
       <p>TOTAL SCORE: {{mastersheet[0]["total_score"]}}</p>
 {%endif%}
 
-{%if result["average"] == 1 %}
+{%if result["average"] == 'on' %}
       <p>AVERAGE: {{ "%.2f"|format(mastersheet[0]["average"]|float) }}</p> 
 {%endif%}
 
-{%if result["position"] == 1 %}
+{%if result["position"] == 'on' %}
         <p> POSITION: {{mastersheet[0]["position"]}} out of {{result["noOfStudents"]}}</p> 
  {%endif%}
 
-{%if result["pandf"] == 1 %}
+{%if result["pandf"] == 'on' %}
         <p> NUMBER OF SUBJECTS PASSED: {{mastersheet[0]["subject_passed"]}} NUMBER OF SUBJECTS FAILED: {{mastersheet[0]["subject_failed"]}}</p> 
 {%endif%}
 </div>
 <div id="grade_summary">
-{%if result["grade_summary"] == 1 %}
+{%if result["grade_summary"] == 'on' %}
         <p>NUMBER OF A'S: {{gradeRows[0]["no_of_A"]}}  NUMBER OF B'S: {{gradeRows[0]["no_of_B"]}}</p> 
         <p>NUMBER OF C'S: {{gradeRows[0]["no_of_C"]}}  NUMBER OF D'S: {{gradeRows[0]["no_of_D"]}}</p>
         <p> NUMBER OF E'S: {{gradeRows[0]["no_of_E"]}} NUMBER OF F'S: {{gradeRows[0]["no_of_F"]}}</p>
 {%endif%}
 </div>
 <div class="row">
-{%if result["psychomotor_box"] == 1 %}
+{%if result["psychomotor_box"] == 'on' %}
 <div class="col">psychomotor  box goes</div>
 {%endif%}
-{%if result["behaviour_box"] == 1 %}
+{%if result["behaviour_box"] == 'on' %}
 <div class="col">behaviour  box goes</div>
 {%endif%}
 </div>
 <div id="comment_lines">
-{%if result["teachers_line"] != 0 %}
-{%for i in range(result["teachers_line"]|int)%}
-draw lines
-{%endfor%}
-{%endif%}
-{%if result["principal_line"]|int != 0 %}
-{%for i in range(result["principal_line"]|int)%}
-draw lines
-{%endfor%}
-{%endif%}
 </div>
 <div id="signature_lines" class="row" >
-{%if result["teachers_signature"] == 1 %}
+{%if result["teachers_signature"] == 'on' %}
 <div class="col">
 teacheres signature <input type="text" class="signature" disabled>
 </div> 
 {%endif%}
-{%if result["principal_signature"] == 1 %}
+{%if result["principal_signature"] == 'on' %}
 <div class="col">
 principals signature <input type="text" class="signature" disabled>
 </div>
