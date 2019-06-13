@@ -52,3 +52,21 @@
                 </span>
            </span>
 3px 2px {{result["l_color"]}}
+        #background_text{
+                position: absolute;
+                z-index: 0;
+                background: white;
+                display:block;
+                min-height: 50%;
+                min-width: 50%;
+                color: yellow;
+        }
+        #bg_text{
+                color: lightgrey;
+                font-size: 120px;
+                transform: rotate(300deg);
+                -webkit-transform: rotate(300deg);
+        }
+<div id="background_text">
+<p id="bg_text">{{schoolInfo[0]["school_name"].upper()}}</p>
+</div>

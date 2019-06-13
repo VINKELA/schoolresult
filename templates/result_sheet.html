@@ -52,22 +52,49 @@
                 color: {{result["l_color"]}};
                 text-decoration: none;
                 text-transform: uppercase;
-                letter-spacing: -3px;
+                letter-spacing: 1px;
                 line-height: 1.8;
                 text-direction: rtl;
                 word-spacing: 10px;
                 {%if result["shadow"] == 'on' %}
-                text-shadow: 3px 2px black;
+                text-shadow: 1px 1px black;
                 {%endif%}
                 font-style: {{result["l_font"]}};
                 font-size: {{result["l_fontsize"]}};
                 font-weight: {{result["l_weight"]}}
         }  
-        
+        #school_details{
+                text-align: {{result["sd_position"]}};
+                color: {{result["sd_color"]}};
+                text-decoration: none;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                line-height: 1.8;
+                text-direction: rtl;
+                word-spacing: 10px;
+                font-style: {{result["sd_font"]}};
+                font-size: {{result["sd_fontsize"]}};
+                font-weight: {{result["sd_weight"]}}
+        } 
+        #student_details{
+                text-align: {{result["std_position"]}};
+                color: {{result["std_color"]}};
+                text-decoration: none;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                line-height: 1.8;
+                text-direction: rtl;
+                word-spacing: 10px;
+                font-style: {{result["std_font"]}};
+                font-size: {{result["std_fontsize"]}};
+                font-weight: {{result["std_weight"]}}
+        } 
+
+
         table, td, th{
                 border: 1px;
-                border-block-color: rgb(0, 0, 0);
-                border-block-style: solid;
+                border-color: white;
+                border-style: solid;
         }
 
         </style>
@@ -79,17 +106,37 @@
   {{schoolInfo[0]["school_name"].upper()}}
 </div>
 <div id="school_details">
-        <h6><p>TERM: {{schoolInfo[0]["current_term"].upper()}}</p></h6>
-      <h6><p>SESSION: {{schoolInfo[0]["current_session"].upper()}}</p></h6>
+       SESSION: {{schoolInfo[0]["current_session"].upper()}} TERM: {{schoolInfo[0]["current_term"].upper()}}
+       {%if result["sd_email"]%}
+       <div>EMAIL ADDRESS: {{result["sd_email"]}}</div> 
+       {%endif%}
+       {%if result["admin_email"] == 'on' %}
+       <div>{{schoolInfo[0]["email"].upper()}}</div>
+       {%endif%}
+       {%if result["address"]%}
+       <div> ADDRESS: {{result["address"]}}</div> 
+       {%endif%}
+       {%if result["po_box"]%}
+       <div>PO BOX: {{result["po_box"]}}</div> 
+       {%endif%}
+       {%if result["phone"]%}
+       <div>PHONE NUMBER: {{result["phone"]}}</div> 
+       {%endif%}
+       {%if result["next_term"]%}
+       <div>NEXT TERM RESUMES: {{result["next_term"]}}</div> 
+       {%endif%}
+       {%if result["sd_other"]%}
+       <div> {{result["sd_other"]}}</div> 
+       {%endif%}
+
 </div>
       
 <div id="student_details">
-<h6><p>NAME: {{class_list[0]["surname"].upper()}} {{class_list[0]["firstname"].upper()}} {{class_list[0]["othername"].upper()}}</p></h6>  
-<h6><P>CLASS: {{classData[0]["classname"].upper()}}</P></h6>
-<h6><P>GENDER: {{class_list[0]["sex"].upper()}}</P></h6>
+<div>NAME: {{class_list[0]["surname"].upper()}} {{class_list[0]["firstname"].upper()}} {{class_list[0]["othername"].upper()}}</div>  
+<div>GENDER: {{class_list[0]["sex"].upper()}} CLASS: {{classData[0]["classname"].upper()}}</div>
 </div>
 <div id="table_area">
-   <table class="table table-striped">
+   <table class="table table-{{result["table_type"]}}">
      <thead>
        <th>NO</th>
         <th>SUBJECT</th>
@@ -171,11 +218,8 @@
  </div>
  <div id="result_summary">
  {%if result["total_score"] == 'on' %}
-      <p>TOTAL SCORE: {{mastersheet[0]["total_score"]}}</p>
-{%endif%}
-
-{%if result["average"] == 'on' %}
-      <p>AVERAGE: {{ "%.2f"|format(mastersheet[0]["average"]|float) }}</p> 
+      <p>TOTAL SCORE: {{mastersheet[0]["total_score"]}} {%if result["average"] == 'on' %} AVERAGE: {{ "%.2f"|format(mastersheet[0]["average"]|float) }} {%endif%}
+</p>
 {%endif%}
 
 {%if result["position"] == 'on' %}
@@ -188,9 +232,7 @@
 </div>
 <div id="grade_summary">
 {%if result["grade_summary"] == 'on' %}
-        <p>NUMBER OF A'S: {{gradeRows[0]["no_of_A"]}}  NUMBER OF B'S: {{gradeRows[0]["no_of_B"]}}</p> 
-        <p>NUMBER OF C'S: {{gradeRows[0]["no_of_C"]}}  NUMBER OF D'S: {{gradeRows[0]["no_of_D"]}}</p>
-        <p> NUMBER OF E'S: {{gradeRows[0]["no_of_E"]}} NUMBER OF F'S: {{gradeRows[0]["no_of_F"]}}</p>
+        <p>NUMBER OF A'S: {{gradeRows[0]["no_of_A"]}}  NUMBER OF B'S: {{gradeRows[0]["no_of_B"]}} NUMBER OF C'S: {{gradeRows[0]["no_of_C"]}}  NUMBER OF D'S: {{gradeRows[0]["no_of_D"]}}  NUMBER OF E'S: {{gradeRows[0]["no_of_E"]}} NUMBER OF F'S: {{gradeRows[0]["no_of_F"]}}</p>
 {%endif%}
 </div>
 <div class="row">

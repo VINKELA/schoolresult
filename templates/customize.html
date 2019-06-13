@@ -274,7 +274,6 @@
                         <option>Copperplate</option>
                         <option>Papyrus</option>
                         <option>Brush Script MT</option>
-                        
             </td>
         </tr>
         <tr>
@@ -290,13 +289,20 @@
                 school details font-size
             </td>
             <td>
-                <input type="number"  min="0" name="sd_font-size" value="{{class_setting["sd_fontsize"]}}">
+                    <select name="sd_fontsize"   aria-required="true">
+                            <option   selected="" disabled="">{{class_setting["sd_fontsize"]}}</option>
+                              {%for i in range(100)%}
+                                    <option  value="{{i+1}}px">{{i+1}}px</option>
+                               {%endfor%}
+                            </select>
+                            <div class="arrow"></div>
             </td>
-        </tr>
+</tr>
 
         <tr>
             <td>school details position</td>
-            <td><select aria-required="true" name="sd_position" value="{{class_setting["sd_position"]}}">
+            <td><select aria-required="true" name="sd_position">
+                    <option selected="selected" disabled="">{{class_setting["sd_position"]}}</option>
                     <option>center</option>
                     <option>left</option>
                     <option>right</option>
@@ -317,9 +323,13 @@
             use admin email
         </td>
         <td>
-            <input type="checkbox"  name="admin_email" value="{{class_setting["admin_email"]}}">
+            {%if class_setting["admin_email"]== 'on'%}
+            <input type="checkbox" name="admin_email"   checked>
+            {%else%}
+            <input type="checkbox" name="admin_email">
+            {%endif%}
         </td>
-    </tr>
+</tr>
     <tr>
         <td>
             add address
@@ -349,7 +359,7 @@
             next term
         </td>
         <td>
-            <input type="date"  name="next_term" value="{{class_setting["next"]}}">
+            <input type="date"  name="next_term" value="{{class_setting["next_term"]}}">
         </td>
     </tr>
 
@@ -368,8 +378,57 @@
             student details font
         </td>
         <td>
-            <input type="number"  min="0" name="std_font" value="{{class_setting["std_font"]}}">
-        </td>
+        <select  name="std_font" >
+            <option selected="selected" disabled="">{{class_setting["std_font"]}}</option>
+            <option>Arial</option> 
+            <option>Arial Black</option>
+            <option>Arial Narrow</option>
+            <option>Arial Rounded MT Bold</option>
+            <option>Avant Garde</option>
+           <option> Calibri</option>
+            <option>Candara</option>
+            <option>Century Gothic</option>
+            <option>Franklin Gothic Medium</option>
+            <option>Futura</option>
+            <option>Geneva</option>
+            <option>Gill Sans</option>
+            <option>Helvetica</option>
+            <option>Impact</option>
+            <option>Lucida Grande</option>
+            <option>Optima</option>
+            <option>Segoe UI</option>
+            <option>Tahoma</option>
+            <option>Trebuchet MS</option>
+            <option>Verdana</option>
+            <option>Big Caslon</option>
+            <option>Bodoni MT</option>
+            <option>Book Antiqua</option>
+            <option>Calisto MT</option>
+            <option>Cambria</option>
+            <option>Didot</option>
+            <option>Garamond</option>
+            <option>Georgia</option>
+            <option>Goudy Old Style</option>
+            <option>Hoefler Text</option>
+            <option>Lucida Bright</option>
+            <option>Palatino</option>
+            <option>Perpetua</option>
+            <option>Rockwell</option>
+            <option>Rockwell Extra Bold</option>
+            <option>Baskerville</option>
+            <option>Times New Roman</option>
+            <option>Consolas</option>
+            <option>Courier New</option>
+            <option>Lucida Console</option>
+            <option>Lucida Sans Typewriter</option>
+            <option>Monaco</option>
+            <option>Andale Mono</option>
+            <option>Fantasy</option>
+            <option>Copperplate</option>
+            <option>Papyrus</option>
+            <option>Brush Script MT</option>
+</td>
+
     </tr>
     <tr>
         <td>
@@ -384,30 +443,45 @@
             student details font-size
         </td>
         <td>
-            <input type="number"  min="0" name="std_font-size" value="{{class_setting["std_fontsize"]}}">
-        </td>
+            <select name="std_fontsize"   aria-required="true">
+                    <option   selected="" disabled="">{{class_setting["std_fontsize"]}}</option>
+                      {%for i in range(100)%}
+                            <option  value="{{i+1}}px">{{i+1}}px</option>
+                       {%endfor%}
+                    </select>
+                    <div class="arrow"></div>
+    </td>
+
     </tr>
 
     <tr>
         <td>student details position</td>
-        <td><select aria-required="true" name="std_position" value="{{class_setting["std_position"]}}">
-                <option>center</option>
-                <option>left</option>
-                <option>right</option>
-                </select>
-                <div class="arrow"></div>
-        </td>
+        <td><select aria-required="true" name="std_position">
+            <option selected="selected" disabled="">{{class_setting["std_position"]}}</option>
+            <option>center</option>
+            <option>left</option>
+            <option>right</option>
+            </select>
+            <div class="arrow"></div>
+    </td>
+
 </tr>
 <tr>
     <td rowspan="11">Result Table</td>
     <td>table type</td>
-    <td><select aria-required="true" name="table_type" value="{{class_setting["table_type"]}}">
-            <option>small </option>
-            <option>big</option>
-            <option>supper small</option>
-            </select>
-            <div class="arrow"></div>
-    </td>
+    <td>
+        <select  name="table_type" >
+            <option selected="selected" disabled="">{{class_setting["table_type"]}}</option>
+            <option>normal</option> 
+            <option>dark</option>
+            <option>striped</option>
+            <option>bordered</option>
+            <option>borderless</option>
+           <option> hover</option>
+            <option>sm</option>
+            <option>responsive</option>
+</td>
+
 </tr>
 
         <tr>
