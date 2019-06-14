@@ -89,19 +89,47 @@
                 font-size: {{result["std_fontsize"]}};
                 font-weight: {{result["std_weight"]}}
         } 
-
-
         table, td, th{
                 border: 1px;
                 border-color: white;
                 border-style: solid;
         }
 
+        {%if result["watermark"] == 'on' %}
+
+        #comment{
+                width: 100%;
+        }
+
+
+        #background{
+                z-index: 0;
+                background: white;
+                color: yellow;
+                position: absolute;
+        }
+        #bg-text{
+                color: lightgrey;
+                font-size: 200px;
+                transform: rotate(300deg);
+                -webkit-transform: rotate(300deg);
+        }
+        #content{
+                position: relative;
+                z-index: 1;
+        }
+{%endif%}
         </style>
         <!-- Custom Theme files -->
         <title>CLASS RESULT</title>
     </head>
 <body>
+                {%set list1 = schoolInfo[0]["school_name"].split(" ") %}
+        {%if result["watermark"] == 'on' %}
+
+        <div id="background"> <p id="bg-text">{{schoolInfo[0]["school_name"]}}</p></div>
+        <div id="content">
+        {%endif%}
   <div id="letter_heading">
   {{schoolInfo[0]["school_name"].upper()}}
 </div>
@@ -223,7 +251,7 @@
 {%endif%}
 
 {%if result["position"] == 'on' %}
-        <p> POSITION: {{mastersheet[0]["position"]}} out of {{result["noOfStudents"]}}</p> 
+        <p> <h5> POSITION: {{mastersheet[0]["position"]}} OUT OF {{result["noOfStudents"]}}</h5></p> 
  {%endif%}
 
 {%if result["pandf"] == 'on' %}
@@ -235,15 +263,37 @@
         <p>NUMBER OF A'S: {{gradeRows[0]["no_of_A"]}}  NUMBER OF B'S: {{gradeRows[0]["no_of_B"]}} NUMBER OF C'S: {{gradeRows[0]["no_of_C"]}}  NUMBER OF D'S: {{gradeRows[0]["no_of_D"]}}  NUMBER OF E'S: {{gradeRows[0]["no_of_E"]}} NUMBER OF F'S: {{gradeRows[0]["no_of_F"]}}</p>
 {%endif%}
 </div>
-<div class="row">
-{%if result["psychomotor_box"] == 'on' %}
-<div class="col">psychomotor  box goes</div>
-{%endif%}
-{%if result["behaviour_box"] == 'on' %}
-<div class="col">behaviour  box goes</div>
-{%endif%}
-</div>
+{% if classData[0]["section"].upper() == 'PRE-NURSERY' or classData[0]["section"].upper() == 'NURSERY' or classData[0]["section"] == 'PRIMARY' %}
 <div id="comment_lines">
+{%if result["teachers_line"]|int > 0 %}
+teachers comment
+{%for i in range(result["teachers_line"]|int)%}
+ <p><input id="comment" type="text" class="signature" disabled></p>
+{%endfor%}
+{%endif%}
+{%if result["principal_line"]|int > 0 %}
+Headmaster's comment
+{%for i in range(result["principal_line"]|int)%}
+ <p><input id="comment" type="text" class="signature" disabled></p>
+{%endfor%}
+{%endif%}
+{%endif%}
+{% if classData[0]["section"].upper() == 'SECONDARY' %}
+<div id="comment_lines">
+{%if result["teachers_line"]|int > 0 %}
+teachers comment
+{%for i in range(result["teachers_line"]|int)%}
+ <p><input id="comment" type="text" class="signature" disabled></p>
+{%endfor%}
+{%endif%}
+{%if result["principal_line"]|int > 0 %}
+principal's comment
+{%for i in range(result["principal_line"]|int)%}
+ <p><input id="comment" type="text" class="signature" disabled></p>
+{%endfor%}
+{%endif%}
+{%endif%}
+                                
 </div>
 <div id="signature_lines" class="row" >
 {%if result["teachers_signature"] == 'on' %}
@@ -259,5 +309,8 @@ principals signature <input type="text" class="signature" disabled>
 {%endif%}
 </div>
 
-      </div>
+</div>
+{%if result["watermark"] == 'on' %}
+</div>
+{%endif%}
   </body>

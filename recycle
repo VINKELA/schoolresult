@@ -67,6 +67,9 @@
                 transform: rotate(300deg);
                 -webkit-transform: rotate(300deg);
         }
+
+                <div id="background"> {%for name in list1%}<p id="bg-text">{{name}}</p>{%endfor%}</div>
+
 <div id="background_text">
 <p id="bg_text">{{schoolInfo[0]["school_name"].upper()}}</p>
 </div>

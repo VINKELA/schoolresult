@@ -617,32 +617,42 @@
             {%endif%}
 
         </tr>
-        <tr>
-            <td>behaviour </td>
-            {%if class_setting["behaviour_box"] == 'on' %}
-            <td><input type="checkbox" name="behave" id=""  checked></td>
-            {%else%}
-            <td><input type="checkbox" name="behave" id=""></td>
-            {%endif%}
-
-        </tr>
 
         <tr>
-            <td>psychomotor box</td>
-            {%if class_setting["psychomotor_box"]== 'on' %}
-            <td><input type="checkbox" name="psychomotor_box" id=""  checked></td>
+            <td>watermark</td>
+            {%if class_setting["watermark"]== 'on' %}
+            <td><input type="checkbox" name="watermark" id=""  checked></td>
             {%else%}
-            <td><input type="checkbox" name="psychomotor_box" id=""></td>
+            <td><input type="checkbox" name="watermark" id=""></td>
             {%endif%}
 
         </tr>
         <tr>
+            
             <td>number of comment line for teacher</td>
-            <td><input type="number" min="0"  name="teachers_line" id="" value="{{class_setting["teachers_line"]}}" ></td>
+            <td>
+                <select name="teachers_line"   aria-required="true">
+                        <option   selected="">{{class_setting["teachers_line"]}}</option>
+                          {%for i in range(5)%}
+                                <option  value="{{i}}">{{i}}</option>
+                           {%endfor%}
+                        </select>
+                        <div class="arrow"></div>
+        </td>
         </tr>
+
         <tr>
             <td>number of comment line for principal</td>
-            <td><input type="number" min="0"  name="principal_line" id="" ></td>
+            <td>
+                <select name="principal_line"   aria-required="true">
+                        <option   selected="" >{{class_setting["principal_line"]}}</option>
+                          {%for i in range(5)%}
+                                <option  value="{{i}}">{{i}}</option>
+                           {%endfor%}
+                        </select>
+                        <div class="arrow"></div>
+        </td>
+
         </tr>
         <tr>
             <td>teachers signature</td>

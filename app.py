@@ -76,7 +76,7 @@ app.config.update(dict(
     MAIL_USE_TLS = True,
     MAIL_USE_SSL = False,
     MAIL_USERNAME = "orjikalukelvin@gmail.com",
-    MAIL_PASSWORD = "googlevenuse123",
+    MAIL_PASSWORD = "gmailvenuse123",
 ))
 
 mail = Mail(app)
@@ -200,7 +200,7 @@ def register():
         db.execute("CREATE TABLE :classes ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'identifier' TEXT )", classes = tables["classes"])
         db.execute("CREATE TABLE :setting ('id' INTEGER PRIMARY KEY NOT NULL, 'classname' TEXT, 'grading_type' INTEGER, 'comment_lines' INTEGER,'student_position' INTEGER DEFAULT 1, 'surname' TEXT, 'firstname' TEXT,'othername' TEXT,'password' TEXT,'section' TEXT, 'ca' INTEGER, 'test' INTEGER,'exam' INTEGER)", setting = tables["session_data"])
         # create result data
-        db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, 'no_of_failures' INTEGER DEFAULT 0, 'grading_type' TEXT DEFAULT 'waec','background_color' TEXT DEFAULT 'white','text_color' TEXT DEFAULT 'black','line_color' TEXT DEFAULT 'black','background_font' TEXT DEFAULT 'ariel','ld_position' TEXT DEFAULT 'center','l_font' TEXT DEFAULT 'ariel','l_weight' TEXT DEFAULT 'bold','l_color' TEXT DEFAULT 'black','l_fontsize' TEXT DEFAULT '14px','sd_font' TEXT DEFAULT 'ariel','sd_color' TEXT DEFAULT 'black','sd_fontsize' TEXT DEFAULT '14px','sd_position' TEXT DEFAULT 'center','sd_email' TEXT,'admin_email' TEXT DEFAULT 'on', 'address' TEXT,'po_box' TEXT,'phone' TEXT,'next_term' TEXT,'sd_other' TEXT,'std_color' TEXT DEFAULT 'black','std_font' TEXT DEFAULT 'ariel','std_fontsize' TEXT DEFAULT '12px','std_position' TEXT DEFAULT 'left','table_type' TEXT DEFAULT 'striped','ca' TEXT DEFAULT 'on','test' TEXT DEFAULT 'on','exam' TEXT DEFAULT 'on','combined' TEXT DEFAULT 'on','subject_total' TEXT DEFAULT 'on','class_average' TEXT DEFAULT 'on','subject_position' TEXT DEFAULT 'on','grade' TEXT DEFAULT 'on','subject_comment' TEXT DEFAULT 'on','teachers_initials' TEXT DEFAULT 'on','total_score' TEXT DEFAULT 'on','average' TEXT DEFAULT 'on','position' TEXT DEFAULT 'on','behaviour_box' TEXT DEFAULT 'on','psychomotor_box' TEXT DEFAULT 'on','teachers_line' TEXT DEFAULT 'on','shadow' TEXT DEFAULT 'on','principal_line' TEXT DEFAULT 'on','teachers_signature' TEXT DEFAULT 'on','principal_signature' TEXT DEFAULT 'on','pandf' TEXT DEFAULT 'on','grade_summary' TEXT DEFAULT 'on')",result = tables["class_term_data"])
+        db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, 'no_of_failures' INTEGER DEFAULT 0, 'grading_type' TEXT DEFAULT 'waec','background_color' TEXT DEFAULT 'white','text_color' TEXT DEFAULT 'black','line_color' TEXT DEFAULT 'black','background_font' TEXT DEFAULT 'Ariel','ld_position' TEXT DEFAULT 'center','l_font' TEXT DEFAULT 'ArielvBlack','l_weight' TEXT DEFAULT '900','l_color' TEXT DEFAULT '#00ff40','l_fontsize' TEXT DEFAULT '30px','sd_font' TEXT DEFAULT 'Ariel','sd_color' TEXT DEFAULT '#808000','sd_fontsize' TEXT DEFAULT '20px','sd_position' TEXT DEFAULT 'center','sd_email' TEXT,'admin_email' TEXT DEFAULT 'off', 'address' TEXT,'po_box' TEXT,'phone' TEXT,'next_term' TEXT,'sd_other' TEXT,'std_color' TEXT DEFAULT 'black','std_font' TEXT DEFAULT 'Arial Narrow','std_fontsize' TEXT DEFAULT '18px','std_position' TEXT DEFAULT 'left','table_type' TEXT DEFAULT 'bordered','ca' TEXT DEFAULT 'on','test' TEXT DEFAULT 'on','exam' TEXT DEFAULT 'on','combined' TEXT DEFAULT 'on','subject_total' TEXT DEFAULT 'on','class_average' TEXT DEFAULT 'on','subject_position' TEXT DEFAULT 'on','grade' TEXT DEFAULT 'on','subject_comment' TEXT DEFAULT 'off','teachers_initials' TEXT DEFAULT 'on','total_score' TEXT DEFAULT 'on','average' TEXT DEFAULT 'on','position' TEXT DEFAULT 'on','teachers_line' INTEGER DEFAULT 0,'shadow' TEXT DEFAULT 'on','principal_line' INTEGER DEFAULT 0,'teachers_signature' TEXT DEFAULT 'off','principal_signature' TEXT DEFAULT 'off','pandf' TEXT DEFAULT 'on','grade_summary' TEXT DEFAULT 'on','watermark' TEXT DEFAULT 'on')",result = tables["class_term_data"])
 
         return render_template("unconfirmed.html", schoolInfo=rows)
     else:
@@ -1437,23 +1437,18 @@ def customize():
             db.execute("UPDATE :settings SET position = :position WHERE id=:id", settings = tables["class_term_data"], position = 'off', id=class_id)
     
 
-    if  request.form.get("behave") != setting["behaviour_box"]:
-        if request.form.get("behave"):
-            db.execute("UPDATE :settings SET behaviour_box = :behave WHERE id=:id", settings = tables["class_term_data"], behave = 'on', id=class_id)
-        else:
-            db.execute("UPDATE :settings SET behaviour_box = :behave WHERE id=:id", settings = tables["class_term_data"], behave = 'off', id=class_id)
 
-    if  request.form.get("psychomotor_box") != setting["psychomotor_box"]:
-        if request.form.get("psychomotor_box"):
-            db.execute("UPDATE :settings SET psychomotor_box = :psychomotor_box WHERE id=:id", settings = tables["class_term_data"], psychomotor_box = 'on', id=class_id)
+    if  request.form.get("watermark") != setting["watermark"]:
+        if request.form.get("watermark"):
+            db.execute("UPDATE :settings SET watermark = :watermark WHERE id=:id", settings = tables["class_term_data"], watermark = 'on', id=class_id)
         else :
-            db.execute("UPDATE :settings SET psychomotor_box = :psychomotor_box WHERE id=:id", settings = tables["class_term_data"], psychomotor_box = 'off', id=class_id)
+            db.execute("UPDATE :settings SET watermark = :watermark WHERE id=:id", settings = tables["class_term_data"], watermark = 'off', id=class_id)
 
-    if request.form.get("teachers_line") and request.form.get("teachers_line") != setting["teachers_line"]:
-        db.execute("UPDATE :settings SET teachers_line = :teachers_line WHERE id=:id", settings = tables["class_term_data"], teachers_line = 'on', id=class_id)
+    if  request.form.get("teachers_line") != setting["teachers_line"] and request.form.get("teachers_line") != 'None':
+        db.execute("UPDATE :settings SET teachers_line = :teachers_line WHERE id=:id", settings = tables["class_term_data"], teachers_line = request.form.get("teachers_line"), id=class_id)
     
 
-    if request.form.get("principal_line") and request.form.get("principal_line") != setting["principal_line"]:
+    if  request.form.get("principal_line") != setting["principal_line"] and request.form.get("principal_line") != 'None':
         db.execute("UPDATE :settings SET principal_line = :principal_line WHERE id=:id", settings = tables["class_term_data"], principal_line = request.form.get("principal_line"), id=class_id)
 
     if  request.form.get("teachers_signature") != setting["teachers_signature"]:
