@@ -200,7 +200,7 @@ def register():
         db.execute("CREATE TABLE :classes ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'identifier' TEXT )", classes = tables["classes"])
         db.execute("CREATE TABLE :setting ('id' INTEGER PRIMARY KEY NOT NULL, 'classname' TEXT, 'grading_type' INTEGER, 'comment_lines' INTEGER,'student_position' INTEGER DEFAULT 1, 'surname' TEXT, 'firstname' TEXT,'othername' TEXT,'password' TEXT,'section' TEXT, 'ca' INTEGER, 'test' INTEGER,'exam' INTEGER)", setting = tables["session_data"])
         # create result data
-        db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, 'no_of_failures' INTEGER DEFAULT 0, 'grading_type' TEXT DEFAULT 'waec','background_color' TEXT DEFAULT 'white','text_color' TEXT DEFAULT 'black','line_color' TEXT DEFAULT 'black','background_font' TEXT DEFAULT 'Ariel','ld_position' TEXT DEFAULT 'center','l_font' TEXT DEFAULT 'ArielvBlack','l_weight' TEXT DEFAULT '900','l_color' TEXT DEFAULT '#00ff40','l_fontsize' TEXT DEFAULT '30px','sd_font' TEXT DEFAULT 'Ariel','sd_color' TEXT DEFAULT '#808000','sd_fontsize' TEXT DEFAULT '20px','sd_position' TEXT DEFAULT 'center','sd_email' TEXT,'admin_email' TEXT DEFAULT 'off', 'address' TEXT,'po_box' TEXT,'phone' TEXT,'next_term' TEXT,'sd_other' TEXT,'std_color' TEXT DEFAULT 'black','std_font' TEXT DEFAULT 'Arial Narrow','std_fontsize' TEXT DEFAULT '18px','std_position' TEXT DEFAULT 'left','table_type' TEXT DEFAULT 'bordered','ca' TEXT DEFAULT 'on','test' TEXT DEFAULT 'on','exam' TEXT DEFAULT 'on','combined' TEXT DEFAULT 'on','subject_total' TEXT DEFAULT 'on','class_average' TEXT DEFAULT 'on','subject_position' TEXT DEFAULT 'on','grade' TEXT DEFAULT 'on','subject_comment' TEXT DEFAULT 'off','teachers_initials' TEXT DEFAULT 'on','total_score' TEXT DEFAULT 'on','average' TEXT DEFAULT 'on','position' TEXT DEFAULT 'on','teachers_line' INTEGER DEFAULT 0,'shadow' TEXT DEFAULT 'on','principal_line' INTEGER DEFAULT 0,'teachers_signature' TEXT DEFAULT 'off','principal_signature' TEXT DEFAULT 'off','pandf' TEXT DEFAULT 'on','grade_summary' TEXT DEFAULT 'on','watermark' TEXT DEFAULT 'on')",result = tables["class_term_data"])
+        db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, 'no_of_failures' INTEGER DEFAULT 0, 'grading_type' TEXT DEFAULT 'waec','background_color' TEXT DEFAULT 'white','text_color' TEXT DEFAULT 'black','line_color' TEXT DEFAULT 'black','background_font' TEXT DEFAULT 'Ariel','ld_position' TEXT DEFAULT 'center','l_font' TEXT DEFAULT 'Ariel Black','l_weight' TEXT DEFAULT '900','l_color' TEXT DEFAULT '#00ff40','l_fontsize' TEXT DEFAULT '30px','sd_font' TEXT DEFAULT 'Ariel','sd_color' TEXT DEFAULT '#808000','sd_fontsize' TEXT DEFAULT '20px','sd_position' TEXT DEFAULT 'center','sd_email' TEXT,'admin_email' TEXT DEFAULT 'off', 'address' TEXT,'po_box' TEXT,'phone' TEXT,'next_term' TEXT,'sd_other' TEXT,'std_color' TEXT DEFAULT 'black','std_font' TEXT DEFAULT 'Arial Narrow','std_fontsize' TEXT DEFAULT '18px','std_position' TEXT DEFAULT 'left','table_type' TEXT DEFAULT 'bordered','ca' TEXT DEFAULT 'on','test' TEXT DEFAULT 'on','exam' TEXT DEFAULT 'on','combined' TEXT DEFAULT 'on','subject_total' TEXT DEFAULT 'on','class_average' TEXT DEFAULT 'on','subject_position' TEXT DEFAULT 'on','grade' TEXT DEFAULT 'on','subject_comment' TEXT DEFAULT 'off','teachers_initials' TEXT DEFAULT 'on','total_score' TEXT DEFAULT 'on','average' TEXT DEFAULT 'on','position' TEXT DEFAULT 'on','teachers_line' INTEGER DEFAULT 0,'shadow' TEXT DEFAULT 'on','principal_line' INTEGER DEFAULT 0,'teachers_signature' TEXT DEFAULT 'off','principal_signature' TEXT DEFAULT 'off','pandf' TEXT DEFAULT 'on','grade_summary' TEXT DEFAULT 'on','watermark' TEXT DEFAULT 'on')",result = tables["class_term_data"])
 
         return render_template("unconfirmed.html", schoolInfo=rows)
     else:
@@ -866,7 +866,8 @@ def scoresheet():
     classlistrow = db.execute("SELECT * FROM :classlist",classlist = tables["classlist"])
     mastersheet_rows = db.execute("SELECT * FROM :mastersheet", mastersheet = tables["mastersheet"])
     subject_position_row = db.execute("SELECT * FROM :subject_position", subject_position = tables["subject_position"])
-    return render_template("scoresheet.html",sub_id=subject_id, schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
+    results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
+    return render_template("scoresheet.html",result = results[0],sub_id=subject_id, schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
 
 
 @app.route("/result_sheet", methods=["POST"])
@@ -1155,6 +1156,7 @@ def confirm_details():
         sub["exam"] = request.form.get(exam)
         single_subject.append(sub)
     rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=tables["school_id"])
+    
     # return classlist.html
     return render_template("confirm_single_scoresheet.html", schoolInfo = rows, subjects= class_subjects, details = single_details, student_subjects=single_subject)
 
@@ -1271,7 +1273,8 @@ def mastersheet():
     examrow = db.execute("SELECT * FROM :ex",ex = tables["exam"])
     mastersheet_rows = db.execute("SELECT * FROM :master", master= tables["mastersheet"])
     subject_p = db.execute("SELECT * FROM :subjectposition", subjectposition = tables["subject_position"])
-    return render_template("mastersheet.html",caData = carow, testData = testrow, examData = examrow, classData = classrow, schoolInfo = schoolrow, subjectData=subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position= subject_p)
+    results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
+    return render_template("mastersheet.html",result = results[0], caData = carow, testData = testrow, examData = examrow, classData = classrow, schoolInfo = schoolrow, subjectData=subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position= subject_p)
 
 
 @app.route("/customize", methods=["POST"])
