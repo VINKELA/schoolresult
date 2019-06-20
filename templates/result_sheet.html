@@ -121,10 +121,9 @@
 {%endif%}
         </style>
         <!-- Custom Theme files -->
-        <title>CLASS RESULT</title>
+        <title>{{schoolInfo[0]["school_name"]}}</title>
     </head>
 <body>
-                {%set list1 = schoolInfo[0]["school_name"].split(" ") %}
         {%if result["watermark"] == 'on' %}
 
         <div id="background"> <p id="bg-text">{{schoolInfo[0]["school_name"]}}</p></div>
