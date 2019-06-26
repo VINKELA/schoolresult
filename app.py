@@ -15,7 +15,7 @@ from requests.models import Response
 
 from operator import itemgetter, attrgetter
 
-from functions import apology, login_required, database, random_string_generator, render_portfolio, term_tables, drop_tables, grade, assign_student_position, assign_subject_position, passwordGen, initials, add_student, remove_student, render_class, render_portfolio
+from functions import apology, login_required, database, random_string_generator, render_portfolio, term_tables, drop_tables, grade, assign_student_position, assign_subject_position, passwordGen, initials, add_student, remove_student, render_class, render_portfolio, update_grade
 
 # Configure application
 app = Flask(__name__)
@@ -1438,8 +1438,6 @@ def customize():
             db.execute("UPDATE :settings SET position = :position WHERE id=:id", settings = tables["class_term_data"], position = 'on', id=class_id)
         else :
             db.execute("UPDATE :settings SET position = :position WHERE id=:id", settings = tables["class_term_data"], position = 'off', id=class_id)
-    
-
 
     if  request.form.get("watermark") != setting["watermark"]:
         if request.form.get("watermark"):
@@ -1496,6 +1494,9 @@ def customize():
             db.execute("UPDATE :settings SET shadow = :shadow WHERE id=:id", settings = tables["class_term_data"], shadow = 'on', id=class_id)
         else:
             db.execute("UPDATE :settings SET shadow = :shadow WHERE id=:id", settings = tables["class_term_data"], shadow = 'off', id=class_id)
+    if request.form.get("grading_type") and request.form.get("grading_type") != setting["grading_type"]:
+        db.execute("UPDATE :settings SET grading_type = :grading_type WHERE id=:id", settings = tables["class_term_data"], grading_type = request.form.get("grading_type"), id=class_id)
+        update_grade(class_id)
 
 
     return render_class(class_id, error ="setting updated successfully")

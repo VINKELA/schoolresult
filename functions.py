@@ -152,7 +152,7 @@ def make_student_result(student_id, class_id):
 	student_average = 0
 	for subject in subjects:
 		sub_total =  db.execute("SELECT * FROM :mastersheet WHERE id=:id ",mastersheet = tables["mastersheet"], id = student_id)
-		sub_total = int(sub_total[str(subject['id'])])
+		sub_total = int(sub_total[str(subject[' id'])])
 		if sub_total:
 			sub_grade = grade(sub_total[0])
 			db.execute("UPDATE :grade SET :subject =:sub_grade WHERE id = :id ", grade = tables["grade"], subject = str(subject["id"]), sub_grade = sub_total, id = student_id)
@@ -197,48 +197,6 @@ def make_student_result(student_id, class_id):
 		db.execute("UPDATE :result_data SET no_students_failed = no_students_failed + 1 WHERE id = :id ", classes = tables["result"],  id = class_id)
 
 
-def make_subject_result(subject_id, class_id):
-    tables = database(class_id)
-    subject_col = str(subject_id)
-    mastersheet_data = db.execute("SELECT * FROM :mastersheet", mastersheet = tables["mastersheet"])
-    subject = db.execute("SELECT * FROM :subjects WHERE id=:id", subjects = tables["subjects"], id = subject_id)
-    classroom = db.execute("SELECT * FROM :classes WHERE id = :class_id", classes = tables["classes"], class_id= tables["class_id"])
-    subject_total = 0
-    exam_row = db.execute("SELECT * FROM :exam", exam = tables["exam"])
-    i = 0
-    for student in mastersheet_data:
-    	if exam_row[i][subject_col]:
-    		total = db.execute("SELECT * FROM :mastersheet WHERE id=:id", mastersheet = tables["mastersheet"], id = student["id"])
-    		total = total[0][subject_col]
-    		sub_grade = grade(total)
-    		if sub_grade[0] == "F":
-    			db.execute("UPDATE :subject SET no_of_fails = no_of_fails + 1", subject = tables["subjects"])
-    		else:
-    			db.execute("UPDATE :subject SET no_of_pass = no_of_pass + 1", subject = tables["subjects"])
-    		if sub_grade[0] ==  "A":
-    			db.execute("UPDATE :subject SET :no_of_grade =:no_of_grade + 1 WHERE id = :id ", subject = tables["subjects"], no_of_grade = "no_of_A",  id = subject_id)
-    		elif sub_grade[0] ==  "B":
-    			db.execute("UPDATE :subject SET :no_of_grade =:no_of_grade + 1 WHERE id = :id ", subject = tables["subjects"], no_of_grade = "no_of_B",  id = subject_id)
-    		elif sub_grade[0] ==  "C":
-    			db.execute("UPDATE :subject SET :no_of_grade =:no_of_grade + 1 WHERE id = :id ", subject = tables["subjects"], no_of_grade = "no_of_C",  id = subject_id)
-    		elif sub_grade[0] ==  "D":
-    			#increase no of D for student
-    			db.execute("UPDATE :subject SET :no_of_grade =:no_of_grade + 1 WHERE id = :id ", subject = tables["subjects"], no_of_grade = "no_of_D",  id = subject_id)
-    		elif sub_grade[0] ==  "E":
-    			#increase no of E for student
-    			db.execute("UPDATE :subject SET :no_of_grade =:no_of_grade + 1 WHERE id = :id ", subject = tables["subjects"], no_of_grade = "no_of_E",  id = subject_id)
-    		elif sub_grade[0] ==  "F":
-    			db.execute("UPDATE :subject SET :no_of_grade =:no_of_grade + 1 WHERE id = :id ", subject = tables["subjects"], no_of_grade = "no_of_F",  id = subject_id)
-    		i = i + 1
-    subject_row = db.execute("SELECT * FROM :subject WHERE id = :id", subject = tables["subjects"], id = subject_id)
-    no_of_fails = int(subject_row["no_of_fails"])
-    no_of_pass = int(subject_row["no_of_pass"])
-    no_of_students_present = no_of_fails + no_of_pass
-    fails_percent = (no_of_fails/no_of_students_present) * 100
-    pass_percent = (no_of_pass/no_of_students_present) * 100
-    db.execute("UPDATE :subject SET fails_percent = :fails_percent, pass_percent = :pass_percent WHERE id=:id ", subject=["subjects"], fails_percent = fails_percent, pass_percent = pass_percent, id = subject_id)
-    subject_average = subject_total / classroom[0]["no_of_students"]
-    db.execute("UPDATE :subjects SET class_average = :average WHERE id = :id", subjects = tables["subjects"],  average = subject_average, id = subject_id )
 
 
 def render_class(class_id, error=None):
@@ -444,3 +402,61 @@ def add_student(student_id, class_id):
 		assign_student_position(class_id)
 		for subject in subjects:
 			assign_subject_position(class_id, subject["id"])
+
+
+def update_grade(class_id):
+	tables = database(class_id)
+	classroom = db.execute("SELECT * FROM :classes WHERE id = :class_id", classes = tables["classes"], class_id= tables["class_id"])
+	current_settings = db.execute("SELECT * FROM :settings WHERE id = :id", settings = tables["class_term_data"], id=class_id)
+	subjects  = db.execute("SELECT * FROM :subjects", subjects = tables["subjects"])
+	db.execute("UPDATE :grades SET :a = 0,  :b = 0,  :c =0 , :d = 0, :e = 0, :f = 0", grades = tables["grade"],a = "no_of_A", b = "no_of_B", c = "no_of_C", d = "no_of_D", e = "no_of_E", f = "no_of_F")
+	db.execute("UPDATE :mastersheet SET subject_passed = 0, subject_failed= 0", mastersheet = tables["mastersheet"])
+
+
+	for subject in subjects:
+		subject_col = str(subject["id"])
+		sj_f = 0
+		sj_a = 0
+		sj_b = 0
+		sj_c = 0
+		sj_d = 0
+		sj_e = 0
+		sj_passes = 0
+		sj_failures = 0
+		mastersheet_data = db.execute("SELECT * FROM :mastersheet", mastersheet = tables["mastersheet"])
+		for student in mastersheet_data:
+			total = student[subject_col]
+			sub_grade = grade(total, str(current_settings[0]["grading_type"]))
+			grade_col = "no_of_"+sub_grade[0]
+			db.execute("UPDATE :grades SET :subject_c = :grade WHERE id=:id", grades = tables["grade"], subject_c = subject_col,grade = sub_grade, id = student["id"] )
+			current_grades = db.execute("SELECT * FROM :grades WHERE id=:id", grades = tables["grade"], id = student["id"])
+			if sub_grade[0] == "F":
+				db.execute("UPDATE :master SET subject_failed = :value WHERE id=:id", master = tables["mastersheet"], value = int(student["subject_failed"])+1, id = student["id"])
+				db.execute("UPDATE :grades SET :grade = :value WHERE id=:id", grades = tables["grade"], grade = grade_col, value = int(current_grades[0][grade_col])+1, id = student["id"])
+				sj_failures = sj_failures + 1
+				sj_f = sj_f + 1
+			else:
+				db.execute("UPDATE :master SET subject_passed = :value WHERE id=:id", master = tables["mastersheet"], value = int(student["subject_passed"])+1, id = student["id"])
+				sj_passes = sj_passes + 1
+
+			if sub_grade[0] ==  "A":
+				sj_a = sj_a + 1
+				db.execute("UPDATE :grades SET :grade = :value WHERE id=:id", grades = tables["grade"], grade = grade_col, value = int(current_grades[0][grade_col])+1, id = student["id"])
+			elif sub_grade[0] ==  "B":
+				sj_b = sj_b + 1
+				db.execute("UPDATE :grades SET :grade = :value WHERE id=:id", grades = tables["grade"], grade = grade_col, value = int(current_grades[0][grade_col])+1, id = student["id"])
+			elif sub_grade[0] ==  "C":
+				sj_c = sj_c + 1
+				db.execute("UPDATE :grades SET :grade = :value WHERE id=:id", grades = tables["grade"], grade = grade_col, value = int(current_grades[0][grade_col])+1, id = student["id"])
+			elif sub_grade[0] ==  "D":
+				sj_d = sj_d + 1
+				#increase no of D for student
+				db.execute("UPDATE :grades SET :grade = :value WHERE id=:id", grades = tables["grade"], grade = grade_col, value = int(current_grades[0][grade_col])+1, id = student["id"])
+			elif sub_grade[0] ==  "E":
+				sj_e = sj_e + 1
+				#increase no of E for student
+				db.execute("UPDATE :grades SET :grade = :value WHERE id=:id", grades = tables["grade"], grade = grade_col, value = int(current_grades[0][grade_col])+1, id = student["id"])
+		subject_row = db.execute("SELECT * FROM :subject WHERE id = :id", subject = tables["subjects"], id = subject["id"])
+		no_of_students_present = sj_passes + sj_failures
+		pass_percent = (sj_passes/no_of_students_present) * 100
+		db.execute("UPDATE :subject SET ppass = :pass_percent1, no_of_A=:s_a, no_of_B=:s_b, no_of_C=:s_c, no_of_D=:s_d, no_of_E=:s_e, no_of_F=:s_f, no_passed= :n_pass, no_failed=:n_fail  WHERE id=:id ", subject=tables["subjects"], pass_percent1 = pass_percent, s_a = sj_a, s_b = sj_b, s_c = sj_c, s_d = sj_d, s_e = sj_e, s_f = sj_f, n_pass = sj_passes, n_fail = sj_failures, id = subject["id"])

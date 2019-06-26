@@ -69,20 +69,13 @@
      </tbody>
      </table>
 
-     <div class=" form-w3ls row">
-       <div class="col">
+     <div class=" form-w3ls ">
       <form action ="/mastersheet" method = "post" target="_blank">
         <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-        <button class="btn btn-primary" type="submit">MASTERSHEET </button>
+        <button class="btn btn-primary" type="submit"> VEIW MASTERSHEET </button>
       </form>
     </div>
-    <div class="col">
-      <form action ="/change_grading" method = "post">
-        <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-        <button class="sign-in" type="submit">CHOOSE GRADING</button>
-      </div>
       </form>
 
-     </div>
 
 {% endblock %}
