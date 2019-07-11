@@ -1,0 +1,27 @@
+
+{% extends "layout.html" %}
+
+{% block title %}
+verify teacher
+{% endblock %}
+
+{% block main %}
+      {% set subject_id = id|string %}
+      {% set class_id = classData[0]["id"]|string %}
+
+    <div class="form-w3ls">
+
+<form action="/edit_scoresheet" method="post" id="verify_teacher_form">            
+<input type="password" name="password" id="password"placeholder="password" />
+<input type="hidden" name="class_id" id="id" value="{{class_id}}"/>
+<input type="hidden" name="subject_id" value="{{subject_id}}"/>
+
+<button class="sign-in" id="verify_teacher">VERIFY </button>
+</form>
+    </div>
+ <!-- js files -->
+	<script src='/static/js/jquery.min.js'></script>
+	<script src="/static/js/veiwclass.js"></script>
+<!-- /js files -->
+
+ {% endblock %}

@@ -1,14 +1,170 @@
-{% extends "layout.html" %}
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script type=text/javascript>
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+  </script>
+  <!--online_fonts-->
+    <link href="//fonts.googleapis.com/css?family=Sansita:400,400i,700,700i,800,800i,900,900i&amp;subset=latin-ext" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Poiret+One" rel="stylesheet">
+  <!--//online_fonts-->
+  <!-- documentation at http://getbootstrap.com/docs/4.0/, alternative themes at https://bootswatch.com/4-alpha/ -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-{% block title %}
-    edit scoresheet
-{% endblock %}
+  <script src="/static/js/script.js"/></script>
 
-{% block main %}
-      {% set subject_id = subjectData[0]["id"]|string %}
+  <link href="//fonts.googleapis.com/css?family=Old+Standard+TT:400,400i,700" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'><!--web font-->
+  <!-- //web font -->
+  <script>addEventListener("load", function() { 
+setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+  <script>addEventListener("load", function() 
+{ setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } 
+</script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+  <style>
+    body{
+            margin: 25px;
+            background-color: {{result["background_color"]}};
+            color: {{result["text_color"]}};
+            font-style: {{result["background_font"]}};
+            font-family: "{{result["background_font"]}}", "Times New Roman", Garamond, "Bookman Old Style",Georgia;
+    }
+    #letter_heading{
+            text-align: {{result["ld_position"]}};
+            color: {{result["l_color"]}};
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.8;
+            text-direction: rtl;
+            word-spacing: 10px;
+            {%if result["shadow"] == 'on' %}
+            text-shadow: 1px 1px black;
+            {%endif%}
+            font-style: {{result["l_font"]}};
+            font-size: {{result["l_fontsize"]}};
+            font-weight: {{result["l_weight"]}}
+    }  
+    #school_details{
+            text-align: {{result["sd_position"]}};
+            color: {{result["sd_color"]}};
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.8;
+            text-direction: rtl;
+            word-spacing: 10px;
+            font-style: {{result["sd_font"]}};
+            font-size: {{result["sd_fontsize"]}};
+            font-weight: {{result["sd_weight"]}}
+    } 
+    #class_details{
+          text-align: {{result["std_position"]}};
+          color: {{result["std_color"]}};
+          text-decoration: none;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          line-height: 1.8;
+          text-direction: rtl;
+          word-spacing: 10px;
+          font-style: {{result["std_font"]}};
+          font-size: {{result["std_fontsize"]}};
+          font-weight: {{result["std_weight"]}}
+  } 
+
+    table, td, th{
+            border: 1px;
+            border-color: white;
+            border-style: solid;
+    }
+    #comment{
+            width: 100%;
+    }
+
+    {%if result["watermark"] == 'on' %}
+
+
+
+    #background{
+            z-index: 0;
+            background: white;
+            color: yellow;
+            position: absolute;
+    }
+    #bg-text{
+            color: lightgrey;
+            font-size: 200px;
+            transform: rotate(300deg);
+            -webkit-transform: rotate(300deg);
+    }
+    #content{
+            position: relative;
+            z-index: 1;
+    }
+{%endif%}
+    </style>
+
+
+     {% set subject_id = subjectData[0]["id"]|string %}
       {% set scoresheet_id = subject_id +"_"+classData[0]["id"]|string %}
+          <!-- Custom Theme files -->
+          <title>EDIT SCORESHEET</title>
+      </head>
+      <body>
+        {%set list1 = schoolInfo[0]["school_name"].split(" ") %}
+{%if result["watermark"] == 'on' %}
 
-<form action="/edited_scoresheet" method="post">
+<div id="background"> <p id="bg-text">{{schoolInfo[0]["school_name"]}}</p></div>
+<div id="content">
+{%endif%}
+<div id="letter_heading">
+{{schoolInfo[0]["school_name"].upper()}}
+</div>
+<div id="school_details">
+{%if result["sd_email"]%}
+<div>EMAIL ADDRESS: {{result["sd_email"]}}</div> 
+{%endif%}
+{%if result["admin_email"] == 'on' %}
+<div>{{schoolInfo[0]["email"].upper()}}</div>
+{%endif%}
+{%if result["address"]%}
+<div> ADDRESS: {{result["address"]}}</div> 
+{%endif%}
+{%if result["po_box"]%}
+<div>PO BOX: {{result["po_box"]}}</div> 
+{%endif%}
+{%if result["phone"]%}
+<div>PHONE NUMBER: {{result["phone"]}}</div> 
+{%endif%}
+{%if result["next_term"]%}
+<div>NEXT TERM RESUMES: {{result["next_term"]}}</div> 
+{%endif%}
+{%if result["sd_other"]%}
+<div> {{result["sd_other"]}}</div> 
+{%endif%}
+
+</div>
+<div id="class_details">
+  <form action="/edited_scoresheet" method="post">
+   <div>SUBJECT:  <input type="text"   class="form-control" value="{{subjectData[0]["name"]}}" name ="subject_name"/></div>
+   <div>SUBJECT TEACHER:  <input type="text"   class="form-control" value="{{subjectData[0]["teachers_name"]}}" name ="teachers_name"/></div>
+
+  <div>CLASS: {{classData[0]["classname"].upper()}} </div>  
+  <div>SECTION: {{classData[0]["section"].upper()}} </div>
+  <div>SESSION: {{schoolInfo[0]["current_session"].upper()}} TERM: {{schoolInfo[0]["current_term"].upper()}}</div>
+  </div>
+
  <table class="table table-sm">
   <thead>
     <tr>
@@ -22,22 +178,67 @@
 {% for student in class_list %}
   <div class="form-row">
         {% set id = student["id"]|string %}
-        <div class="col">   <tr><td>{{student["surname"]}} {{student["firstname"]}}</td></div>
+        {% set ca_id = caData[loop.index-1][subjectData[0]["id"]|string] |string %}
+        {% set test_id = testData[loop.index-1][subjectData[0]["id"]|string] |string %}
+        {% set exam_id = examData[loop.index-1][subjectData[0]["id"]|string] |string %}
+
+
+        <div class="col">   <tr><td>{{student["surname"]}} {{student["firstname"]}} {{student["othername"]}}</td></div>
+          <div class="col">
+            {% set cascore = "cascore"+ id %}
+                       <td><select name="{{cascore}}" id="ca"  aria-required="true">
+                       <option  value="{{ca_id}}" selected="">{{ca_id}}</option>
+                       <option  value="0" >0</option>
+                         {%for i in range(classData[0]["ca"])%}
+                         
+                               <option  value="{{i+1}}">{{i+1}}</option>
+                          {%endfor%}
+                       </select>
+                       <div class="arrow"></div></td>
+            </div>  
+            <div class="col">
+              {% set testscore = "testscore"+ id %}
+                         <td><select name="{{testscore}}" id="test"  aria-required="true">
+                         <option  value="{{test_id}}" selected="">{{test_id}}</option>
+                         <option  value="0" >0</option>
+                           {%for i in range(classData[0]["test"])%}
+                                 <option  value="{{i+1}}">{{i+1}}</option>
+                            {%endfor%}
+                         </select>
+                         <div class="arrow"></div></td>
+             </div>
+      
         <div class="col">
-         {% set cascore = "cascore"+ id %}
-         <td><input type="number" max="{{schoolInfo[0]["ca_max"]}}" min="0"  class="form-control"  name ="{{cascore}}" value="{{caData[loop.index-1][subjectData[0]["name"]]}}"></td>
-        </div>
         <div class="col">
-         {% set testscore = "testscore"+ id %}
-         <td><input type="number" max="{{schoolInfo[0]["test_max"]}}" min="0" class="form-control" value="{{testData[loop.index-1][subjectData[0]["name"]]}}" name ="{{testscore}}"></td>
-        </div>
-        <div class="col">
-         {% set examscore = "examscore"+ id %}
-         <td><input type="number" max="{{schoolInfo[0]["exam_max"]}}" min="0" class="form-control" value="{{examData[loop.index-1][subjectData[0]["name"]]}}" name ="{{examscore}}"></td>
-        </div>
+          {% set examscore = "examscore"+ id %}
+                     <td><select name="{{examscore}}" id="exam" class="mdb-select md-form"  aria-required="true">
+                     <option  value="{{exam_id}}" selected="">{{exam_id}}</option>
+                     <option  value="0">0</option>
+                       {%for i in range(classData[0]["exam"])%}
+                             <option  value="{{i+1}}">{{i+1}}</option>
+                        {%endfor%}
+                     </select>
+                     <div class="arrow"></div></td>
+         </div>
+
   </div>
 {% endfor %}
 </table>
-<button class="sign-in" name="edited_scoresheet" value="{{scoresheet_id}}" type="submit">Submit</button>
+<input type="hidden"  class="form-control" value="{{scoresheet_id}}" name="edited_scoresheet" >
+<div class= "row">
+  <div class="col">
+
+<button class="btn btn-primary"  type="submit">Submit</button>
  </form>
-{% endblock %}
+ <form action="/delete_scoresheet" method="post">
+  </div>
+  <div class="col">
+ <button class="btn btn-primary"  type="submit">Delete scoresheet</button>
+ </form>
+</div>
+<div class="col">
+  <form action="/cancel" method="post">
+    <button class="btn btn-primary"  type="submit">cancel</button>
+  </form>
+</div>
+</div>
