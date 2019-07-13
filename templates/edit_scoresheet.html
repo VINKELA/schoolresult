@@ -233,11 +233,16 @@ setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1
  <form action="/delete_scoresheet" method="post">
   </div>
   <div class="col">
+      <input type="hidden"   value="{{subjectData[0]["id"]}}" name ="subject_id"/>
+      <input type="hidden"   value="{{classData[0]["id"]}}" name ="class_id"/>
+
  <button class="btn btn-primary"  type="submit">Delete scoresheet</button>
  </form>
 </div>
 <div class="col">
   <form action="/cancel" method="post">
+    <input type="hidden"   value="{{subjectData[0]["id"]}}" name ="subject_id"/>
+    <input type="hidden"   value="{{classData[0]["id"]}}" name ="class_id"/>
     <button class="btn btn-primary"  type="submit">cancel</button>
   </form>
 </div>

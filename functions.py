@@ -218,7 +218,7 @@ def render_portfolio(error=None):
     classrows = db.execute("SELECT * FROM :session_data ", session_data = tables["session_data"])
     if error:
     	flash(error,'failure')
-    return render_template("portfolio.html", schoolInfo = rows, classData = classrows, error=error)
+    return render_template("portfolio.html", schoolInfo = rows, clas = classrows, error=error)
 
 def assign_student_position(class_id):
 	tables = database(class_id)

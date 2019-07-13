@@ -39,8 +39,10 @@ edit student details
  </form>
  <form action="/delete_class" method="post"><button name="delete_class" class="sign-in" type="submit" value={{classData[0]["id"]}}>DELETE</button></form>
 </div>
- <button name="cancel" class="sign-in" >CANCEL</button>
-
+<form method="POST" action="/cancel_portfolio">
+  <input name="class_id" type="hidden" value="{{classData[0]["id"]}}"/>
+  <button class="sign-in" type="submit" >cancel</button>
+</form>
     </div>
     
 
