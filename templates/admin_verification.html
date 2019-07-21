@@ -1,0 +1,16 @@
+
+{% extends "layout.html" %}
+
+{% block title %}
+verify admin
+{% endblock %}
+
+{% block main %}
+
+<div class="form-w3ls">
+<form action="/admin_verification" method="post">            
+<input type="password" name="password" placeholder="admin password" />
+<button class="sign-in">VERIFY </button>
+</form>
+</div>
+{% endblock %}

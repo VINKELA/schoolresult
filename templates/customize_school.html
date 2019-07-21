@@ -3,7 +3,7 @@
 {{classData[0]["classname"]}}
 {% endblock %}
 {% block main %}
-<form method="POST" action="/customize">
+<form method="POST" action="/customize_school">
 <input type="hidden" value="{{class_setting["id"]}}" name="class_id"/>
 <table class="table table-striped">
     <thead>
@@ -15,9 +15,195 @@
     </thead>
     <tbody>
         <tr>
+            <td rowspan="2">SET SESSION/TERM</td>
+            <td>SESSION</td>
+            <td>
+                    <select name="session"   aria-required="true">
+                            <option   selected="" disabled="">{{schoolInfo[0]["current_session"]}}</option>
+                            <option  value="2018/2019">2018/2019</option>
+                            <option  value="2019/2020">2019/2020</option>
+                            <option  value="2020/2021">2020/2021</option>
+                            <option  value="2021/2022">2021/2022</option>
+                            </select>
+                            <div class="arrow"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>TERM</td>
+            <td>
+                    <select name="term"   aria-required="true">
+                            <option   selected="" disabled="">{{schoolInfo[0]["current_term"]}}</option>
+                            <option  value="1">1</option>
+                            <option  value="2">2</option>
+                            <option  value="3">3</option>
+                            </select>
+                            <div class="arrow"></div>
+            </td>
+</tr>
+            <tr>
+                    <td rowspan="12">school detail and other information</td>
+                    <td>
+                            school name
+                        </td>
+                        <td>
+                            <input type="text" " name="sd_other" value="{{schoolInfo[0]["school_name"].upper()}}">
+                        </td>
+                    </tr>
+                    <tr>
+                    <td>
+                        school details font
+                    </td>
+                    <td>
+                        <select  name="sd_font" >
+                                <option selected="selected" disabled="">{{class_setting["sd_font"]}}</option>
+                                <option>Arial</option> 
+                                <option>Arial Black</option>
+                                <option>Arial Narrow</option>
+                                <option>Arial Rounded MT Bold</option>
+                                <option>Avant Garde</option>
+                               <option> Calibri</option>
+                                <option>Candara</option>
+                                <option>Century Gothic</option>
+                                <option>Franklin Gothic Medium</option>
+                                <option>Futura</option>
+                                <option>Geneva</option>
+                                <option>Gill Sans</option>
+                                <option>Helvetica</option>
+                                <option>Impact</option>
+                                <option>Lucida Grande</option>
+                                <option>Optima</option>
+                                <option>Segoe UI</option>
+                                <option>Tahoma</option>
+                                <option>Trebuchet MS</option>
+                                <option>Verdana</option>
+                                <option>Big Caslon</option>
+                                <option>Bodoni MT</option>
+                                <option>Book Antiqua</option>
+                                <option>Calisto MT</option>
+                                <option>Cambria</option>
+                                <option>Didot</option>
+                                <option>Garamond</option>
+                                <option>Georgia</option>
+                                <option>Goudy Old Style</option>
+                                <option>Hoefler Text</option>
+                                <option>Lucida Bright</option>
+                                <option>Palatino</option>
+                                <option>Perpetua</option>
+                                <option>Rockwell</option>
+                                <option>Rockwell Extra Bold</option>
+                                <option>Baskerville</option>
+                                <option>Times New Roman</option>
+                                <option>Consolas</option>
+                                <option>Courier New</option>
+                                <option>Lucida Console</option>
+                                <option>Lucida Sans Typewriter</option>
+                                <option>Monaco</option>
+                                <option>Andale Mono</option>
+                                <option>Fantasy</option>
+                                <option>Copperplate</option>
+                                <option>Papyrus</option>
+                                <option>Brush Script MT</option>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        school details color
+                    </td>
+                    <td>
+                        <input type="color"   name="sd_color" value="{{class_setting["sd_color"]}}">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        school details font-size
+                    </td>
+                    <td>
+                            <select name="sd_fontsize"   aria-required="true">
+                                    <option   selected="" disabled="">{{class_setting["sd_fontsize"]}}</option>
+                                      {%for i in range(100)%}
+                                            <option  value="{{i+1}}px">{{i+1}}px</option>
+                                       {%endfor%}
+                                    </select>
+                                    <div class="arrow"></div>
+                    </td>
+        </tr>
+        
+                <tr>
+                    <td>school details position</td>
+                    <td><select aria-required="true" name="sd_position">
+                            <option selected="selected" disabled="">{{class_setting["sd_position"]}}</option>
+                            <option>center</option>
+                            <option>left</option>
+                            <option>right</option>
+                            </select>
+                            <div class="arrow"></div>
+                    </td>
+            </tr>
+            <tr>
+                <td>
+                    add school email
+                </td>
+                <td>
+                    <input type="text"  name="sd_email" value="{{class_setting["sd_email"]}}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    use admin email
+                </td>
+                <td>
+                    {%if class_setting["admin_email"]== 'on'%}
+                    <input type="checkbox" name="admin_email"   checked>
+                    {%else%}
+                    <input type="checkbox" name="admin_email">
+                    {%endif%}
+                </td>
+        </tr>
+            <tr>
+                <td>
+                    add address
+                </td>
+                <td>
+                    <input type="text"  name="address" value="{{class_setting["address"]}}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    add P.O BOX
+                </td>
+                <td>
+                    <input type="text"  name="po_box" value="{{class_setting["po_box"]}}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    add phone numbers
+                </td>
+                <td>
+                    <input type="text"  name="phone" value="{{class_setting["phone"]}}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    next term
+                </td>
+                <td>
+                    <input type="date"  name="next_term" value="{{class_setting["next_term"]}}">
+                </td>
+            </tr>
+        
+            <tr>
+                <td>
+                    other information
+                </td>
+                <td>
+                    <input type="text" " name="sd_other" value="{{class_setting["sd_other"]}}">
+                </td>
+            </tr>
+        
+        <tr>
         <td>grading type</td>
         <td></td>
-
         <td>
                 <select name="grading_type"  aria-required="true">
                     <option selected="selected" disabled="">{{class_setting["grading_type"]}}</option>
@@ -27,8 +213,6 @@
                     <div class="arrow"></div>
         </td>
     </tr>
-
-
             <tr>
                 <td rowspan="4">Background</td>
                 <td>background color</td>
@@ -234,158 +418,6 @@
                     </td>
         
         </tr>
-        <tr>
-            <td rowspan="11">school detail and other information</td>
-            <td>
-                school details font
-            </td>
-            <td>
-                <select  name="sd_font" >
-                        <option selected="selected" disabled="">{{class_setting["sd_font"]}}</option>
-                        <option>Arial</option> 
-                        <option>Arial Black</option>
-                        <option>Arial Narrow</option>
-                        <option>Arial Rounded MT Bold</option>
-                        <option>Avant Garde</option>
-                       <option> Calibri</option>
-                        <option>Candara</option>
-                        <option>Century Gothic</option>
-                        <option>Franklin Gothic Medium</option>
-                        <option>Futura</option>
-                        <option>Geneva</option>
-                        <option>Gill Sans</option>
-                        <option>Helvetica</option>
-                        <option>Impact</option>
-                        <option>Lucida Grande</option>
-                        <option>Optima</option>
-                        <option>Segoe UI</option>
-                        <option>Tahoma</option>
-                        <option>Trebuchet MS</option>
-                        <option>Verdana</option>
-                        <option>Big Caslon</option>
-                        <option>Bodoni MT</option>
-                        <option>Book Antiqua</option>
-                        <option>Calisto MT</option>
-                        <option>Cambria</option>
-                        <option>Didot</option>
-                        <option>Garamond</option>
-                        <option>Georgia</option>
-                        <option>Goudy Old Style</option>
-                        <option>Hoefler Text</option>
-                        <option>Lucida Bright</option>
-                        <option>Palatino</option>
-                        <option>Perpetua</option>
-                        <option>Rockwell</option>
-                        <option>Rockwell Extra Bold</option>
-                        <option>Baskerville</option>
-                        <option>Times New Roman</option>
-                        <option>Consolas</option>
-                        <option>Courier New</option>
-                        <option>Lucida Console</option>
-                        <option>Lucida Sans Typewriter</option>
-                        <option>Monaco</option>
-                        <option>Andale Mono</option>
-                        <option>Fantasy</option>
-                        <option>Copperplate</option>
-                        <option>Papyrus</option>
-                        <option>Brush Script MT</option>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                school details color
-            </td>
-            <td>
-                <input type="color"   name="sd_color" value="{{class_setting["sd_color"]}}">
-            </td>
-        </tr>
-        <tr>
-            <td>
-                school details font-size
-            </td>
-            <td>
-                    <select name="sd_fontsize"   aria-required="true">
-                            <option   selected="" disabled="">{{class_setting["sd_fontsize"]}}</option>
-                              {%for i in range(100)%}
-                                    <option  value="{{i+1}}px">{{i+1}}px</option>
-                               {%endfor%}
-                            </select>
-                            <div class="arrow"></div>
-            </td>
-</tr>
-
-        <tr>
-            <td>school details position</td>
-            <td><select aria-required="true" name="sd_position">
-                    <option selected="selected" disabled="">{{class_setting["sd_position"]}}</option>
-                    <option>center</option>
-                    <option>left</option>
-                    <option>right</option>
-                    </select>
-                    <div class="arrow"></div>
-            </td>
-    </tr>
-    <tr>
-        <td>
-            add school email
-        </td>
-        <td>
-            <input type="text"  name="sd_email" value="{{class_setting["sd_email"]}}">
-        </td>
-    </tr>
-    <tr>
-        <td>
-            use admin email
-        </td>
-        <td>
-            {%if class_setting["admin_email"]== 'on'%}
-            <input type="checkbox" name="admin_email"   checked>
-            {%else%}
-            <input type="checkbox" name="admin_email">
-            {%endif%}
-        </td>
-</tr>
-    <tr>
-        <td>
-            add address
-        </td>
-        <td>
-            <input type="text"  name="address" value="{{class_setting["address"]}}">
-        </td>
-    </tr>
-    <tr>
-        <td>
-            add P.O BOX
-        </td>
-        <td>
-            <input type="text"  name="po_box" value="{{class_setting["po_box"]}}">
-        </td>
-    </tr>
-    <tr>
-        <td>
-            add phone numbers
-        </td>
-        <td>
-            <input type="text"  name="phone" value="{{class_setting["phone"]}}">
-        </td>
-    </tr>
-    <tr>
-        <td>
-            next term
-        </td>
-        <td>
-            <input type="date"  name="next_term" value="{{class_setting["next_term"]}}">
-        </td>
-    </tr>
-
-    <tr>
-        <td>
-            other information
-        </td>
-        <td>
-            <input type="text" " name="sd_other" value="{{class_setting["sd_other"]}}">
-        </td>
-    </tr>
 
     <tr>
         <td rowspan="4">student details</td>
@@ -713,9 +745,8 @@
         <button class="sign-in"  type="submit">Submit</button></div>
 </form>
 <div class="form-w3ls col">
-  <form action="/cancel" method="POST">  <input type="hidden" value="{{classData[0]["id"]}}" name="class_id"><button class="sign-in"  type="submit">Back</button></form>
+<form action="/cancel_portfolio" method="POST"> <button class="sign-in"  type="submit">Back</button></form>
 </div>
 </form>
-
 </div>
 {% endblock %}
