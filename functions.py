@@ -129,8 +129,8 @@ def database(id):
     schoolId = session["user_id"]
     tables["classes"] = "classes"+"_"+str(tables["school_id"])
     tables["sessions"] = "sessions"+"_"+str(tables["school_id"])
-    tables["classlist"] = "classlist"+"_"+str(tables["class_id"])+"_"+str(tables["school_id"])
     classIdentifier = str(tables["class_id"])+"_"+str(current_term)+"_"+str(current_session)+"_"+str(tables["school_id"])
+    tables["classlist"] = "classlist"+"_"+classIdentifier
     tables["ca"]  = "catable"+"_"+classIdentifier
     tables["test"] = "testtable"+"_"+classIdentifier
     tables["exam"] = "examtable"+"_"+classIdentifier
@@ -261,7 +261,6 @@ def random_string_generator(str_size, allowed_chars):
 
 def term_tables(classid):
 	tables = database(classid)
-	db.execute("CREATE TABLE :classlist ('id' INTEGER PRIMARY KEY AUTOINCREMENT  NOT NULL, 'surname' TEXT,'firstname' TEXT,'othername' TEXT,'sex' TEXT, 'pin' TEXT)",classlist = tables["classlist"] )
 
 	db.execute("CREATE TABLE :classsubjects ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'name' TEXT, 'total_score' INTEGER DEFAULT 0,'ppass' INTEGER DEFAULT 0,'class_average' INTEGER DEFAULT 0,'no_of_A' INTEGER DEFAULT 0, no_of_B INTEGER DEFAULT 0, no_of_C INTEGER DEFAULT 0,no_of_D INTEGER DEFAULT 0,no_of_E INTEGER DEFAULT 0,no_of_F INTEGER DEFAULT 0,'no_failed' INTEGER DEFAULT 0,'no_passed' INTEGER DEFAULT 0,'teachers_name' TEXT ,'teachers_initial' TEXT )",classsubjects = tables["subjects"] )
 
@@ -276,17 +275,19 @@ def term_tables(classid):
 
 	# create examtable
 	db.execute("CREATE TABLE :examtable ('id' INTEGER PRIMARY KEY  NOT NULL)",examtable = tables["exam"] )
-
+	
 	# create mastersheet
 	db.execute("CREATE TABLE :mastersheet ('id' INTEGER PRIMARY KEY  NOT NULL, 'total_score' INTEGER DEFAULT 0, 'average' INTEGER DEFAULT 0, 'subject_passed' INTEGER DEFAULT 0,'subject_failed' INTEGER DEFAULT 0, 'position' INTEGER )",mastersheet = tables["mastersheet"] )
 
 	# create subject_position
 	db.execute("CREATE TABLE :subjectposition ('id' INTEGER PRIMARY KEY  NOT NULL)",subjectposition = tables['subject_position'] )
 
+	# create classlist
+	db.execute("CREATE TABLE :classlist ('id' INTEGER PRIMARY KEY  NOT NULL, 'surname' TEXT,'firstname' TEXT,'othername' TEXT,'sex' TEXT, 'pin' TEXT)",classlist = tables["classlist"] )
+
 
 def drop_tables(classid):
 	tables = database(classid)
-
 	db.execute("DROP TABLE :classsubjects ",classsubjects = tables["subjects"] )
 
 	# create  catable
@@ -307,7 +308,8 @@ def drop_tables(classid):
 	# create subject_position
 	db.execute("DROP TABLE :subjectposition",subjectposition = tables['subject_position'] )
 
-	db.execute("DROP TABLE :classlist ",classlist = tables["classlist"] )
+	# create classlist
+	db.execute("DROP TABLE :classlist",classlist = tables['classlist'] )
 
 def passwordGen(stringLength=8):
     """Generate a random string of fixed length """
@@ -438,7 +440,6 @@ def update_grade(class_id):
 			else:
 				db.execute("UPDATE :master SET subject_passed = :value WHERE id=:id", master = tables["mastersheet"], value = int(student["subject_passed"])+1, id = student["id"])
 				sj_passes = sj_passes + 1
-
 			if sub_grade[0] ==  "A":
 				sj_a = sj_a + 1
 				db.execute("UPDATE :grades SET :grade = :value WHERE id=:id", grades = tables["grade"], grade = grade_col, value = int(current_grades[0][grade_col])+1, id = student["id"])
@@ -460,3 +461,86 @@ def update_grade(class_id):
 		no_of_students_present = sj_passes + sj_failures
 		pass_percent = (sj_passes/no_of_students_present) * 100
 		db.execute("UPDATE :subject SET ppass = :pass_percent1, no_of_A=:s_a, no_of_B=:s_b, no_of_C=:s_c, no_of_D=:s_d, no_of_E=:s_e, no_of_F=:s_f, no_passed= :n_pass, no_failed=:n_fail  WHERE id=:id ", subject=tables["subjects"], pass_percent1 = pass_percent, s_a = sj_a, s_b = sj_b, s_c = sj_c, s_d = sj_d, s_e = sj_e, s_f = sj_f, n_pass = sj_passes, n_fail = sj_failures, id = subject["id"])
+
+#reeturns true if session_term exist and false if it does not exist
+def session_term_check(session,term):
+	tables = database(0)
+	session_columns = db.execute("SELECT * FROM :ss", ss= tables["sessions"])
+	session_columns = session_columns[0].keys()
+	for s_t in session_columns:
+		if s_t != "id":
+			session_term = s_t.split("_")
+			current_sesssion = session_term[0]
+			current_term = session_term[1]
+			if session == current_sesssion:
+				if term ==current_term:
+					return True
+	return False
+def new_term(school_session,term):
+	tables = database(0)
+	selected_term = term
+	selected_session = school_session
+	former_term_settings = db.execute("SELECT * FROM :class_settings",class_settings = tables["class_term_data"])
+	classes = db.execute("SELECT * FROM :all_classes", all_classes = tables["classes"])
+	new_session = selected_session+"_"+selected_term
+	#alter table add column new_session
+	db.execute("ALTER  TABLE :sessions ADD COLUMN :this_column", sessions=tables["sessions"],this_column=new_session)
+	class_term_data = "class_term_data"+"_"+str(selected_term)+"_"+str(selected_session)+"_"+str(session["user_id"])
+	# create class term tables
+	db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, 'no_of_failures' INTEGER DEFAULT 0, 'grading_type' TEXT DEFAULT 'WAEC','background_color' TEXT DEFAULT 'white','text_color' TEXT DEFAULT 'black','line_color' TEXT DEFAULT 'black','background_font' TEXT DEFAULT 'Ariel','ld_position' TEXT DEFAULT 'center','l_font' TEXT DEFAULT 'Ariel Black','l_weight' TEXT DEFAULT '900','l_color' TEXT DEFAULT '#00ff40','l_fontsize' TEXT DEFAULT '30px','sd_font' TEXT DEFAULT 'Ariel','sd_color' TEXT DEFAULT '#808000','sd_fontsize' TEXT DEFAULT '20px','sd_position' TEXT DEFAULT 'center','sd_email' TEXT,'admin_email' TEXT DEFAULT 'off', 'address' TEXT,'po_box' TEXT,'phone' TEXT,'next_term' TEXT,'sd_other' TEXT,'std_color' TEXT DEFAULT 'black','std_font' TEXT DEFAULT 'Arial Narrow','std_fontsize' TEXT DEFAULT '18px','std_position' TEXT DEFAULT 'left','table_type' TEXT DEFAULT 'bordered','ca' TEXT DEFAULT 'on','test' TEXT DEFAULT 'on','exam' TEXT DEFAULT 'on','combined' TEXT DEFAULT 'on','subject_total' TEXT DEFAULT 'on','class_average' TEXT DEFAULT 'on','subject_position' TEXT DEFAULT 'on','grade' TEXT DEFAULT 'on','subject_comment' TEXT DEFAULT 'off','teachers_initials' TEXT DEFAULT 'on','total_score' TEXT DEFAULT 'on','average' TEXT DEFAULT 'on','position' TEXT DEFAULT 'on','teachers_line' INTEGER DEFAULT 0,'shadow' TEXT DEFAULT 'on','principal_line' INTEGER DEFAULT 0,'teachers_signature' TEXT DEFAULT 'off','principal_signature' TEXT DEFAULT 'off','pandf' TEXT DEFAULT 'on','grade_summary' TEXT DEFAULT 'on','watermark' TEXT DEFAULT 'on')",result = class_term_data)
+	for  clas in classes:
+		former = database(clas["id"])
+		class_settings = db.execute("SELECT * FROM :settings WHERE id=:id", settings = former["class_term_data"], id=clas["id"])
+		# format class tables names
+		current_session = selected_session
+		current_term = selected_term
+		session_data = "session_data"+"_"+str(session["user_id"])+"_"+current_session
+		classIdentifier = str(clas["id"])+"_"+str(selected_term)+"_"+str(selected_session)+"_"+str(former["school_id"])
+		classlist = "classlist"+"_"+classIdentifier
+		ca  = "catable"+"_"+classIdentifier
+		test = "testtable"+"_"+classIdentifier
+		exam = "examtable"+"_"+classIdentifier
+		subjects = "subjects"+"_"+classIdentifier
+		mastersheet = "mastersheet"+"_"+classIdentifier
+		subject_position = "subject_position"+"_"+classIdentifier
+		grade = "grade"+"_"+classIdentifier
+		#create tables
+		db.execute("CREATE TABLE :classsubjects ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'name' TEXT, 'total_score' INTEGER DEFAULT 0,'ppass' INTEGER DEFAULT 0,'class_average' INTEGER DEFAULT 0,'no_of_A' INTEGER DEFAULT 0, no_of_B INTEGER DEFAULT 0, no_of_C INTEGER DEFAULT 0,no_of_D INTEGER DEFAULT 0,no_of_E INTEGER DEFAULT 0,no_of_F INTEGER DEFAULT 0,'no_failed' INTEGER DEFAULT 0,'no_passed' INTEGER DEFAULT 0,'teachers_name' TEXT ,'teachers_initial' TEXT )",classsubjects = subjects )
+
+		# create  catable
+		db.execute("CREATE TABLE :catable ('id' INTEGER PRIMARY KEY   NOT NULL)",catable = ca )
+
+		# create  grade
+		db.execute("CREATE TABLE :grade ('id' INTEGER PRIMARY KEY   NOT NULL, 'no_of_A' INTEGER DEFAULT 0,'no_of_B' INTEGER DEFAULT 0,'no_of_C' INTEGER DEFAULT 0,'no_of_D' INTEGER DEFAULT 0,'no_of_E' INTEGER DEFAULT 0,'no_of_F' INTEGER DEFAULT 0)",grade = grade )
+
+		# create testtable
+		db.execute("CREATE TABLE :testtable ('id' INTEGER PRIMARY KEY   NOT NULL)",testtable = test )
+
+		# create examtable
+		db.execute("CREATE TABLE :examtable ('id' INTEGER PRIMARY KEY  NOT NULL)",examtable = exam )
+
+		# create mastersheet
+		db.execute("CREATE TABLE :mastersheet ('id' INTEGER PRIMARY KEY  NOT NULL, 'total_score' INTEGER DEFAULT 0, 'average' INTEGER DEFAULT 0, 'subject_passed' INTEGER DEFAULT 0,'subject_failed' INTEGER DEFAULT 0, 'position' INTEGER )",mastersheet = mastersheet )
+
+		# create subject_position
+		db.execute("CREATE TABLE :subjectposition ('id' INTEGER PRIMARY KEY  NOT NULL)",subjectposition = subject_position )
+
+		# create classlist
+		db.execute("CREATE TABLE :classlist ('id' INTEGER PRIMARY KEY  NOT NULL, 'surname' TEXT,'firstname' TEXT,'othername' TEXT,'sex' TEXT, 'pin' TEXT)",classlist = classlist )
+		#copy classlist
+		tables = database(clas["id"])
+		previous_classlist = db.execute("SELECT * FROM :classlist", classlist = tables["classlist"])
+		#copy previous classlist
+		for student in previous_classlist:
+			db.execute("INSERT INTO :classlist (id, surname, firstname, othername, sex)VALUES(:id, :surname, :firstname, :othername, :sex)",classlist=classlist, id = student["id"], surname= student["surname"], firstname = student["firstname"], othername=student["othername"], sex=student["sex"])
+		#insert into sessions
+		db.execute("UPDATE :current_sessions SET :session_column = :value WHERE id=:id", current_sessions = tables["sessions"],session_column=new_session, value=new_session, id=clas["id"])
+		#copy term tables
+		db.execute("INSERT INTO :settings (id, noOfStudents ,noOfSubjects , no_of_passes , no_of_failures , grading_type ,background_color ,text_color ,line_color,background_font,ld_position,l_font ,l_weight ,l_color ,l_fontsize,sd_font,sd_color,sd_fontsize ,sd_position ,sd_email,admin_email , address ,po_box ,phone,next_term ,sd_other ,std_color,std_font,std_fontsize,std_position,table_type ,ca ,test,exam,combined ,subject_total,class_average,subject_position,grade,subject_comment ,teachers_initials,total_score,average,position,teachers_line ,shadow ,principal_line,teachers_signature,principal_signature,pandf ,grade_summary ,watermark)VALUES(:id, :noOfStudents ,:noOfSubjects , :no_of_passes , :no_of_failures , :grading_type ,:background_color ,:text_color ,:line_color,:background_font,:ld_position,:l_font ,:l_weight ,:l_color ,:l_fontsize,:sd_font,:sd_color,:sd_fontsize ,:sd_position ,:sd_email,:admin_email , :address ,:po_box ,:phone,:next_term ,:sd_other ,:std_color,:std_font,:std_fontsize,:std_position,:table_type ,:ca ,:test,:exam,:combined ,:subject_total,:class_average,:subject_position,:grade,:subject_comment ,:teachers_initials,:total_score,:average,:position,:teachers_line ,:shadow ,:principal_line,:teachers_signature,:principal_signature,:pandf ,:grade_summary ,:watermark)",settings = class_term_data,id =clas["id"], noOfStudents = class_settings[0]["noOfStudents"] ,noOfSubjects = class_settings[0]["noOfSubjects"] , no_of_passes = class_settings[0]["no_of_passes"] , no_of_failures = class_settings[0]["no_of_failures"] , grading_type = class_settings[0]["grading_type"] ,background_color  = class_settings[0]["background_color"],text_color = class_settings[0]["text_color"] ,line_color = class_settings[0]["line_color"],background_font = class_settings[0]["background_font"],ld_position = class_settings[0]["ld_position"],l_font  = class_settings[0]["l_font"],l_weight = class_settings[0]["l_weight"] ,l_color  = class_settings[0]["l_color"],l_fontsize = class_settings[0]["l_fontsize"],sd_font = class_settings[0]["sd_font"],sd_color = class_settings[0]["sd_color"],sd_fontsize = class_settings[0]["sd_fontsize"] ,sd_position  = class_settings[0]["sd_position"],sd_email = class_settings[0]["sd_email"],admin_email  = class_settings[0]["admin_email"], address  = class_settings[0]["address"],po_box  = class_settings[0]["po_box"],phone= class_settings[0]["phone"],next_term  = class_settings[0]["phone"],sd_other  = class_settings[0]["phone"],std_color = class_settings[0]["std_color"],std_font = class_settings[0]["std_font"],std_fontsize = class_settings[0]["std_fontsize"],std_position = class_settings[0]["std_position"],table_type = class_settings[0]["table_type"] ,ca  = class_settings[0]["ca"],test = class_settings[0]["test"],exam = class_settings[0]["exam"],combined  = class_settings[0]["combined"],subject_total = class_settings[0]["subject_total"],class_average = class_settings[0]["noOfStudents"],subject_position = class_settings[0]["noOfStudents"],grade = class_settings[0]["grade"],subject_comment = class_settings[0]["subject_comment"] ,teachers_initials = class_settings[0]["teachers_initials"],total_score = class_settings[0]["total_score"],average = class_settings[0]["noOfStudents"],position = class_settings[0]["position"],teachers_line  = class_settings[0]["teachers_line"],shadow  = class_settings[0]["shadow"],principal_line = class_settings[0]["principal_line"],teachers_signature = class_settings[0]["teachers_signature"],principal_signature = class_settings[0]["principal_signature"],pandf  = class_settings[0]["pandf"],grade_summary  = class_settings[0]["grade_summary"],watermark = class_settings[0]["watermark"])
+	#update term om school
+	db.execute("UPDATE school SET current_term=:value WHERE id=:id",value= selected_term, id=session["user_id"])
+
+
+#todo 
+def new_session(session,term):
+	print("implement new_session")

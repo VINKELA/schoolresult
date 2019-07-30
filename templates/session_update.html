@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}
+new session update
+{% endblock %}
+{% block main %}
+  <div class="form-w3ls">
+    <form action="/session_update" method="post">
+
+{%for classData in session_data%}
+    <hr>
+          <h1 class="message green"> CHANGE CLASS NAME</h1>
+
+
+      <input type="text"  placeholder="{{classData["classname"]}}" name="class_name">
+      <h1 class="message green"> CHANGE CLASS TEACHER </h1>
+
+  <div class="row">
+<div class="col">
+
+     <input type="text"  name =  "surname" placeholder="{{classData["surname"]}}">
+    </div>
+    <div class="col">
+
+     <input type="text"  name="firstname" placeholder={{classData["firstname"]}}>
+    </div>
+     <div class="col">
+
+      <input type="text"  name="othername" placeholder={{classData["othername"]}}>
+  </div>
+    </div>
+
+<hr>
+
+{%endfor%}
+    <div class="row">
+            <div class="col">
+           <button  class="sign-in" type="submit" >Submit</button>
+           <input type="hidden"  value = "{{selected_class}}" name="selected_class">
+           <input type="hidden"  value = "{{selected_session}}" name="selected_session">
+          </div>
+          <div class="col">
+           </form>
+          </div>
+          <form method="POST" action="/cancel_portfolio">
+            <button class="sign-in" type="submit" >cancel</button>
+          </form>
+        </div>
+
+{% endblock %}

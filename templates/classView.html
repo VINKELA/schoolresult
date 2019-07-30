@@ -61,7 +61,7 @@
      <tr>
      <td>{{loop.index}}</td>
 
-     <td>{{subject["name"]}} <a href="/verify_edit_scoresheet?subject_id={{subject["id"]}}&&class_id={{class_id}}"> edit</a></td>
+     <td>{{subject["name"].upper()}} <a href="/verify_edit_scoresheet?subject_id={{subject["id"]}}&&class_id={{class_id}}"> edit</a></td>
      <td>{{ "%.2f"|format(subject["class_average"]|float) }}</td>
      <td><form action="/scoresheet" method="post" target="_blank"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">VEIW </button></form></td>
      </tr>
