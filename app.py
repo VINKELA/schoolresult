@@ -1710,6 +1710,42 @@ def customize_school():
                 new_term(selected_session, selected_term)
             else:
                 return render_template("session_update.html", selected_session = selected_session, selected_term = selected_term, schoolInfo = school_info, session_data = session_data)
-
+        else:
+            db.execute("UPDATE school SET current_term = :cur, current_session=:sess WHERE id=:id", cur= selected_term, sess=selected_session, id= session["user_id"])
     return render_portfolio()
+
+
+@app.route("/session_update", methods=["POST"])
+@login_required
+def session_update():
+    new_term( request.form.get("selected_session"),request.form.get("selected_term"))
+    db.execute("UPDATE school SET current_session=:c_s WHERE id=:id", c_s = request.form.get("selected_session"), id = session["user_id"])
+    tables = database(0)
+    classes = db.execute("SELECT * FROM :session_data", session_data = tables["session_data"])
+    for  clas in classes:
+        id = str(clas["id"])
+        name = "name"+id
+        formmaster = "formmaster"+id
+        ca = "ca"+id
+        test ="test"+id
+        exam = "exam"+id
+        section = "section"+id
+        form = request.form.get("formmaster").split(" ")
+        firstname = None
+        secondname = None
+        othername = None
+        if request.form.get("formmaster"):
+            form = request.form.get("formmaster").split(" ")
+            length = len(form)
+            if length  > 0:
+                firstname = form[0]
+            if length > 1:
+                secondname = form[1]
+            if length > 2:
+                othername = form[2]
+        db.execute("UPDATE :data SET classname=:name,firstname = :first, surname = :sur, othername = :other, ca=:cs, test = :ts, exam =:ex, section =:sec",data = tables["session_data"], name=request.form.get(name), first = firstname, sur = secondname, other = othername, cs = request.form.get(ca), ts = request.form.get(test), ex = request.form.get(exam), sec=request.form.get(section))
+    error = "session changed successfully"
+    return render_portfolio(error)
+         
+
 
