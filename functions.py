@@ -536,15 +536,18 @@ def new_term(school_session,term):
 		#copy classlist
 		tables = database(clas["id"])
 		previous_classlist = db.execute("SELECT * FROM :classlist", classlist = tables["classlist"])
+		pins = generate_pins(10, len(previous_classlist))
 		#copy previous classlist
+		i = 0
 		for student in previous_classlist:
-			db.execute("INSERT INTO :classlist (id, surname, firstname, othername, sex)VALUES(:id, :surname, :firstname, :othername, :sex)",classlist=classlist, id = student["id"], surname= student["surname"], firstname = student["firstname"], othername=student["othername"], sex=student["sex"])
+			db.execute("INSERT INTO :classlist (id, surname, firstname, othername, sex, pin)VALUES(:id, :surname, :firstname, :othername, :sex, :pin)",classlist=classlist, id = student["id"], surname= student["surname"], firstname = student["firstname"], othername=student["othername"], sex=student["sex"], pin = pins[i])
 			db.execute("INSERT INTO :catable (id)VALUES(:id) ",catable = ca,id=student["id"])
 			db.execute("INSERT INTO :testtable (id)VALUES(:id) ",testtable = test,id=student["id"])
 			db.execute("INSERT INTO :examtable (id)VALUES(:id) ",examtable = exam,id=student["id"])
 			db.execute("INSERT INTO :mastersheet (id)VALUES(:id) ",mastersheet = mastersheet,id=student["id"])
 			db.execute("INSERT INTO :subject_position (id)VALUES(:id)",subject_position = subject_position,id=student["id"])
 			db.execute("INSERT INTO :grades (id)VALUES(:id) ",grades = grade,id=student["id"])
+			i = i + 1
 		#insert into sessions
 		db.execute("UPDATE :current_sessions SET :session_column = :value WHERE id=:id", current_sessions = tables["sessions"],session_column=new_session, value=new_session, id=clas["id"])
 		#copy term tables
@@ -558,3 +561,17 @@ def new_term(school_session,term):
 #todo 
 def new_session(session,term):
 	print("implement new_session")
+
+
+
+def generate_pins(length, count, alphabet=string.digits):
+  alphabet = ''.join(set(alphabet))
+  if count > len(alphabet)**length:
+    raise ValueError("Can't generate more than %s > %s pins of length %d out of %r" %
+                      count, len(alphabet)**length, length, alphabet)
+  def onepin(length):
+    return ''.join(random.choice(alphabet) for x in range(length))
+  result = set(onepin(length) for x in range(count))
+  while len(result) < count:
+    result.add(onepin(length))
+  return list(result)

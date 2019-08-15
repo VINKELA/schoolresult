@@ -36,11 +36,10 @@
 		</div>
 		
 		<div id="signup-agile">   
-			<form  action="#" method="post">
-				
-				<input type="number" name="check_result" placeholder="EXAM NO " onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'ENTER YOUR EXAM NUMBER';}" required="required">
-				<input type="number" name="check_result" placeholder=" PIN" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'ENTER YOUR PIN';}" required="required">
-				<button type="submit" class="register" value="check result"> check result</button>
+			<form  action="check_results" method="post" target="_blank">
+				<input type="number" name="regnumber"  placeholder="exam number">
+				<input type="number" name="pin" placeholder="pin">
+				<button type="submit" class="register" > check result</button>
 			</form>
 		</div> 
     </div><!-- tab-content -->
