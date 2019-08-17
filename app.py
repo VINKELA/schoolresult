@@ -1693,9 +1693,9 @@ def customize_school():
 
         if  request.form.get("watermark") != setting["watermark"]:
             if request.form.get("watermark"):
-                db.execute("UPDATE :settings SET watermark = :watermark WHERE id=:id", settings = tables["class_term_data"], watermark = 'on', id=class_id)
+                db.execute("UPDATE :settings SET watermark = :watermark ", settings = tables["class_term_data"], watermark = 'on')
             else :
-                db.execute("UPDATE :settings SET watermark = :watermark WHERE id=:id", settings = tables["class_term_data"], watermark = 'off', id=class_id)
+                db.execute("UPDATE :settings SET watermark = :watermark ", settings = tables["class_term_data"], watermark = 'off')
         
         if request.form.get("std_position") and request.form.get("std_position") != setting["std_position"]:
             db.execute("UPDATE :settings SET std_position = :std_position  ", settings = tables["class_term_data"], std_position = request.form.get("std_position") )
@@ -1836,5 +1836,6 @@ def check_results():
     mastersheet_rows = db.execute("SELECT * FROM :mastersheet where id=:id", mastersheet = tables["mastersheet"], id= student_id)
     subject_position_row = db.execute("SELECT * FROM :subject_position where id=:id", subject_position = tables["subject_position"], id= student_id)
     results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
+    session.clear()
     return render_template("result_sheet.html",gradeRows = grades,result = results[0], schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
             
