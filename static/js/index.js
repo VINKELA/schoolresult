@@ -72,6 +72,37 @@ $(function() {
     });
   });
 
+  $(function() {
+    $('#check_result').bind('click', function() {
+  // Stop form from submitting normally
+  event.preventDefault();
+  if($('input[name="regnumber"]').val() == ""){
+    alert("you must provide a regnumber");
+  }
+  else{
+    var str = $('input[name="regnumber"]').val();
+  if(str.length < 6){
+    alert("exam number invalid");
+  }
+
+  else if($('input[name="pin"]').val() ==""){
+    alert("you must provide a pin");
+  }
+  else{
+      $.post( $SCRIPT_ROOT + '/result_check',{
+        regnumber: $('input[name="regnumber"]').val(),
+        pin: $('input[name="pin"]').val()
+      }, function(data) {
+          if (data == "fail"){alert("invalid reg number")}
+          else if (data == "pin_invalid"){alert("pin invalid")}
+          else{
+            $("#check_results").submit();
+          }
+      });}
+    }
+    });
+  });
+  
 var myInput2 = document.getElementById("psw");
 var length2 = document.getElementById("length2");
 // When the user clicks on the password field, show the message box
@@ -126,3 +157,5 @@ $(function() {
   }
 });
 });
+
+

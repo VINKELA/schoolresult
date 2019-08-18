@@ -1839,3 +1839,53 @@ def check_results():
     session.clear()
     return render_template("result_sheet.html",gradeRows = grades,result = results[0], schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
             
+
+@app.route("/result_check", methods=["POST"])
+def result_check():
+    if request.method == "POST":
+            # get user digit
+        reg_number = request.form.get("regnumber")
+        pin = request.form.get("pin")
+
+    if len(reg_number) < 6:
+        session.clear()
+        return "fail"
+
+    #collect student id class id and school id
+    student_id = reg_number[0]+reg_number[1]+reg_number[2]
+    while student_id[0] == "0":
+        student_id = student_id.strip("0")
+
+    class_id = reg_number[3]+reg_number[4]
+    if class_id[0] == "0":
+        class_id = class_id.strip("0")
+    
+    code_length = len(reg_number)
+    school_length = len(reg_number) - 5
+    school_id = reg_number[-school_length:]
+    #check if school exist else
+    schoolInfo = db.execute("SELECT * FROM school WHERE id=:id", id = school_id)
+    if len(schoolInfo) != 1:
+        return "fail"
+        
+    session["user_id"] = schoolInfo[0]["id"]
+    tables = database(0)
+    #check if class exist else "reg doesnt exist"
+    classInfo = db.execute("SELECT * FROM :classes WHERE id = :id", classes = tables["classes"], id = class_id)
+    if len(classInfo) != 1:
+        session.clear()
+        return "fail"
+    
+    tables = database(str(classInfo[0]["id"]))
+    #check if student exist in class else "reg doesnt exist"
+    studentInfo = db.execute("SELECT * FROM :classlist WHERE id=:id", classlist=tables["classlist"], id=student_id)
+    if len(studentInfo) != 1:
+        session.clear()
+        return "fail"
+    
+    #check if pin is same with given pin is students pin else pin is incorrect
+    if pin != str(studentInfo[0]["pin"]):
+        session.clear()
+        return "pin_invalid"
+    
+    return "pass"
