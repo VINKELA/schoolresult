@@ -1889,3 +1889,18 @@ def result_check():
         return "pin_invalid"
     
     return "pass"
+
+
+@app.route("/admin_check", methods=["POST"])
+def admin_check():
+    password = request.form.get("password")
+    school = db.execute("SELECT * FROM school WHERE id=:id", id= session["user_id"])
+    print(generate_password_hash(password))
+    print(school[0]["admin_password"])
+    if check_password_hash(school[0]["admin_password"],password):
+        return "correct"
+    else:
+        return "incorrect password"
+
+
+
