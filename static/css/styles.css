@@ -10,7 +10,10 @@
 nav .navbar-brand
 {
     /* size for brand */
-    font-size: 25px;
+	font-size:35px;
+	font-weight: bolder;
+	font-style: italic;
+	font-family: Georgia, 'Times New Roman', Times, serif
 }
 
 /* colors for brand */
@@ -638,9 +641,7 @@ or {
 #main{
 	margin-top: 70px;
 }
-#portfolio{
-	margin-top:50px;
-}
+
 #login-div{
 	margin-top:0px;
 }

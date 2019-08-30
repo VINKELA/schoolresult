@@ -1258,8 +1258,6 @@ def confirm_details():
         subject = db.execute("SELECT * FROM :class_subjects",class_subjects = tables["subjects"] )
         flash(error,'success')
         return render_template("add_student.html", schoolInfo = schoolrow,clas=classRows,subjects = subject, classInfo=class_info[0])
-
-
     if not request.form.get("firstname"):
         error = "you must provide students firstname"
         schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
