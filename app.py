@@ -1909,3 +1909,32 @@ def terms():
 @app.route("/privacy", methods=["GET"])
 def privacy():
     return render_template("privacy.html")
+
+
+@app.route("/print_pins", methods=["GET"])
+def print_pins():        
+    tables= database(0)
+    classrow = db.execute("SELECT * FROM :classes", classes = tables["session_data"],)
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+    return render_template("pin_verification.html", schoolInfo = schoolrow, classData=classrow)
+
+
+@app.route("/admin_verified", methods=["POST"])
+def admin_verified():        
+    password = request.form.get("password")
+    tables= database(0)
+    classrow = db.execute("SELECT * FROM :classes", classes = tables["session_data"],)
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+    settings = db.execute("SELECT * FROM :setting", setting = tables["class_term_data"])
+    classlist = []
+    if check_password_hash(schoolrow[0]["admin_password"], password ):
+        for klass in classrow:
+            tables=database(klass["id"])
+            classlist_id = "classlist"+ str(klass["id"])
+            classlis= db.execute("SELECT * FROM :classlist",classlist=tables["classlist"])
+            classlist.append(classlis)
+        return render_template("pins.html", schoolInfo = schoolrow, classData=classrow, result = settings[0], classlists= classlist)
+    else:
+        error = "admin password incorrect"
+        flash(error)
+        return render_template("pin_verification.html",schoolInfo = schoolrow, error=error)
