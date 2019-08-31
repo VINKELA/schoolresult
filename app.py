@@ -1902,3 +1902,10 @@ def admin_check():
 
 
 
+@app.route("/terms", methods=["GET"])
+def terms():
+    return render_template("terms.html")
+
+@app.route("/privacy", methods=["GET"])
+def privacy():
+    return render_template("privacy.html")

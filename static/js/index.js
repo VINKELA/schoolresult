@@ -53,11 +53,11 @@ $(function() {
   // Stop form from submitting normally
   event.preventDefault();
   if($('input[name="username"]').val() == ""){
-    alert("you must provide a username");
+    alert("username is empty");
   }
 
  else if($('input[name="password"]').val() ==""){
-    alert("you must provide a password");
+    alert("password is empty");
   }
  else{
       $.post( $SCRIPT_ROOT + '/login_check',{
@@ -77,7 +77,7 @@ $(function() {
   // Stop form from submitting normally
   event.preventDefault();
   if($('input[name="regnumber"]').val() == ""){
-    alert("you must provide a regnumber");
+    alert("exam number is empty");
   }
   else{
     var str = $('input[name="regnumber"]').val();
@@ -86,7 +86,7 @@ $(function() {
   }
 
   else if($('input[name="pin"]').val() ==""){
-    alert("you must provide a pin");
+    alert("pin is empty");
   }
   else{
       $.post( $SCRIPT_ROOT + '/result_check',{
