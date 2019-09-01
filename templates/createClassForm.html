@@ -43,11 +43,13 @@ create a class
         <div class="form-group">
             <input  id="confirmation" class="form-control" name="confirmation" placeholder="confirm password" type="password" required="required"/>
         </div>
-
-        <button  id="create_button" class="sign-in" type="submit" value="create" >create</button>
-
+<div class="row">
+      <div class="col"> <button  id="create_button" class="sign-in" type="submit" value="create" >create</button></div> 
     </form>
-    </div>
+    <form action="/cancel_portfolio" method="POST"><div class="col"><button class="sign-in" id="password_button">CANCEL</button></div>
+    </form>
+        </div>
+</div>
 <!-- js files -->
 	<script src="/static/js/portfolio.js"></script>
 <!-- /js files -->

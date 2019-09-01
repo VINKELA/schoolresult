@@ -21,9 +21,12 @@
             <div class="arrow"></div>
         </div>
             <input autocomplete="off"   name="subject_teacher" placeholder="subject_teacher" type="text" required/>
-        <button name = "submit_scoresheet"id="submit_scoresheet" class="sign-in" type="submit">SUBMIT</button>
+            <div class="row">
+        <div class="col"><button name = "submit_scoresheet"id="submit_scoresheet" class="sign-in" type="submit">SUBMIT</button></div>
     </form>
+    <form action="/cancel_portfolio" method="POST"><div class="col"><button class="sign-in" id="password_button">CANCEL</button></div>
     </div>
+</div>
 <!-- js files -->
 	<script src='/static/js/jquery.min.js'></script>
 	<script src="/static/js/submit.js"></script>

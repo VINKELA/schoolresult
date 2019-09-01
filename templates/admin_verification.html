@@ -10,8 +10,12 @@ verify admin
 <div class="form-w3ls">
 <form action="/admin_verification" id="password_form" method="post">            
 <input type="password" name="password" placeholder="admin password" />
-<button class="sign-in" id="password_button">VERIFY </button>
+<div class="row">
+<div class="col"><button class="sign-in" id="password_button">VERIFY </button></div>
 </form>
+<form action="/cancel_portfolio" method="POST"><div class="col"><button class="sign-in" id="password_button">CANCEL</button></div>
+</form>
+</div>
 </div>
  <!-- js files -->
  <script src='/static/js/jquery.min.js'></script>

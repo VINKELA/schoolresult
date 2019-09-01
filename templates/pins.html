@@ -46,6 +46,10 @@
                 border: 0;
                 border-bottom: 1px solid {{result["line_color"]}}
         }
+        .row{
+                margin: 30px;
+                position: center;
+        }
         #letter_heading{
                 text-align: {{result["ld_position"]}};
                 color: {{result["l_color"]}};
@@ -161,17 +165,9 @@
 {%else%}
 {%set class_identifier = class_id|string%}
 {%endif%}
- <h4> class: {{classData[loop.index-1]["classname"]|string}}</h4>
+ <div id="classname"  class="row"><b> CLASS: {{classData[loop.index-1]["classname"].upper()}}</b></div>
+ <div class="row" >
 
-<div id="table_area">
-    <table class="table table-{{result["table_type"]}}">
-      <thead>
-        <th>NO</th>
-        <th>EXAM NUMBER</th>
-         <th>NAME</th>
-         <th>PIN</th>
-      </thead>
-      <tbody>
 {%for student in klass%}
 {% set student_id = student["id"]|string %}
 {% set button_id = student_id+"_"+class_id %}
@@ -183,18 +179,13 @@
 {%set student_identifier = student_id|string%}
 {%endif%}
 {%set final_identifier = student_identifier+class_identifier+schoolInfo[0]["id"]|string%}
-
-
-
-      <tr>
-      <td>{{loop.index}}</td>
-      <td>{{final_identifier}}</td>
-      <td>{{student["firstname"].upper()}} {{student["surname"].upper()}} {{student["othername"].upper()}}</td>
-      <td>{{student["pin"]}}</td>
-      </tr>  
+      <div class="col" >
+      <hr> <p>Exam number: {{final_identifier}}</p>
+        <hr> <p>Name: {{student["firstname"].upper()}} {{student["surname"].upper()}} {{student["othername"].upper()}}</p>
+        <hr> <p>Pin: {{student["pin"]}}</p><hr>
+      </div>  
       {%endfor%}
-      </tbody>
-      </table>
+  </div>
   </div>
  {%endfor%}
 </body>

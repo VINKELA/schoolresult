@@ -1938,3 +1938,39 @@ def admin_verified():
         error = "admin password incorrect"
         flash(error)
         return render_template("pin_verification.html",schoolInfo = schoolrow, error=error)
+
+@app.route("/manage_password", methods=["GET"])
+def manage_password():        
+    tables= database(0)
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+    return render_template("password_verification.html", schoolInfo = schoolrow)
+
+
+@app.route("/password_verified", methods=["POST"])
+def password_verified():        
+    password = request.form.get("password")
+    tables= database(0)
+    classrow = db.execute("SELECT * FROM :classes", classes = tables["session_data"],)
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+    if check_password_hash(schoolrow[0]["admin_password"], password ):
+        return render_template("change_passwords.html", schoolInfo = schoolrow, classData=classrow)
+    else:
+        error = "admin password incorrect"
+        flash(error)
+        return render_template("password_verification.html",schoolInfo = schoolrow, error=error)
+
+
+@app.route("/password_changer", methods=["POST"])
+def password_changer():        
+    tables= database(0)
+    classrow = db.execute("SELECT * FROM :classes", classes = tables["session_data"])
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+    user_input = request.form.get("general")
+    if user_input:
+        db.execute("UPDATE school SET password = :general WHERE id=:id",general=generate_password_hash(request.form.get("general")), id=session["user_id"])
+    for klass in classrow:
+        if request.form.get(klass["id"]):
+            db.execute("UPDATE :data SET password=:new_password",data = tables["session_data"], new_password=generate_password_hash(request.form.get(klass["id"])))
+    error="password changed successfully"
+    return render_portfolio(error)
+
