@@ -16,7 +16,7 @@ from requests.models import Response
 from operator import itemgetter, attrgetter
 
 from functions import apology, login_required, database, random_string_generator, render_portfolio, term_tables, drop_tables, grade, assign_student_position, assign_subject_position
-db = SQL("postgres://tfwabbwalwnmwz:51243ec987c5d56483d9e634acd86a81593b82a61d93a3496f6bd9cd64080dbb@ec2-54-235-104-136.compute-1.amazonaws.com:5432/d5h1l71gvc7ao4")
+db = SQL("sqlite:///schools.db")
 
 def create_table():
 	db.execute("CREATE TABLE 'school' ('id' integer PRIMARY KEY AUTOINCREMENT NOT NULL, 'username' text, 'email' text, 'school_name' text, 'address' text, 'city' text, 'state' text, 'current_term' text, 'current_session' text, 'password' text, 'admin_password' text, 'token_id' text, 'token' text,'confirmed' text DEFAULT 'false', 'registered_on' datetime, 'confirmed_on' datetime)")
