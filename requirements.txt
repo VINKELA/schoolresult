@@ -3,3 +3,4 @@ flask_mail
 flask_session
 requests
 cs50
+pymysql

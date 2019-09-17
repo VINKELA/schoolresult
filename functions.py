@@ -49,15 +49,15 @@ def login_required(f):
     return decorated_function
 
 
-#def check_confirmed(func):
-  #  @wraps(func)
-   # def decorated_function(*args, **kwargs):
-      #  if current_user.confirmed is False:
-       #     flash('Please confirm your account!', 'warning')
-        #    return redirect(url_for('user.unconfirmed'))
-       # return func(*args, **kwargs)
-
-   # return decorated_function
+def check_confirmed(func):
+	@wraps(func)
+	def decorated_function(*args, **kwargs):
+		current_user = db.execute("SELECT * FROM school WHERE id=:id", id=session.get("user_id"))
+		if current_user[0]["confirmed"] != "true":
+			flash('Please confirm your account!', 'warning')
+			return redirect("/unconfirmed")
+		return func(*args, **kwargs)
+	return decorated_function
 
 
 

@@ -15,7 +15,7 @@ from requests.models import Response
 
 from operator import itemgetter, attrgetter
 
-from functions import apology, login_required, database, random_string_generator, render_portfolio, term_tables, drop_tables, grade, assign_student_position, assign_subject_position, passwordGen, initials, add_student, remove_student, render_class, render_portfolio, update_grade, session_term_check, new_term, new_session, generate_pins
+from functions import apology, login_required, database, random_string_generator, render_portfolio, term_tables, drop_tables, grade, assign_student_position, assign_subject_position, passwordGen, initials, add_student, remove_student, render_class, render_portfolio, update_grade, session_term_check, new_term, new_session, generate_pins,check_confirmed
 
 # Configure application
 app = Flask(__name__)
@@ -83,7 +83,7 @@ mail = Mail(app)
 
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///schools.db")
+db = SQL("postgres://tfwabbwalwnmwz:51243ec987c5d56483d9e634acd86a81593b82a61d93a3496f6bd9cd64080dbb@ec2-54-235-104-136.compute-1.amazonaws.com:5432/d5h1l71gvc7ao4")
 
 info = {}
 subject_info = {}
@@ -466,6 +466,7 @@ def class_name():
 
 
 @app.route("/createClass", methods=["GET", "POST"])
+@check_confirmed
 @login_required
 def createClass():
     tables = database(str(0))
