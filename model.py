@@ -16,11 +16,11 @@ from requests.models import Response
 from operator import itemgetter, attrgetter
 
 from functions import apology, login_required, database, random_string_generator, render_portfolio, term_tables, drop_tables, grade, assign_student_position, assign_subject_position
-
-db = SQL("postgresql://suhvkspwdkqgsc:8e320b4f9f7a79bb0b8865bd86c078a500b62dbfc1a6cf6bcbb04704ad49214a@ec2-54-235-100-99.compute-1.amazonaws.com:5432/d7vb1s2vel25o3")
+db = SQL("sqlite:///schools.db")
 
 def create_table():
-	db.execute("INSERT INTO schools (school_name, email,username, password,admin_password,confirmed, current_session, current_term) VALUES ('classresult admin', 'classresult@yahoo.com', 'admin', :hash,  :adminPassword,'true','2011/2012','1')", hash = generate_password_hash('Admin123'),adminPassword = generate_password_hash('Admin123'))
+	db.execute("CREATE TABLE 'school' ('id' integer PRIMARY KEY AUTOINCREMENT NOT NULL, 'username' text, 'email' text, 'school_name' text, 'address' text, 'city' text, 'state' text, 'current_term' text, 'current_session' text, 'password' text, 'admin_password' text, 'token_id' text, 'token' text,'confirmed' text DEFAULT 'false', 'registered_on' datetime, 'confirmed_on' datetime)")
+	db.execute("INSERT INTO school (school_name, email,username, password,admin_password,confirmed, current_session, current_term) VALUES ('classresult admin', 'classresult@yahoo.com', 'admin', :hash,  :adminPassword,'true','2011/2012','1')", hash = generate_password_hash('Admin123'),adminPassword = generate_password_hash('Admin123'))
 	print("table created")
 
 

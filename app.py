@@ -1,4 +1,3 @@
-import psycopg2
 import os
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify, url_for, make_response
@@ -84,7 +83,7 @@ mail = Mail(app)
 
 
 # Configure CS50 Library to use SQLite database
-db = SQL("postgresql://suhvkspwdkqgsc:8e320b4f9f7a79bb0b8865bd86c078a500b62dbfc1a6cf6bcbb04704ad49214a@ec2-54-235-100-99.compute-1.amazonaws.com:5432/d7vb1s2vel25o3")
+db = SQL("sqlite:///schools.db")
 
 info = {}
 subject_info = {}
@@ -1975,4 +1974,4 @@ def password_changer():
             db.execute("UPDATE :data SET password=:new_password",data = tables["session_data"], new_password=generate_password_hash(request.form.get(klass["id"])))
     error="password changed successfully"
     return render_portfolio(error)
-    
+
