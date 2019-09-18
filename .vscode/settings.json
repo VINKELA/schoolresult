@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "C:\\Users\\owner\\project\\venv\\result\\schools.db",
+            "dialect": "MySQL",
+            "name": "schools"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}

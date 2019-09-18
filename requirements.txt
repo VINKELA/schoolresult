@@ -1,6 +1,9 @@
 Flask
 flask_mail
-flask_session
 requests
 cs50
 pymysql
+Flask-Session
+passlib
+SQLAlchemy
+psycopg2
