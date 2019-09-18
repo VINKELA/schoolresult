@@ -84,7 +84,7 @@ mail = Mail(app)
 
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///schools.db")
+db = SQL("postgresql://suhvkspwdkqgsc:8e320b4f9f7a79bb0b8865bd86c078a500b62dbfc1a6cf6bcbb04704ad49214a@ec2-54-235-100-99.compute-1.amazonaws.com:5432/d7vb1s2vel25o3")
 
 info = {}
 subject_info = {}
@@ -1976,6 +1976,3 @@ def password_changer():
     error="password changed successfully"
     return render_portfolio(error)
     
-__name__ == "__main__"  :
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host="0.0.0.0", port=port)
