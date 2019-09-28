@@ -83,7 +83,7 @@ mail = Mail(app)
 
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///schools.db")
+db = SQL("sqlite:///db/schools.db")
 
 info = {}
 subject_info = {}

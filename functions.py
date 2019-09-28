@@ -18,7 +18,7 @@ MAIL_USE_SSL = True
 
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///schools.db")
+db = SQL("sqlite:///db/schools.db")
 
 def apology(message, code=400):
     """Render message as an apology to user."""
