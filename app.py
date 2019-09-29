@@ -539,7 +539,7 @@ def createClass():
         info["surname"] = request.form.get("surname")
         info["firstname"] = request.form.get("firstname")
         info["othername"] = request.form.get("othername")
-        info["className"] = request.form.get("class_name").upper()
+        info.update({"className":request.form.get("class_name").upper()})
         info["ca_max"] = request.form.get("ca")
         info["test_max"] = request.form.get("test")
         info["exam_max"] = request.form.get("exam")
