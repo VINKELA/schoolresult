@@ -86,8 +86,7 @@ mail = Mail(app)
 db = SQL("sqlite:///schools.db")
 
 info = {}
-if session:
-    session["subject_info"] = {}
+
 error = None
 class_scores = []
 all_students = []
@@ -688,10 +687,10 @@ def delete_school():
 @login_required
 def submit_score():
     class_scores.clear()
+    session["subject_info"] = {}
     tables = database(str(0))
 
     if request.method == "POST":
-
 	    if not request.form.get("subject_name"):
 	        error = " provide the subject name"
 	        classes = db.execute("SELECT * FROM :session_data", session_data = tables["session_data"])
