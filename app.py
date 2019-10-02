@@ -86,7 +86,8 @@ mail = Mail(app)
 db = SQL("sqlite:///schools.db")
 
 info = {}
-session["subject_info"] = {}
+if session:
+    session["subject_info"] = {}
 error = None
 class_scores = []
 all_students = []
