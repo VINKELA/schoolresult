@@ -86,7 +86,7 @@ mail = Mail(app)
 db = SQL("sqlite:///schools.db")
 
 info = {}
-subject_info = {}
+session["subject_info"] = {}
 error = None
 class_scores = []
 all_students = []
@@ -720,17 +720,17 @@ def submit_score():
 	        schoolId = session['user_id']
 	        schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = schoolId)
 	        return render_template("submit_score_form.html",classes = classes, schoolInfo = schoolrow, error = error)
-	    subject_info["subject"] = request.form.get("subject_name").lower()
-	    subject_info["subject_teacher"] = request.form.get("subject_teacher")
+	    session["subject_info"]["subject"] = request.form.get("subject_name").lower()
+	    session["subject_info"]["subject_teacher"] = request.form.get("subject_teacher")
 	    class_id= int(request.form.get("the_class"))
 	    tables = database(class_id)
-	    subject_info["class_id"] = class_id
+	    session["subject_info"]["class_id"] = class_id
 	    class_row = db.execute("select * from :classid where id = :current_class", classid = tables["classes"], current_class= tables["class_id"])
 	    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = session["user_id"])
 	    current_setting = db.execute("SELECT * FROM :settings WHERE id = :id", settings = tables["class_term_data"], id = tables["class_id"])
 	    session_setting = db.execute("SELECT * FROM :session_data WHERE id = :id", session_data = tables["session_data"], id = tables["class_id"]  )
 	    class_names = db.execute("select * from :thelist ORDER BY surname", thelist = tables["classlist"])
-	    return render_template("empty_scoresheet.html",schoolInfo = schoolrow, subject_info = subject_info,class_names = class_names ,classinfo = class_row[0], setting = session_setting, result = current_setting)
+	    return render_template("empty_scoresheet.html",schoolInfo = schoolrow, subject_info = session["subject_info"],class_names = class_names ,classinfo = class_row[0], setting = session_setting, result = current_setting)
     else:
 	    tables = database(str(0))
 	    classes = db.execute("SELECT * FROM :session_data", session_data = tables["session_data"])
@@ -741,8 +741,8 @@ def submit_score():
 @login_required
 def submitted():
     tables = database(request.form.get("button"))
-    db.execute("INSERT INTO :subjects (name, teachers_name) VALUES (:subject, :teacher) ",subjects = tables["subjects"], subject = subject_info["subject"], teacher=subject_info["subject_teacher"])
-    subject_list = db.execute("SELECT * FROM :subject WHERE name=:subject_name", subject = tables["subjects"],subject_name = subject_info["subject"])
+    db.execute("INSERT INTO :subjects (name, teachers_name) VALUES (:subject, :teacher) ",subjects = tables["subjects"], subject = session["subject_info"]["subject"], teacher=session["subject_info"]["subject_teacher"])
+    subject_list = db.execute("SELECT * FROM :subject WHERE name=:subject_name", subject = tables["subjects"],subject_name = session["subject_info"]["subject"])
     db.execute("UPDATE :classresult SET noOfSubjects = noOfSubjects + 1 WHERE id= :class_id", classresult = tables["class_term_data"], class_id=tables["class_id"])
     subject_id = str(subject_list[0]["id"])
     db.execute("ALTER TABLE :cascore_table ADD COLUMN :subject TEXT ", cascore_table = tables["ca"], subject = subject_id)
@@ -759,7 +759,7 @@ def submitted():
     term_passed = 0
     for  student in class_scores:
         total_score = 0
-        subject_list = db.execute("SELECT * FROM :subject WHERE name=:subject_name", subject = tables["subjects"],subject_name = subject_info["subject"])
+        subject_list = db.execute("SELECT * FROM :subject WHERE name=:subject_name", subject = tables["subjects"],subject_name = session["subject_info"]["subject"])
         student_row = db.execute("SELECT * FROM :master WHERE id=:student_id", master=tables["mastersheet"],student_id=student[0])
         db.execute("UPDATE :catable SET :subject = :score WHERE id =:id", catable = tables["ca"], subject = subject_id,score =student[3], id = student[0])
         db.execute("UPDATE :testtable SET :subject = :score WHERE id =:id", testtable = tables["test"], subject = subject_id,score =student[4], id = student[0])
@@ -810,7 +810,7 @@ def submitted():
     db.execute("UPDATE :subject SET class_average = :n_average WHERE id=:id ", subject = tables["subjects"],  n_average =subject_average, id = subject_id)
     db.execute("UPDATE :subject SET total_score = :total WHERE id=:id ", subject = tables["subjects"],  total =subject_total, id = subject_id)
     # calculate and insert ppass for subject and class and repair passed and failed for class 
-    initial_array = str(subject_info["subject_teacher"]).split()
+    initial_array = str(session["subject_info"]["subject_teacher"]).split()
     teacher_initials = ""
     for name in initial_array:
         if teacher_initials == "":
@@ -819,14 +819,14 @@ def submitted():
             teacher_initials = teacher_initials+initials(name)
     db.execute("UPDATE :subject SET teachers_initial = :abbr WHERE id=:id ", subject = tables["subjects"],  abbr =teacher_initials, id = subject_id)
     # send email to admin about subject scoresheet
-    html = render_template('new_score.html',subject = subject_info, class_info=classRows[0])
-    subject = subject_info["subject"]+" scoreesheet submitted for  "+ classRows[0]["classname"]
+    html = render_template('new_score.html',subject = session["subject_info"], class_info=classRows[0])
+    subject = session["subject_info"]["subject"]+" scoreesheet submitted for  "+ classRows[0]["classname"]
     try:
         send_email(rows[0]["email"], subject, html, 'classresultest@gmail.com')
     except Exception as e:
         print(e)
     classRows = db.execute("SELECT * FROM :session_data ",session_data = tables["session_data"])
-    error = subject_info["subject"]+" scoresheet submitted successfully"
+    error = session["subject_info"]["subject"]+" scoresheet submitted successfully"
     # return classlist.html
     return render_class(tables["class_id"],error)
 
@@ -835,7 +835,7 @@ def submitted():
 def confirm_scoresheet():
     #declare an array of
     class_scores.clear()
-    tables = database(subject_info["class_id"])
+    tables = database(session["subject_info"]["class_id"])
     rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=session["user_id"])
     class_list = db.execute("SELECT * FROM :classlist", classlist = tables["classlist"])
     # each student will be an element of the array
@@ -845,7 +845,7 @@ def confirm_scoresheet():
         exam = "examscore"+str(student["id"])
         class_scores.append((student["id"], student["firstname"], student["surname"], request.form.get(ca), request.form.get(test), request.form.get(exam)))
     #return classlist.html
-    return render_template("confirm_scoresheet.html",schoolInfo = rows, students=class_scores, class_id = subject_info["class_id"])
+    return render_template("confirm_scoresheet.html",schoolInfo = rows, students=class_scores, class_id = session["subject_info"]["class_id"])
 
 
 @app.route("/veiwclass", methods=["post", "get"])
@@ -1017,7 +1017,7 @@ def edited_scoresheet():
     subject = request.form.get("subject_name")+" edited successfully"
     error = request.form.get("subject_name")+" scoresheet edited successfully"
     # send email to admin about subject scoresheet
-    html = render_template('new_score.html',subject = subject_info, class_info=classRows[0])
+    html = render_template('new_score.html',subject = session["subject_info"], class_info=classRows[0])
     try:
         send_email(rows[0]["email"], subject, html, 'classresultest@gmail.com')
     except Exception as e:
