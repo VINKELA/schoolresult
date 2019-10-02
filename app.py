@@ -85,13 +85,8 @@ mail = Mail(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///schools.db")
 
-info = {}
 
 error = None
-class_scores = []
-all_students = []
-single_details = {}
-single_subject = []
 
 
 
@@ -469,6 +464,7 @@ def class_name():
 @check_confirmed
 @login_required
 def createClass():
+    session["info"]={}
     tables = database(str(0))
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
@@ -476,7 +472,7 @@ def createClass():
         # Ensure schoolname was submitted
         if not request.form.get("class_name"):
             error = "Provide a class name"
-            return render_template("createClassForm.html", error=error, schoolInfo=schoolrow)
+            return render_template("createClassForm.html", error=error, school=schoolrow)
         row = db.execute("SELECT * FROM :session_data WHERE classname = :class_name",session_data=tables["session_data"], class_name = request.form.get("class_name").lower() )
         if len(row) > 0:
             error = "class already exist"
@@ -536,16 +532,16 @@ def createClass():
         if (request.form.get("password") != request.form.get("confirmation")):
             error = "Provide a password is not equal to  confirmation"
             return render_template("createClassForm.html", error=error)
-        info["surname"] = request.form.get("surname")
-        info["firstname"] = request.form.get("firstname")
-        info["othername"] = request.form.get("othername")
-        info.update({"className":request.form.get("class_name").upper()})
-        info["ca_max"] = request.form.get("ca")
-        info["test_max"] = request.form.get("test")
-        info["exam_max"] = request.form.get("exam")
-        info["noOfStudents"] = request.form.get("no_of_students")
-        info["password"] = request.form.get("password")
-        info["section"] = request.form.get("section")
+        session["info"]["surname"] = request.form.get("surname")
+        session["info"]["firstname"] = request.form.get("firstname")
+        session["info"]["othername"] = request.form.get("othername")
+        session["info"].update({"className":request.form.get("class_name").upper()})
+        session["info"]["ca_max"] = request.form.get("ca")
+        session["info"]["test_max"] = request.form.get("test")
+        session["info"]["exam_max"] = request.form.get("exam")
+        session["info"]["noOfStudents"] = request.form.get("no_of_students")
+        session["info"]["password"] = request.form.get("password")
+        session["info"]["section"] = request.form.get("section")
         schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = session["user_id"])
         return render_template("classListForm.html",n = int(request.form.get("no_of_students")), schoolInfo = schoolrow )
     else:
@@ -556,21 +552,21 @@ def createClass():
 @app.route("/confirm_classlist", methods=["POST"])
 @login_required
 def confirm_classlist():
-    all_students.clear()
+    session["all_students"]=[]
     #declare an array of dicts
     tables = database(str(0))
     rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=session["user_id"])
     #fill classlist
-    g = int(info["noOfStudents"])
+    g = int(session["info"]["noOfStudents"])
     # each student will be an element of the array
     for i in range(g):
         surname = "s"+str(i)
         firstname = "f"+str(i)
         othername = "o"+str(i)
         sex = "g"+str(i)
-        all_students.append((request.form.get(surname), request.form.get(firstname), request.form.get(othername), request.form.get(sex)))
+        session["all_students"].append((request.form.get(surname), request.form.get(firstname), request.form.get(othername), request.form.get(sex)))
     #return classlist.html
-    return render_template("confirm_classlist.html",schoolInfo = rows, students= all_students )
+    return render_template("confirm_classlist.html",schoolInfo = rows, students= session["all_students"] )
 
 
 @app.route("/classCreated", methods=["POST"])
@@ -579,20 +575,20 @@ def classCreated():
     tables = database(str(0))
     rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=session["user_id"])
     schoolClass = tables["classes"]
-    identity = info["className"]+"_"+str(datetime.datetime.now())
+    identity = session["info"]["className"]+"_"+str(datetime.datetime.now())
     #insert class and identifer
     db.execute("INSERT INTO :classes (identifier) VALUES (:name_date)", classes = tables["classes"], name_date = identity)
     #select class id with the identifier
     classRow = db.execute("SELECT * FROM :classes WHERE identifier = :name_d",classes = tables["classes"], name_d = identity)
     classId = classRow[0]["id"]
     session_term =str(rows[0]["current_session"])+"_"+str(rows[0]["current_term"])
-    db.execute("INSERT INTO :results (id, noOfStudents) values (:id, :no_of_students)",results = tables["class_term_data"],id = classId, no_of_students = info["noOfStudents"] )
+    db.execute("INSERT INTO :results (id, noOfStudents) values (:id, :no_of_students)",results = tables["class_term_data"],id = classId, no_of_students = session["info"]["noOfStudents"] )
     db.execute("INSERT INTO :sessions (id,:current_term) VALUES(:id, :term)", sessions = tables["sessions"], current_term = session_term,id = classId, term = session_term)
-    db.execute("INSERT INTO :session_data (id,surname,firstname,othername, classname, password,section,ca, test, exam) values (:id,:surname,:firstname,:othername,:className,:password,:section,:ca,:test,:exam)",session_data = tables["session_data"],id = classId, surname =  info["surname"],firstname =  info["firstname"],othername =  info["othername"], className = info["className"].lower(),password = generate_password_hash(info["password"]),section=info["section"],ca=info["ca_max"], test=info["test_max"], exam=info["exam_max"])
+    db.execute("INSERT INTO :session_data (id,surname,firstname,othername, classname, password,section,ca, test, exam) values (:id,:surname,:firstname,:othername,:className,:password,:section,:ca,:test,:exam)",session_data = tables["session_data"],id = classId, surname =  session["info"]["surname"],firstname =  session["info"]["firstname"],othername =  session["info"]["othername"], className = session["info"]["className"].lower(),password = generate_password_hash(session["info"]["password"]),section=session["info"]["section"],ca=session["info"]["ca_max"], test=session["info"]["test_max"], exam=session["info"]["exam_max"])
     term_tables(classId)
     tables = database(classId)
     # fill classlist
-    sort_names = sorted(all_students, key=itemgetter(0))
+    sort_names = sorted(session["all_students"], key=itemgetter(0))
     #generate pins
     pins = generate_pins(10,len(sort_names))
     # fill classlist
@@ -686,7 +682,6 @@ def delete_school():
 @app.route("/submit_score", methods =["POST","GET"])
 @login_required
 def submit_score():
-    class_scores.clear()
     session["subject_info"] = {}
     tables = database(str(0))
 
@@ -737,6 +732,23 @@ def submit_score():
 	    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = session["user_id"])
 	    return render_template("submit_score_form.html",classes = classes, schoolInfo = schoolrow)
 
+@app.route("/confirm_scoresheet", methods=["POST"])
+@login_required
+def confirm_scoresheet():
+    #declare an array of
+    session["class_scores"] = []
+    tables = database(session["subject_info"]["class_id"])
+    rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=session["user_id"])
+    class_list = db.execute("SELECT * FROM :classlist", classlist = tables["classlist"])
+    # each student will be an element of the array
+    for student  in class_list:
+        ca = "cascore"+str(student["id"])
+        test = "testscore"+str(student["id"])
+        exam = "examscore"+str(student["id"])
+        session["class_scores"].append((student["id"], student["firstname"], student["surname"], request.form.get(ca), request.form.get(test), request.form.get(exam)))
+    #return classlist.html
+    return render_template("confirm_scoresheet.html",schoolInfo = rows, students=session["class_scores"], class_id = session["subject_info"]["class_id"])
+
 @app.route("/submitted", methods=["POST"])
 @login_required
 def submitted():
@@ -757,7 +769,7 @@ def submitted():
     subject_total = 0
     term_failed = 0
     term_passed = 0
-    for  student in class_scores:
+    for  student in session["class_scores"]:
         total_score = 0
         subject_list = db.execute("SELECT * FROM :subject WHERE name=:subject_name", subject = tables["subjects"],subject_name = session["subject_info"]["subject"])
         student_row = db.execute("SELECT * FROM :master WHERE id=:student_id", master=tables["mastersheet"],student_id=student[0])
@@ -829,23 +841,6 @@ def submitted():
     error = session["subject_info"]["subject"]+" scoresheet submitted successfully"
     # return classlist.html
     return render_class(tables["class_id"],error)
-
-@app.route("/confirm_scoresheet", methods=["POST"])
-@login_required
-def confirm_scoresheet():
-    #declare an array of
-    class_scores.clear()
-    tables = database(session["subject_info"]["class_id"])
-    rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=session["user_id"])
-    class_list = db.execute("SELECT * FROM :classlist", classlist = tables["classlist"])
-    # each student will be an element of the array
-    for student  in class_list:
-        ca = "cascore"+str(student["id"])
-        test = "testscore"+str(student["id"])
-        exam = "examscore"+str(student["id"])
-        class_scores.append((student["id"], student["firstname"], student["surname"], request.form.get(ca), request.form.get(test), request.form.get(exam)))
-    #return classlist.html
-    return render_template("confirm_scoresheet.html",schoolInfo = rows, students=class_scores, class_id = session["subject_info"]["class_id"])
 
 
 @app.route("/veiwclass", methods=["post", "get"])
@@ -1243,13 +1238,13 @@ def verified_add_student():
  
 @app.route("/confirm_details", methods=["POST"])
 def confirm_details():
-    single_details.clear()
-    single_subject.clear()
+    session["single_details"]={}
+    session["single_subject"].clear()
     class_id = request.form.get("class_id")
     tables= database(class_id)
     class_session = db.execute("SELECT * FROM :class_s WHERE id=:id", class_s = tables["session_data"], id= class_id )
-    single_details["class_id"] = class_id
-    single_details["class_name"] = class_session[0]["classname"]
+    session["single_details"]["class_id"] = class_id
+    session["single_details"]["class_name"] = class_session[0]["classname"]
     if not request.form.get("surname"):
         error = "you must provide students surname"
         schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
@@ -1268,10 +1263,10 @@ def confirm_details():
         subject = db.execute("SELECT * FROM :class_subjects",class_subjects = tables["subjects"] )
         flash(error,'success')
         return render_template("add_student.html", schoolInfo = schoolrow,clas=classRows,subjects = subject, classInfo=class_info[0])
-    single_details["surname"] = request.form.get("surname")
-    single_details["firstname"] = request.form.get("firstname")
-    single_details["othername"] = request.form.get("othername")
-    single_details["sex"] = request.form.get("sex")
+    session["single_details"]["surname"] = request.form.get("surname")
+    session["single_details"]["firstname"] = request.form.get("firstname")
+    session["single_details"]["othername"] = request.form.get("othername")
+    session["single_details"]["sex"] = request.form.get("sex")
     class_subjects = db.execute("SELECT * FROM :subs", subs = tables["subjects"])
     for subject in class_subjects:
         sub = {}
@@ -1283,19 +1278,19 @@ def confirm_details():
         sub["ca"] = request.form.get(ca)
         sub["test"] = request.form.get(test)
         sub["exam"] = request.form.get(exam)
-        single_subject.append(sub)
+        session["single_subject"].append(sub)
     rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=tables["school_id"])
     
     # return classlist.html
-    return render_template("confirm_single_scoresheet.html", schoolInfo = rows, subjects= class_subjects, details = single_details, student_subjects=single_subject)
+    return render_template("confirm_single_scoresheet.html", schoolInfo = rows, subjects= class_subjects, details = session["single_details"], student_subjects=session["single_subject"])
 
 @app.route("/student_added", methods=["POST"])
 def student_added():
-    class_id = single_details["class_id"]
+    class_id = session["single_details"]["class_id"]
     tables= database(class_id)
     pins = generate_pins(10, 1)
-    db.execute("INSERT INTO :classlist (surname, firstname, othername, sex, pin ) VALUES (:surname, :firstname, :othername, :sex, :pin)", classlist=tables["classlist"], surname= single_details["surname"].upper(), firstname=single_details["firstname"].upper(), othername=single_details["othername"].upper(), sex=single_details["sex"], pin = pins[0])
-    student_row = db.execute("SELECT * FROM :classlist WHERE surname=:surname AND firstname=:firstname AND othername = :othername", classlist=tables["classlist"], surname = single_details["surname"].upper() ,firstname=single_details["firstname"].upper(), othername=single_details["othername"].upper())
+    db.execute("INSERT INTO :classlist (surname, firstname, othername, sex, pin ) VALUES (:surname, :firstname, :othername, :sex, :pin)", classlist=tables["classlist"], surname= session["single_details"]["surname"].upper(), firstname=session["single_details"]["firstname"].upper(), othername=session["single_details"]["othername"].upper(), sex=session["single_details"]["sex"], pin = pins[0])
+    student_row = db.execute("SELECT * FROM :classlist WHERE surname=:surname AND firstname=:firstname AND othername = :othername", classlist=tables["classlist"], surname = session["single_details"]["surname"].upper() ,firstname=session["single_details"]["firstname"].upper(), othername=session["single_details"]["othername"].upper())
     student_id = student_row[-1]["id"]
     db.execute("INSERT INTO :catable (id) VALUES (:id) ",catable = tables["ca"], id=student_id)
     db.execute("INSERT INTO :testtable (id )VALUES (:id) ",testtable = tables["test"], id=student_id)
@@ -1306,7 +1301,7 @@ def student_added():
     term_data = db.execute("SELECT * FROM :term_data WHERE id =:id", term_data = tables["class_term_data"], id=class_id)
     new = int(term_data[0]["noOfStudents"]) + 1
     db.execute("UPDATE :term_data SET noOfStudents = :no_of_students WHERE id=:id", term_data =tables["class_term_data"], no_of_students = new, id=class_id)
-    for subject in single_subject:
+    for subject in session["single_subject"]:
         ntotal = 0
         db.execute("UPDATE :ca SET :col=:subject_score WHERE id=:id",ca = tables["ca"], col=str(subject["id"]), subject_score = subject["ca"],id=student_id)
         db.execute("UPDATE :test SET :col=:subject_score WHERE id=:id",test = tables["test"], col=str(subject["id"]), subject_score = subject["test"],id=student_id)
