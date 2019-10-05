@@ -8,7 +8,112 @@
 	
 
 <div class="form-w3ls">
+	{% extends "layout.html" %}
 
+	{% block title %}
+	{% endblock %}
+	
+	{% block main %}
+	<div id="log" class="row">
+		<div class="col blue"><h1>Welcome!</h1>
+			<p><h4>Lets Make your school's result for you</h4><p>
+			<p><h4>And guess what? you also get paid for it too.</h4><p>
+			<p><h4>Results ready in minutes, no stress!</h4><p>
+			<p><h4>Just  <a href="/register">Register</a> or sign in to get started.</h4><p>
+			<p><h4>Result has never been this Cool!</h4><p>
+	
+	
+		</div>
+	
+	<div class="col">
+		<div class="form-w3ls">
+	
+			<ul id="tab-group" class="tab-group cl-effect-4">
+				<table>
+				<th> <li class="tab active"><a href="#signin-agile">Sign-in</a></li></th>
+				 <th><li class="tab"><a href="#signup-agile">Register</a></li></th>
+			 </table>
+			 </ul>
+			 <div class="tab-content">
+				 <div id="signin-agile">
+					 <form  action = "/login" method="post" id="login_form">
+						 <input type="text" name="username" placeholder="User Name" required="required">
+						 <input type="password" name="password" placeholder="password" required="required">
+						 <div class="psw">Forgot <a href="/change_password">password?</a></div>
+						 <div><input name="remember_me" type="checkbox" id="brand" value="checked">Remember me</div>
+						 <button type="submit" id="login" class="sign-in" value="Sign In">sign in</button>
+					 </form>
+	
+				 </div>
+	
+				 <div id="signup-agile">
+						<form id="register" action="/register" method="post">
+							<div class="register-form">
+							<hr>
+								 <h3 class="message green"> REGISTER FOR FREE!</h3>
+							<hr>
+							 <h4 class="message"><b>School information</b></h4>
+						   <input  name="school_name" placeholder="school name" type="text" required="required"/ >
+							<input  name="email" placeholder="email" type="email" required="required"/>
+							<span class="row">
+	
+								<div  class="col">
+									<select name="term" id="term"  aria-required="true">
+									<option  value="" selected="" disabled="">term</option>
+											<option  value="1">first</option>
+											<option  value="2">second</option>
+											<option  value="3">third</option>
+									</select>
+									<div class="arrow"></div>
+								</div>
+								<div  class="col">
+									<select name="school_session" id="school_session"  aria-required="true" >
+									<option  value="">session</option>
+											<option  value="2018/2019">2018/2019</option>
+											<option  value="2019/2020">2019/2020</option>
+											<option  value="2020/2021">2020/2021</option>
+									</select>
+									<div class="arrow"></div>
+								</div>
+									   </span>
+	
+							<hr>
+							<h3 class="message">login details</h3>
+							<input  name="username" placeholder="Username" type="text"/>
+							<input placeholder="password" type="password" id="psw" name="password" pattern=".{8,}" title="Must contain at least 8 or more characters" required="required">
+							<div id="message2">
+							  <h4>Password must contain the following:</h4>
+							  <p id="length2" class="invalid">Minimum <b>8 characters</b></p>
+							</div>
+	
+							<input  name="confirmation" placeholder=" confirm Password" type="password" required="required"/>
+							<p>By clicking Register, you agree to the <a href="/terms" target="_blank">Terms of Service</a> and you acknowledge that classresult and each Member process your school's and personal data in accordance with the <a href="/privacy" target="_blank">Privacy Policy</a>.</p>
+	
+							<button type="submit" class="sign-in" id="submit_registration" value="Register">Register</button>
+							</div>
+					</form>
+				 </div>
+			 </div><!-- tab-content -->
+	
+		 </div> <!-- /form -->
+		 <div class="form-w3ls" id="space">
+			 <h4><b>CHECK RESULT</b></h4>
+			 <form  action="check_results" method="post" id="check_results"target="_blank">
+		 <input type="number" name="regnumber"  placeholder="exam number">
+		 <input type="number" name="pin" placeholder="pin">
+		 <button type="submit" id ="check_result" class="sign-in" > check result</button>
+				</form>
+		 </div>
+	
+	</div>
+		 </div>
+	<!-- js files -->
+		<script src='/static/js/jquery.min.js'></script>
+		<script src="/static/js/index.js"></script>
+	
+	<!-- /js files -->
+	{% endblock %}
+	
    <ul id="tab-group" class="tab-group cl-effect-4">
    	<table>
        <th> <li class="tab active"><a href="#signin-agile">Sign-in</a></li></th>
