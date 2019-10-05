@@ -201,3 +201,236 @@ input[type="text"]:focus,input[type="email"]:focus, input[type="password"]:focus
 #space{
 	margin-top: 10px;
 }
+/*-- Responsive start here --*/
+@media (max-width:1600px) {
+	.form-w3ls {
+	width: 38%;	
+	}
+}
+
+@media (max-width:1440px) {
+	.tab-group {
+		margin: 0 0 30px 124px;
+	}
+}
+@media (max-width:1366px) {
+	.tab-group {
+		margin: 0 0 30px 112px;
+	}
+}	
+@media (max-width: 1280px) {
+	.tab-group {
+		margin: 0 0 30px 125px;
+	}
+	.form-w3ls {
+		width: 43%;
+	}
+}
+
+@media (max-width: 1080px) {
+	h1 {
+		font-size: 25px;
+	}
+	.tab-group li a {
+		font-size: 17px;
+	}
+	.tab-group {
+		margin: 0 0 40px 96px;
+	}
+	p.header {
+		font-size: 14px;
+	}
+ input[type="checkbox"]+label {
+		font-size: 14px;
+		padding-right: 25px;
+	}
+ input[type="checkbox"]+label span:first-child {
+		top: 0;
+	}
+ .sign-in {
+		font-size:17px;
+	}
+	p.copyright {
+		font-size:14px;
+		line-height:30px;
+	}
+}
+
+@media (max-width: 1024px) {
+	.tab-group {
+			margin:0 0 40px 114px;
+		}
+	.form-w3ls {
+		width: 50%;
+	}
+}
+
+@media (max-width: 991px) {
+	.tab-group {
+		margin: 0px 0 40px 93px;
+	}
+	.form-w3ls {
+		width: 45%;
+		padding:25px 40px;
+	}
+ .register {
+		margin-bottom:30px;
+	}
+}
+
+@media (max-width: 900px) {
+	.tab-group {
+		margin: 0px 0 40px 91px;
+	}
+	.form-w3ls {
+		width: 50%;
+	}
+}
+
+@media (max-width: 800px) {
+	.form-w3ls {
+		width: 55%;
+		padding: 25px 35px;
+	}
+}
+
+@media (max-width: 768px) {
+	h1 {
+		font-size: 22px;
+	}
+	.form-w3ls {
+		width: 60%;
+	}
+ input[type="text"],  input[type="password"],  input[type="number"],  input[type="email"], div#signup-agile  {
+		margin:13px 0 25px;
+	}
+	.tab-group {
+		margin: 0 0 35px 102px;
+	}
+ input[type="checkbox"]+label {
+		margin-top:-3px;
+	}
+ .sign-in {
+		margin-top:22px;
+	}
+	p.copyright {
+		padding:35px 0 20px;
+	}
+}
+@media (max-width: 736px){
+	.tab-group {
+		margin: 0 0 35px 92px;
+	}
+}	
+@media (max-width: 667px) {
+	.tab-group {
+		margin: 0 0 35px 89px;
+	}
+	.form-w3ls {
+		width: 65%;
+	}
+}
+
+@media (max-width: 640px) {
+	.tab-group {
+			margin: 0 0 35px 87px;
+		}
+	.form-w3ls {
+		width: 70%;
+	}
+	.tab-group li a {
+		font-size: 15px;
+	}
+	p.header {
+		font-size: 13px;
+	}
+	div#signin-agile input[type="text"], div#signin-agile input[type="password"], div#signup-agile input[type="text"], div#signup-agile input[type="email"], div#signup-agile input[type="password"] {
+		font-size:15px;
+	}
+}
+
+@media (max-width: 568px) {
+
+	h1 {
+		font-size: 15px;
+	}
+	.tab-group {
+		margin: 0 0 35px 75px;
+	}
+}
+
+@media (max-width: 480px) {
+	.form-w3ls {
+		width: 80%;
+	}
+	p.copyright {
+		padding:30px 10px;
+	}
+	.tab-group {
+		margin: 0 0 30px 66px;
+	}
+}
+
+@media (max-width: 414px) {
+	.tab-group {
+		margin: 0 0 30px 52px;
+	}
+	.form-w3ls {
+		width: 85%;
+	}
+	p.header {
+		font-size: 13px;
+	}
+	div#signin-agile input[type="text"], div#signin-agile input[type="password"], div#signup-agile input[type="text"],div#signup-agile input[type="email"], div#signup-agile input[type="password"] {
+		margin: 10px 0 12px;
+	}	
+}
+
+@media (max-width: 384px) {
+	.tab-group {
+		margin: 0 0 30px 45px;
+	}
+	.form-w3ls {
+		padding: 15px 30px;
+	}
+	div#signup-agile .register {
+		font-size:17px;
+	}
+}
+
+@media (max-width: 375px) {
+	h1 {
+		font-size: 13px;
+	}
+	.tab-group {
+		margin: 0 0 30px 41px;
+	}
+}
+
+@media (max-width: 320px) {
+	h1 {
+		font-size: 13px;
+	}
+	.tab-group {
+		margin: 0 0 30px 39px;
+	}
+	.tab-group li a {
+		margin-right:12px;
+	}
+	.form-w3ls {
+		width: 90%;
+		padding:10px 20px;
+	}
+	div#signin-agile input[type="text"], div#signin-agile input[type="password"], div#signup-agile input[type="text"], div#signup-agile input[type="email"], div#signup-agile input[type="password"] {
+		font-size:15px;
+		margin: 10px 0 20px;
+	}
+	div#signin-agile .sign-in, div#signup-agile .register {
+		font-size: 16px;
+	}
+	p.copyright {
+		padding: 10px 10px;
+	} 
+}
+
+/*-- //Responsive end here--*/
