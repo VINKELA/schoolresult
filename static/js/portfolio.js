@@ -1,9 +1,9 @@
-
+  
 $(function() {
     $('#create_button').bind('click', function() {
   // Stop form from submitting normally
   event.preventDefault();
-
+  
  if($('input[name="class_name"]').val() ==""){
     alert(" provide your class name ");
   }
@@ -65,19 +65,4 @@ else{
   });}
 
 });
-});
-
-$('.tab a,.links a').on('click', function (e) {
-
-  e.preventDefault();
-
-  $(this).parent().addClass('active');
-  $(this).parent().siblings().removeClass('active');
-
-  target = $(this).attr('href');
-
-  $('.tab-content > div').not(target).hide();
-
-  $(target).fadeIn(600);
-
 });
