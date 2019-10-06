@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+edit student details
+{% endblock %}
+
+{% block main %}
+  <div class="form-w3ls">
+
+<form action="/edited_class" method="post">
+  <hr>
+      <h1 class="message green"> CHANGE CLASS TEACHER </h1>
+
+  <div class="row">
+<div class="col">
+
+     <input type="text"  name =  "surname" placeholder="{{classData[0]["surname"]}}">
+    </div>
+    <div class="col">
+
+     <input type="text"  name="firstname" placeholder={{classData[0]["firstname"]}}>
+    </div>
+     <div class="col">
+
+      <input type="text"  name="othername" placeholder={{classData[0]["othername"]}}>
+  </div>
+    </div>
+    <hr>
+          <h1 class="message green"> CHANGE CLASS NAME</h1>
+
+
+      <input type="text"  placeholder="{{classData[0]["classname"]}}" name="class_name">
+
+<div class="row">
+  <div class="col">
+ <button name="id" class="sign-in" type="submit" value={{classData[0]["id"]}}>Submit</button>
+</div>
+<div class="col">
+ </form>
+ <form action="/delete_class" method="post"><button name="delete_class" class="sign-in" type="submit" value={{classData[0]["id"]}}>DELETE</button></form>
+</div>
+<form method="POST" action="/cancel_portfolio">
+  <input name="class_id" type="hidden" value="{{classData[0]["id"]}}"/>
+  <button class="sign-in" type="submit" >cancel</button>
+</form>
+    </div>
+    
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block title %}
+    confirm student
+{% endblock %}
+{% block main %}
+<form action="/student_added" method="post">
+  <div id="details">
+            <p> SURNAME: {{details["surname"].upper()}}</p>
+           <p> FIRSTNAME: {{details["firstname"].upper()}}</p>
+             <p>OTHERNAME: {{details["othername"].upper()}}</p>
+              <p>SEX: {{details["sex"].upper()}}</p>
+            <p>CLASS: {{details["class_name"].upper()}}</p>
+</div>
+ <table class="table table-striped">
+  <thead>
+    <tr>
+      <th>subject</th>
+      <th>ca</th>
+      <th>test</th>
+      <th>exam</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for subject in student_subjects %}
+    {% set id = subject["id"]|string %}
+    {% set ca = "cascore"+ id %}
+    {% set test = "testscore"+ id %}
+    {% set exam = "examscore"+ id %}
+    <tr>
+      <td>{{subject["name"].upper()}}</td>
+      <td>{{subject["ca"]}}</td>
+      <td>{{subject["test"]}}</td>
+      <td>{{subject["exam"]}}</td>
+    </tr>
+    {%endfor%}
+  </tbody>
+
+</table>
+
+
+<div class="row">
+<div class="form-w3ls col">
+      <button class="sign-in" name="button" type="submit">Confirm</button>
+
+ </div>
+
+ </form>
+ <div class="form-w3ls col">
+     <form action="/submit_score" method="get">
+ <button class="sign-in" name="cancel" type="submit">Cancel</button>
+ </form>
+</div>
+ </div>
+{% endblock %}

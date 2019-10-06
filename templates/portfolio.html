@@ -5,28 +5,135 @@
 {% endblock %}
 
 {% block main %}
-  <div id=portfolio>
     {% if clas | length < 1 %}
-        <h1>HOW TO USE CLASS RESULT? </h1>
+    <div class="row">
+    <div class="col">
+        <h3>HOW TO USE CLASS RESULT? </h3>
         <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. <p>Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. </p> <p>The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32. </p>
         <p>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham. </p>
+    </div>
+    <div class="col form-w3ls">
+    <form id="create_form" action="/createClass" method="post">
+      <h2>Add Class</h2>
+        <div class="row">
+        <div class="col">
+            <input  id="class_name"  name="class_name" placeholder="class name" type="text" required="required"/>
+        </div>
+    <div class="col">
+        <select name="section" id="section"  aria-required="true">
+        <option  value="" selected="" disabled="">section</option>
+                <option  value="pre-nursery">pre-nursery</option>
+                <option  value="nursery">nursery</option>
+                <option  value="primary">primary</option>
+                <option  value="secondary">secondary</option>
+        </select>
+        <div class="arrow"></div>
+     </div>
+     </div>
+          <div class="row">
+           <input class="col"  name="ca" placeholder="ca is over?" id="ca" type="number" required="required"/>
+            <input  class ="col" name="test" placeholder="test over?" id="test" type="number" required="required"/>
+           <input class="col" name="exam" placeholder="exam over?" id="exam" type="number" required="required"/>
+           </div>
+            <input  id="no_of_students"  name="no_of_students" placeholder="The number of students in class" type="number" required="required"/>
+         <span class="row">
+           <input class="col"  name="firstname" placeholder=" firstname" type="text" required="required"/>
+            <input  class ="col" name="surname" placeholder="surname" type="text" required="required"/>
+           <input class="col" name="othernames" placeholder="othername" type="text" required="required"/>
+           </span>
+            <input  id="password"  name="password" placeholder="choose Password for class" type="password" required="required"/>
+            <input  id="confirmation"  name="confirmation" placeholder="confirm password" type="password" required="required"/>
+<div class="row">
+    <div class="col"> <button  id="create_button" class="sign-in" type="submit" value="create" >create</button></div>
+    </form>
+    <div class="col"><form action="/cancel_portfolio" method="POST"><button class="sign-in" id="password_button">cancel</button></form>
+</div>
+    </div>
+        </div>
     {%else%}
-    
- <table class = "table table-striped">
-    <tr>
-      <td scope="col"> <span class="blue">CLASSES</span></td>
-    </tr>
-  <tbody>
-      {%for data in clas%}
-    <tr>
-<td><form action="/veiwclass" id="portfolio-form" method="post">
-  <button class="rcorners2" name = "veiw_class" value = "{{data["id"]}}" type="submit">{{data["classname"].upper()}}
-    <a href="/edit_class?class_id={{data["id"]}}" >edit</a></button>
-</form> form-teacher: {{data["firstname"]}} {{data["surname"]}}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-  </table>
+<div class="row">
+    <div class="form-w3ls col">
+
+      <ul id="tab-group" class="tab-group cl-effect-4">
+        <th> <li class="tab active"><a href="#scoresheet_form">Submit scoresheet</a></li></th>
+         <th><li class="tab"><a href="#add_class">Add class</a></li></th>
+       </ul>
+       <div class="tab-content">
+         <div id="scoresheet_form">
+           <form action="/submit_score" id="submit_score" method="post">
+                   <input name="subject_name" placeholder="FULL NAME OF SUBJECT" type="text" required/>
+
+       <div  class="pure-u-1-2 reg-month puree-dropdown dropdown">
+                   <select name="the_class" id="your_class"  aria-required="true" required>
+                   <option value="" selected="" disabled="">select&nbsp;Class</option>
+                   {% for class in clas %}
+                           <option  value="{{class["id"]}}">{{class["classname"]}}</option>
+                   {% endfor %}
+                   </select>
+                   <div class="arrow"></div>
+               </div>
+                   <input autocomplete="off"   name="subject_teacher" placeholder="subject_teacher" type="text" required/>
+          <button name = "submit_scoresheet"id="submit_scoresheet" class="sign-in" type="submit">SUBMIT</button>
+           </form>
+         </div>
+
+         <div id="add_class">
+           <form id="create_form" action="/createClass" method="post">
+               <div class="row">
+               <div class="col">
+                   <input  id="class_name"  name="class_name" placeholder="class name" type="text" required="required"/>
+               </div>
+           <div class="col">
+               <select name="section" id="section"  aria-required="true">
+               <option  value="" selected="" disabled="">section</option>
+                       <option  value="pre-nursery">pre-nursery</option>
+                       <option  value="nursery">nursery</option>
+                       <option  value="primary">primary</option>
+                       <option  value="secondary">secondary</option>
+               </select>
+               <div class="arrow"></div>
+            </div>
+            </div>
+                 <div class="row">
+                  <input class="col"  name="ca" placeholder="ca is over?" id="ca" type="number" required="required"/>
+                   <input  class ="col" name="test" placeholder="test over?" id="test" type="number" required="required"/>
+                  <input class="col" name="exam" placeholder="exam over?" id="exam" type="number" required="required"/>
+                  </div>
+                   <input  id="no_of_students"  name="no_of_students" placeholder="The number of students in class" type="number" required="required"/>
+                <span class="row">
+                  <input class="col"  name="firstname" placeholder=" firstname" type="text" required="required"/>
+                   <input  class ="col" name="surname" placeholder="surname" type="text" required="required"/>
+                  <input class="col" name="othernames" placeholder="othername" type="text" required="required"/>
+                  </span>
+                   <input  id="password"  name="password" placeholder="choose Password for class" type="password" required="required"/>
+                   <input  id="confirmation"  name="confirmation" placeholder="confirm password" type="password" required="required"/>
+          <button  id="create_button" class="sign-in" type="submit" value="create" >create</button>
+           </form>
+
+         </div>
+       </div><!-- tab-content -->
+     </div> <!-- /form -->
+  <div class="col">
+  {%for data in clas%}
+  <div class="form-w3ls" style="width:100%">
+    <h4><b class="blue">CLASS: {{data["classname"].upper()}} </b></h4><hr>
+    <p class="class_details blue">SECTION: {{data["section"].upper()}}
+    <p class="class_details blue">CLASS TEACHER: {{data["firstname"].upper()}} {{data["surname"].upper()}}
+<form action="/veiwclass" id="portfolio-form" method="post">
+  <div class="row">
+  <div class="col">  <button class="btn btn-primary" name = "veiw_class" value = "{{data["id"]}}" type="submit"> veiw class</button></div>
+<div class="col"> <a class="btn btn-primary" href="/edit_class?class_id={{data["id"]}}">edit</a></div>
   </div>
+</form>
+</div>
+    {% endfor %}
+</div>
+</div>
 {%endif%}
+<!-- js files -->
+	<script src='/static/js/jquery.min.js'></script>
+	<script src="/static/js/portfolio.js"></script>
+
+<!-- /js files -->
+
 {% endblock %}
