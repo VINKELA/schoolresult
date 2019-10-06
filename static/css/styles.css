@@ -423,3 +423,7 @@ input[type="text"]:focus,input[type="email"]:focus, input[type="password"]:focus
 }
 
 /*-- //Responsive end here--*/
+
+.form-w3ls{
+	width: 100%;
+}

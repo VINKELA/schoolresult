@@ -5,8 +5,16 @@
 
 {% block main %}
 <div id="log" class="row">
+
+	<div class="col blue"><h1>Welcome!</h1>
+		<p><h4>Lets Make your school's result for you</h4><p>
+		<p><h4>And guess what? you also get paid for it too.</h4><p>
+		<p><h4>Results ready in minutes, no stress!</h4><p>
+		<p><h4>Just  <a href="/register">Register</a> or sign in to get started.</h4><p>
+		<p><h4>Result has never been this Cool!</h4><p>
+	</div>
 	<div class="col">
-		<div class="form-w3ls" style="width:100%">
+		<div class="form-w3ls">
 
 			<ul id="tab-group" class="tab-group cl-effect-4">
 				<th> <li class="tab active"><a href="#signin-agile">Sign-in</a></li></th>
@@ -74,7 +82,7 @@
 			 </div><!-- tab-content -->
 
 		 </div> <!-- /form -->
-		 <div class="form-w3ls" style="width:100%" id="space">
+		 <div class="form-w3ls" id="space">
 			 <h4><b>CHECK RESULT</b></h4>
 			 <form  action="check_results" method="post" id="check_results"target="_blank">
 		 <input type="number" name="regnumber"  placeholder="exam number">
@@ -82,15 +90,8 @@
 		 <button type="submit" id ="check_result" class="sign-in" > check result</button>
 				</form>
 		 </div>
-
 	</div>
-	<div class="col blue"><h1>Welcome!</h1>
-		<p><h4>Lets Make your school's result for you</h4><p>
-		<p><h4>And guess what? you also get paid for it too.</h4><p>
-		<p><h4>Results ready in minutes, no stress!</h4><p>
-		<p><h4>Just  <a href="/register">Register</a> or sign in to get started.</h4><p>
-		<p><h4>Result has never been this Cool!</h4><p>
-	</div>
+	
 </div>
 <!-- js files -->
 	<script src='/static/js/jquery.min.js'></script>
