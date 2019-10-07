@@ -6,13 +6,10 @@
 
 {% block main %}
 
-<div class="form-w3ls">
-  <h4 class="blue"><b>{{classData[0]["classname"].upper()}} CLASSLIST</b></h4>
- <table  class = "table table-sm">
+ <table id="classview" class = "table table-striped">
     <tr>
       <td>EXAM NO</td>
-      <td>Names</td>
-      <td></td>
+      <td colspan="2"><h4 class="blue"><b>{{classData[0]["classname"].upper()}} Classlist</b></h4></td>
       {% set class_id = classData[0]["id"]|string %}
       {%if class_id|length == 1%}
       {%set class_identifier = "0"+class_id|string%}
@@ -47,7 +44,7 @@
     {% endfor %}  
   </tbody>
   </table>
-<div id="customize_add" class = "row">
+<div class = " form-w3ls row">
     <div class="col">
 
     <form action ="/verify_add_student" method = "post">
@@ -64,12 +61,12 @@
 
   </div>
 
-  <h4 class="blue"><b>{{classData[0]["classname"].upper()}} SUBJECT LIST</b></h4>
-   <table class = "table table-sm">
+
+   <table id="classview" class = "table table-striped">
      <thead>
-       <th>NUMBER</th>
-        <th>SUBJECT</th>
-        <th>SUBJECT AVERAGE</th>
+       <th>No</th>
+        <th>Subject List</th>
+        <th>Subject Average</th>
         <th></th>
      </thead>
      <tbody>
@@ -88,7 +85,7 @@
      </tbody>
      </table>
 
-     <div>
+     <div class=" form-w3ls ">
       <form action ="/mastersheet" method = "post" target="_blank">
         <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
         <button class="btn btn-primary" type="submit"> VEIW MASTERSHEET </button>
@@ -96,5 +93,5 @@
     </div>
       </form>
 
-    </div>
+
 {% endblock %}

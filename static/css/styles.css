@@ -65,27 +65,25 @@ nav .navbar-brand
 .tab-group {
 	list-style: none;
     padding: 0;
-    margin: 0 0 30px 155px;
 }
 .tab-group:after {
   content: "";
   display: table;
   clear: both;
 }
-.tab-group li a {
+.tab-group div a {
   display: block;
   text-decoration: none;
   padding: 15px;
   color: #212121;
   font-size: 20px;
   margin-right:25px;
-  float: left;
   text-align: center;
   cursor: pointer;
   -webkit-transition: .5s ease;
   transition: .5s ease;
 }
-.tab-group li a:hover {
+.tab-group div a:hover {
   color: #212121;
 }
 .tab-group .active a {
@@ -94,10 +92,10 @@ nav .navbar-brand
 .tab-content > div:last-child {
   display: none;
 }
-.cl-effect-4 li a {
+.cl-effect-4 div a {
 	position:relative;
 }
-.cl-effect-4 li a::after {
+.cl-effect-4 div a::after {
 	position: absolute;
 	top: 100%;
 	left: 0;
@@ -113,7 +111,7 @@ nav .navbar-brand
 	-moz-transform: translateY(-10px);
 	transform: translateY(-10px);
 }
-.cl-effect-4 li.active a::after, .cl-effect-4 li a:hover::after, .cl-effect-4 li a:focus::after {
+.cl-effect-4 div.active a::after, .cl-effect-4 div a:hover::after, .cl-effect-4 div a:focus::after {
     height: 2px;
     opacity: 1;
     -webkit-transform: translateY(0px);
@@ -190,13 +188,15 @@ input[type="text"]:focus,input[type="email"]:focus, input[type="password"]:focus
 }
 
 
-
-/*-- //Responsive end here--*/
-
 .form-w3ls{
 	width: 100%;
 }
 
-#customize_add{
-    margin-bottom: 20px;
+.class_details{
+    text-align: left
 }
+
+#class_veiw{
+    float: right;
+}
+
