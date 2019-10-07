@@ -196,3 +196,7 @@ input[type="text"]:focus,input[type="email"]:focus, input[type="password"]:focus
 .form-w3ls{
 	width: 100%;
 }
+
+#customize_add{
+    margin-bottom: 20px;
+}
