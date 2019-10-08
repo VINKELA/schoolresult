@@ -216,3 +216,31 @@ input[type="text"]:focus,input[type="email"]:focus, input[type="password"]:focus
 #school_name{
     text-align: center;
 }
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+    color: green;
+  }
+  
+  .valid:before {
+    position: relative;
+    left: -15px;
+    content: "✔";
+  }
+  
+  /* Add a red text color and an "x" when the requirements are wrong */
+  .invalid {
+    color: red;
+  }
+  
+  .invalid:before {
+    position: relative;
+    left: -15px;
+    content: "✖";
+  }
+
+  @media (max-width: 736px){
+	.row {
+		display: block;
+	}
+}

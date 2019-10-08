@@ -53,18 +53,19 @@ $(function() {
   // Stop form from submitting normally
   event.preventDefault();
   if($('input[name="username"]').val() == ""){
-    alert("username is empty");
+    $('#signin_message').text("username is empty")
   }
 
  else if($('input[name="password"]').val() ==""){
-    alert("password is empty");
-  }
+  $('#password_message').text("password is empty")
+}
  else{
       $.post( $SCRIPT_ROOT + '/login_check',{
         username: $('input[name="username"]').val(),
         password: $('input[name="password"]').val()
       }, function(data) {
-          if (data == "fail"){alert("invalid username or password")}
+          if (data == "fail"){    $('#signin_message').text("username or password is incorrect")
+        }
           else{
             $("#login_form").submit();
           }

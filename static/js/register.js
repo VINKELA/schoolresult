@@ -90,77 +90,52 @@ $(function() {
     $('#submit_registration').bind('click', function() {
   // Stop form from submitting normally
   event.preventDefault();
-
-
-
-  if($('input[name="username"]').val() == ""){
-    alert("you must provide a username");
-  }
-
-
-  else if($('input[name="school_name"]').val() ==""){
-    alert("you must provide a school name");
+  if($('input[name="school_name"]').val() ==""){
+    $('#schoolname_message').text("school name is empty")
   }
   else if($('input[name="email"]').val() ==""){
-    alert("you must provide a email");
+    $('#email_message').text("email is empty")
+  }
+  else if(validateEmail($('input[name="email"]').val()) !=true){
+    $('#email_message').text("email is not valid")
+  }
+  else if($('#term').find(":selected").val() ==""){
+    $('#term_message').text("current term is empty!")
   }
   else if($('#school_session').find(":selected").val() ==""){
-    alert("you must provide current school session");
-  }
-    else if($('#term').find(":selected").val() ==""){
-    alert("you must provide a current school term");
-  }
-  else if($('input[name="firstname"]').val() ==""){
-    alert("you must provide your firstname");
-  }
-    else if($('input[name="surname"]').val() ==""){
-    alert("you must provide your surname");
+    $('#session_message').text("current session is empty!")
   }
 
-  else if(validateEmail($('input[name="email"]').val()) !=true){
-    alert("email not valid");
-  }
-  else if($('input[name="admin_password"]').val() ==""){
-    alert("you must provide a password for admin");
-  }
-   else if($('input[name="phone_number"]').val() ==""){
-    alert("you must provide a phone number");
-  }
-   else if($('input[name="address"]').val() ==""){
-    alert("you must provide an address");
+  else if($('input[name="username"]').val() == ""){
+    $('#username_message').text("username is empty")
   }
    else if($('input[name="password"]').val() ==""){
-    alert("you must provide a password");
+    $('#password_message').text("password is empty!")
+  }
+  // Validate length
+  else if(myInput2.value.length < 8) {
+    $('#password_message').text("password must be up to 8 digits")
   }
    else if($('input[name="confirmation"]').val() ==""){
-    alert("you must provide a password");
-  }
-   else if($('#state').find(":selected").val() ==""){
-    alert("you must provide state");
-  }
-  else if($('input[name="city"]').val() ==""){
-    alert("you must provide city");
+    $('#confirmation_message').text("re-enter password")
   }
    else if($('input[name="password"]').val() != $('input[name="confirmation"]').val()){
-    alert("password and confirmation do not match");
-  }
-      // Validate length
-  else if(myInput2.value.length < 8) {
-    alert(" password must be up to 8 digits");
-  }
+    $('#confirmation_message').text("password and confirmation do not match")
 
-
+  }
  else{
       $.post( $SCRIPT_ROOT + '/username_check',{
         username: $('input[name="username"]').val()
       }, function(data) {
           if (data == "false")
-          {alert("username already taken")}
+          {    $('#username_message').text("username already taken")
+        }
           else{ $.post( $SCRIPT_ROOT + '/email_check',{
         email: $('input[name="email"]').val()
       }, function(data) {
           if (data == "false")
-          {alert("email already belongs to another account")}
+          {    $('#email_message').text("email already exist")
+        }
           else{$("#register").submit();
 };
       });};
