@@ -65,6 +65,7 @@ nav .navbar-brand
 .tab-group {
 	list-style: none;
     padding: 0;
+    margin: 10%;
 }
 .tab-group:after {
   content: "";
@@ -159,6 +160,7 @@ input[type="text"]:focus,input[type="email"]:focus, input[type="password"]:focus
 
 
 
+
 .sign-in {
 	font-size: 20px;
 	font-weight: 600;
@@ -199,3 +201,18 @@ input[type="text"]:focus,input[type="email"]:focus, input[type="password"]:focus
     float: right;
 }
 
+.single_form{
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 15%;
+}
+
+.other_forms{
+    margin-top: 5%;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+#school_name{
+    text-align: center;
+}

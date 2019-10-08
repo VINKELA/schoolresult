@@ -6,15 +6,16 @@ verify admin
 {% endblock %}
 
 {% block main %}
-
+<div class="single_form">
 <div class="form-w3ls">
 <form action="/admin_verification" id="password_form" method="post">            
 <input type="password" name="password" placeholder="admin password" />
 <div class="row">
-<div class="col"><button class="sign-in" id="password_button">VERIFY </button></div>
+<div class="col"><button class="sign-in">VERIFY </button></div>
 </form>
-<form action="/cancel_portfolio" method="POST"><div class="col"><button class="sign-in" id="password_button">CANCEL</button></div>
+<div class="col"><form action="/cancel_portfolio" method="POST"><button class="sign-in">CANCEL</button></div>
 </form>
+</div>
 </div>
 </div>
  <!-- js files -->

@@ -7,7 +7,7 @@ verify add student
 
 {% block main %}
       {% set id = classData[0]["id"]|string %}
-
+<div class="single_form">
 <div class="form-w3ls">
 
     <form action="/verified_customize" method="post" id="add_student_form">            
@@ -16,6 +16,7 @@ verify add student
 
     <button class="sign-in" type="submit" id="add_student_button">VERIFY </button>
     </form>
+</div>
 </div>
     <!-- js files -->
 	<script src='/static/js/jquery.min.js'></script>

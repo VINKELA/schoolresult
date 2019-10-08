@@ -6,7 +6,6 @@
 
         <!-- Required meta tags -->
         <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <script type=text/javascript>
         $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -51,11 +50,6 @@
             <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <span class="green">
-            {% if session.user_id %}
-            {{schoolInfo[0]["school_name"].upper()}}
-            {% endif %}
-            </span>
             <div class="collapse navbar-collapse" id="navbar">
                 {% if session.user_id %}
                     <ul class="navbar-nav ml-auto mt-2">
@@ -98,6 +92,12 @@
         {% endif %}
     </div>
         <div id="main">
+                <span class="blue" id="school_name">
+                        {% if session.user_id %}
+                        <h4>{{schoolInfo[0]["school_name"].upper()}}</h4>
+                        {% endif %}
+                </span>
+            
             {% block main %}{% endblock %}
         </div>
     </body>

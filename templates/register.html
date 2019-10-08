@@ -5,19 +5,19 @@
 {% endblock %}
 
 {% block main %}
-<div name="register-form">
+
+<div class="other_forms">
 
     <div class="form-w3ls">
 
     <form id="register" action="/register" method="post">
             <div class="register-form">
+                 <h4 class="blue"> REGISTER FOR FREE!</h4>
             <hr>
-                 <h1 class="message green"> REGISTER FOR FREE!</h1>
-            <hr>
-             <h1 class="message">School information</h1>
+             <h3>School information</h3>
            <input  name="school_name" placeholder="school name" type="text" required="required"/ >
             <input  name="email" placeholder="email" type="email" required="required"/>
-            <span class="row">
+            <div class="row">
 
                 <div  class="col">
                     <select name="term" id="term"  aria-required="true">
@@ -37,19 +37,18 @@
                     </select>
                     <div class="arrow"></div>
                 </div>
-                       </span>
+            </div>
 
             <hr>
-            <h1 class="message">login details</h1>
-            <input class="form-control" name="username" placeholder="Username" type="text"/>
+            <h3 >login details</h3>
+            <input name="username" placeholder="Username" type="text"/>
             <input placeholder="password" type="password" id="psw" name="password" pattern=".{8,}" title="Must contain at least 8 or more characters" required="required">
             <div id="message2">
-              <h3>Password must contain the following:</h3>
               <p id="length2" class="invalid">Minimum <b>8 characters</b></p>
             </div>
 
             <input  name="confirmation" placeholder=" confirm Password" type="password" required="required"/>
-            By clicking Register, you agree to the <a href="/terms" target="_blank">Terms of Service</a> and you acknowledge that classresult and each Member process your school's and personal data in accordance with the <a href="/privacy" target="_blank">Privacy Policy</a>.
+          <p>  By clicking Register, you agree to the <a href="/terms" target="_blank">Terms of Service</a> and you acknowledge that classresult and each Member process your school's and personal data in accordance with the <a href="/privacy" target="_blank">Privacy Policy</a>.</p>
 
 			<button type="submit" class="sign-in" id="submit_registration" value="Register">Register</button>
 			</div>

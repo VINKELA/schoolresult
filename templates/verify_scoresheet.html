@@ -8,12 +8,13 @@ verify scoresheet
 {% block main %}
       {% set subject_id = sub_id|string %}
       {% set scoresheet_id = subject_id +"_"+classData[0]["id"]|string %}
-
-    <div class="form-w3ls">
+<div class="single_form">
+<div class="form-w3ls">
 
 <form action="/edit_scoresheet" method="post">            
 <input name="password" placeholder="form master password" type="password"/>
 <button class="sign-in" name="edit_scoresheet" value="{{scoresheet_id}}">VERIFY</button>
 </form>
-    </div>
+</div>
+</div>
     {% endblock %}

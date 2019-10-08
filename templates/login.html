@@ -35,13 +35,12 @@
 				 <div id="signup-agile">
 						<form id="register" action="/register" method="post">
 							<div class="register-form">
-							<hr>
-								 <h3 class="message green"> REGISTER FOR FREE!</h3>
+								 <h4 class="blue"> REGISTER FOR FREE!</h4>
 							<hr>
 							 <h4 class="message"><b>School information</b></h4>
 						   <input  name="school_name" placeholder="school name" type="text" required="required"/ >
 							<input  name="email" placeholder="email" type="email" required="required"/>
-							<span class="row">
+							<div class="row">
 
 								<div  class="col">
 									<select name="term" id="term"  aria-required="true">
@@ -61,17 +60,15 @@
 									</select>
 									<div class="arrow"></div>
 								</div>
-									   </span>
+							</div>
 
 							<hr>
 							<h3 class="message">login details</h3>
 							<input  name="username" placeholder="Username" type="text"/>
 							<input placeholder="password" type="password" id="psw" name="password" pattern=".{8,}" title="Must contain at least 8 or more characters" required="required">
-							<div id="message2">
-							  <h4>Password must contain the following:</h4>
+							<div>
 							  <p id="length2" class="invalid">Minimum <b>8 characters</b></p>
 							</div>
-
 							<input  name="confirmation" placeholder=" confirm Password" type="password" required="required"/>
 							<p>By clicking Register, you agree to the <a href="/terms" target="_blank">Terms of Service</a> and you acknowledge that classresult and each Member process your school's and personal data in accordance with the <a href="/privacy" target="_blank">Privacy Policy</a>.</p>
 

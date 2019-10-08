@@ -8,8 +8,8 @@ verify teacher
 {% block main %}
       {% set student_id = id|string %}
       {% set class_id = classData[0]["id"]|string %}
-
-    <div class="form-w3ls">
+<div class="single_form">
+<div class="form-w3ls">
 
 <form action="/edit_student" method="post" id="verify_teacher_form">            
 <input type="password" name="password" id="password"placeholder="password" />
@@ -18,7 +18,9 @@ verify teacher
 
 <button class="sign-in" id="verify_teacher">VERIFY </button>
 </form>
-    </div>
+</div>
+</div>
+  
  <!-- js files -->
 	<script src='/static/js/jquery.min.js'></script>
 	<script src="/static/js/veiwclass.js"></script>
