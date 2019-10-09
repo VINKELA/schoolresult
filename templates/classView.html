@@ -5,11 +5,11 @@
 {% endblock %}
 
 {% block main %}
-
+<h4 class="blue">{{classData[0]["classname"].upper()}} </h4>
  <table id="classview" class = "table table-striped">
     <tr>
       <td>EXAM NO</td>
-      <td colspan="2"><h4 class="blue"><b>{{classData[0]["classname"].upper()}} Classlist</b></h4></td>
+      <td colspan="2">Classlist</td>
       {% set class_id = classData[0]["id"]|string %}
       {%if class_id|length == 1%}
       {%set class_identifier = "0"+class_id|string%}

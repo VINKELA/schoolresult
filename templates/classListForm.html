@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-<div id="enter_classlist">
+<div>
 <form action="/confirm_classlist"  id="class_created"  method="post">
  <table class="table table-striped">
 <thead>
@@ -30,9 +30,8 @@
             <td><input  class="col classlist"  name="{{firstname}}" placeholder=" firstname" type="text" required/></td>
            <td> <input  class ="col classlist" name="{{surname}}" placeholder="surname" type="text" required/></td>
             <td><input class="col" name="{{othername}}" placeholder="othername" type="text"/></td>
-            <td><label ><input  class = "col" type="radio" name="{{sex}}" value="Female" required> <h4>Female</h4> </label>
-            <label ><input class = "col" type="radio" name="{{sex}}" value="Male" required> <h4>Male</h4></label></td>
-            
+            <td><label ><input  class = "col" type="radio" name="{{sex}}" value="Female" required> <b>Female</b> </label>
+            <label ><input class = "col" type="radio" name="{{sex}}" value="Male" required> <b>Male</b></label></td>
         </tr>
            <input name="n" value="{{n}}" type="text" hidden/>
 
@@ -40,10 +39,10 @@
 </tbody>
 </table>
 <div class="form-w3ls row">
- <div class="col"><button id="submit_classlist" class="sign-in" type="submit">Submit</button></div>
+ <div class="col"><button id="submit_classlist" class="sign-in" type="submit">Submit</button></form></div>
+ 
+ <div class="col"><form action="/cancel_portfolio" method="POST"><button class="sign-in" id="password_button">CANCEL</button></div>
  </div>
- </form>
- <form action="/cancel_portfolio" method="POST"><div class="col"><button class="sign-in" id="password_button">CANCEL</button></div>
  </div>
 <!-- js files -->
 	<script src="/static/js/portfolio.js"></script>

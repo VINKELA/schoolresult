@@ -241,9 +241,8 @@ setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1
 </div>
 <div class="col">
   <form action="/cancel" method="post">
-    <input type="hidden"   value="{{subjectData[0]["id"]}}" name ="subject_id"/>
     <input type="hidden"   value="{{classData[0]["id"]}}" name ="class_id"/>
-    <button class="btn btn-primary"  type="submit">cancel</button>
+    <button class="sign-in"  type="submit">cancel</button>
   </form>
 </div>
 </div>

@@ -16,8 +16,16 @@ verify teacher
 <input type="hidden" name="class_id" id="id" value="{{class_id}}"/>
 <input type="hidden" name="subject_id" value="{{subject_id}}"/>
 
-<button class="sign-in" id="verify_teacher">VERIFY </button>
-</form>
+<div class="row">
+            <div class="col"><button class="sign-in" id="verify_teacher">VERIFY </button></form></div>
+            <div class="col">
+                        <form action="/cancel" method="post">
+                          <input type="hidden"   value="{{classData[0]["id"]}}" name ="class_id"/>
+                          <button class="sign-in"  type="submit">cancel</button>
+                        </form>
+            </div>
+</div>
+
     </div>
 </div>
  <!-- js files -->

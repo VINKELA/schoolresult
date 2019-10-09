@@ -3,37 +3,38 @@
 {% block title %}
 edit student details
 {% endblock %}
-
 {% block main %}
-<form action="/edited_student" method="post" id="edit_student_form">
 <div class="form-w3ls">
+<form action="/edited_student" method="post" id="edit_student_form">
         {% set student_id = id|string %}
         {% set surname = "s"+ student_id %}
         {% set firstname = "f"+ student_id%}
         {% set othername = "o"+ student_id%}
         {% set sex = "g"+ student_id%}
 
-   <input type="text"  placeholder="surname" name =  "{{surname}}" value={{student["surname"]}} id="surname" required="required">
+      <input type="text"  placeholder="surname" name =  "{{surname}}" value={{student["surname"]}} id="surname" required="required">
      <input type="text"  placeholder="firstname" name="{{firstname}}" value={{student["firstname"]}} id="firstname" required="required">
      <input type="text"  placeholder="othernames" name="{{othername}}" value={{student["othername"]}}>
+     <div>
       {%if student["sex"] == "male" %}
       <label class="radio-inline"><input class = "col" type="radio" name="{{sex}}" value="female"> <h4> Female </h4> </label>
       <label class="radio-inline"><input class = "col" type="radio" name="{{sex}}" value="male" checked> <h4> Male </h4> </label>
       {%else%}
      <label class="radio-inline"><input class = "col" type="radio" name="{{sex}}" value="female" checked> <h4> Female </h4> </label>
       <label class="radio-inline"><input class = "col" type="radio" name="{{sex}}" value="male" > <h4> Male </h4> </label>
-        {%endif%}
+      {%endif%}
+    </div>
 <div class="row">
-<div class="col">
-  <div class="col"></div><button  class="sign-in" type="submit"  id="edit_student_button">Submit</button></div>
-  <input type="hidden" name="student_id" value="{{student_id}}"/>
-  <input type="hidden" name="class_id" value="{{classData[0]["id"]}}"/> 
-
- </form>
- <form action="/unregister_student" method="post"><div class="col"><button name="unregister_student" class="sign-in" type="submit">DELETE STUDENT</button></div>
-  <input type="hidden" name="student_id" value="{{student_id}}"/>
-  <input type="hidden" name="class_id" value="{{classData[0]["id"]}}"/> 
-</form>
+  <div class="col"><button  class="sign-in" type="submit"  id="edit_student_button">Submit</button>
+  <input type="hidden" name="student_id" value="{{student_id}}">
+  <input type="hidden" name="class_id" value="{{classData[0]["id"]}}"> 
+  </form></div>
+ <div class="col"><form action="/unregister_student" method="post"><button  name="unregister_student" class="sign-in delete" type="submit">DELETE</button></form></div>
+ <div class="col">
+    <form action="/cancel" method="post">
+      <input type="hidden"   value="{{classData[0]["id"]}}" name ="class_id"/>
+      <button class="sign-in"  type="submit">cancel</button>
+    </form>
 </div>
 </div>
 

@@ -6,8 +6,8 @@ new session update
   <form action="/session_update" method="post">
 <table class="table table-striped">
   <thead>
-    <th>class name</th>
-    <th>new name</th>
+    <th>Last session class name</th>
+    <th>New session class name</th>
     <th>section</th>
     <th>form master</th>
     <th>ca is marked over?</th>
@@ -24,7 +24,7 @@ new session update
   {%set exam = "exam"+id%}
   {%set section = "section"+id%}
 <tr>
-    <td><h1>{{clas["classname"]}}</h1></td>
+    <td><b>{{clas["classname"].upper()}}</b></td>
     <td><input type = "text" name="{{name}}" placeholder="new name"  /> </td>
     <td><select name="{{section}}"   aria-required="true">
       <option   selected="" disabled="">{{clas["section"]}}</option>
