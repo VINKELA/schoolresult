@@ -49,9 +49,71 @@
     <div class="col"><form action="/cancel_portfolio" method="POST"><button class="sign-in" id="password_button">cancel</button></form>
 </div>
     </div>
-        </div>
+  </div>
     {%else%}
 <div class="row main_pages">
+    <div class="form-w3ls col">
+
+        <div id="tab-group" class="tab-group cl-effect-4 row">
+          <div class="tab active col"><a href="#scoresheet_form">Scoresheet</a></div>
+           <div class="tab col"><a href="#add_class">Add class</a></div>
+        </div>
+         <div class="tab-content">
+           <div id="scoresheet_form">
+             <form action="/submit_score" id="submit_score" method="post">
+                     <input name="subject_name" placeholder="FULL NAME OF SUBJECT" type="text" required/>
+  
+         <div  class="pure-u-1-2 reg-month puree-dropdown dropdown">
+                     <select name="the_class" id="your_class"  aria-required="true" required>
+                     <option value="" selected="" disabled="">select&nbsp;Class</option>
+                     {% for class in clas %}
+                             <option  value="{{class["id"]}}">{{class["classname"]}}</option>
+                     {% endfor %}
+                     </select>
+                     <div class="arrow"></div>
+                 </div>
+                     <input autocomplete="off"   name="subject_teacher" placeholder="subject_teacher" type="text" required/>
+            <button name = "submit_scoresheet"id="submit_scoresheet" class="sign-in" type="submit">SUBMIT</button>
+             </form>
+           </div>
+  
+           <div id="add_class">
+             <form id="create_form" action="/createClass" method="post">
+                 <div class="row">
+                 <div class="col">
+                     <input  id="class_name"  name="class_name" placeholder="class name" type="text" required="required"/>
+                 </div>
+             <div class="col">
+                 <select name="section" id="section"  aria-required="true">
+                 <option  value="" selected="" disabled="">section</option>
+                         <option  value="pre-nursery">pre-nursery</option>
+                         <option  value="nursery">nursery</option>
+                         <option  value="primary">primary</option>
+                         <option  value="secondary">secondary</option>
+                 </select>
+                 <div class="arrow"></div>
+              </div>
+              </div>
+                   <div class="row">
+                   <div class="col"> <input   name="ca" placeholder="ca is over?" id="ca" type="number" required="required"/></div>
+                   <div class="col"><input   name="test" placeholder="test over?" id="test" type="number" required="required"/></div> 
+                   <div class="col"><input  name="exam" placeholder="exam over?" id="exam" type="number" required="required"/></div> 
+                    </div>
+                     <input  id="no_of_students"  name="no_of_students" placeholder="The number of students in class" type="number" required="required"/>
+                  <div class="row">
+                   <div class="col"> <input class="col"  name="firstname" placeholder=" firstname" type="text" required="required"/></div>
+                     <div class="col"><input  class ="col" name="surname" placeholder="surname" type="text" required="required"/></div>
+                    <div class="col"><input class="col" name="othernames" placeholder="othername" type="text" required="required"/></div>
+                  </div>
+                     <input  id="password"  name="password" placeholder="choose Password for class" type="password" required="required"/>
+                     <input  id="confirmation"  name="confirmation" placeholder="confirm password" type="password" required="required"/>
+            <button  id="create_button" class="sign-in" type="submit" value="create" >create</button>
+             </form>
+  
+           </div>
+         </div><!-- tab-content -->
+       </div> <!-- /form -->
+  
     <div  class="col">
         {%for data in clas%}
         <div class="form-w3ls">
@@ -68,68 +130,6 @@
       </div>
           {% endfor %}
       </div>
-      
-    <div class="form-w3ls col">
-
-      <div id="tab-group" class="tab-group cl-effect-4 row">
-        <div class="tab active col"><a href="#scoresheet_form">Scoresheet</a></div>
-         <div class="tab col"><a href="#add_class">Add class</a></div>
-      </div>
-       <div class="tab-content">
-         <div id="scoresheet_form">
-           <form action="/submit_score" id="submit_score" method="post">
-                   <input name="subject_name" placeholder="FULL NAME OF SUBJECT" type="text" required/>
-
-       <div  class="pure-u-1-2 reg-month puree-dropdown dropdown">
-                   <select name="the_class" id="your_class"  aria-required="true" required>
-                   <option value="" selected="" disabled="">select&nbsp;Class</option>
-                   {% for class in clas %}
-                           <option  value="{{class["id"]}}">{{class["classname"]}}</option>
-                   {% endfor %}
-                   </select>
-                   <div class="arrow"></div>
-               </div>
-                   <input autocomplete="off"   name="subject_teacher" placeholder="subject_teacher" type="text" required/>
-          <button name = "submit_scoresheet"id="submit_scoresheet" class="sign-in" type="submit">SUBMIT</button>
-           </form>
-         </div>
-
-         <div id="add_class">
-           <form id="create_form" action="/createClass" method="post">
-               <div class="row">
-               <div class="col">
-                   <input  id="class_name"  name="class_name" placeholder="class name" type="text" required="required"/>
-               </div>
-           <div class="col">
-               <select name="section" id="section"  aria-required="true">
-               <option  value="" selected="" disabled="">section</option>
-                       <option  value="pre-nursery">pre-nursery</option>
-                       <option  value="nursery">nursery</option>
-                       <option  value="primary">primary</option>
-                       <option  value="secondary">secondary</option>
-               </select>
-               <div class="arrow"></div>
-            </div>
-            </div>
-                 <div class="row">
-                 <div class="col"> <input   name="ca" placeholder="ca is over?" id="ca" type="number" required="required"/></div>
-                 <div class="col"><input   name="test" placeholder="test over?" id="test" type="number" required="required"/></div> 
-                 <div class="col"><input  name="exam" placeholder="exam over?" id="exam" type="number" required="required"/></div> 
-                  </div>
-                   <input  id="no_of_students"  name="no_of_students" placeholder="The number of students in class" type="number" required="required"/>
-                <div class="row">
-                 <div class="col"> <input class="col"  name="firstname" placeholder=" firstname" type="text" required="required"/></div>
-                   <div class="col"><input  class ="col" name="surname" placeholder="surname" type="text" required="required"/></div>
-                  <div class="col"><input class="col" name="othernames" placeholder="othername" type="text" required="required"/></div>
-                </div>
-                   <input  id="password"  name="password" placeholder="choose Password for class" type="password" required="required"/>
-                   <input  id="confirmation"  name="confirmation" placeholder="confirm password" type="password" required="required"/>
-          <button  id="create_button" class="sign-in" type="submit" value="create" >create</button>
-           </form>
-
-         </div>
-       </div><!-- tab-content -->
-     </div> <!-- /form -->
 </div>
 {%endif%}
 <!-- js files -->

@@ -65,7 +65,7 @@ nav .navbar-brand
 .tab-group {
 	list-style: none;
     padding: 0;
-    margin: 10%;
+    margin: 1%;
 }
 .tab-group:after {
   content: "";
@@ -73,26 +73,26 @@ nav .navbar-brand
   clear: both;
 }
 .tab-group div a {
-  display: block;
   text-decoration: none;
-  padding: 15px;
+  padding: 5px;
   color: #212121;
-  font-size: 20px;
-  margin-right:25px;
+  font-size: 15px;
+  margin-right:0px;
   text-align: center;
   cursor: pointer;
   -webkit-transition: .5s ease;
   transition: .5s ease;
 }
-.tab-group div a:hover {
-  color: #212121;
-}
 .tab-group .active a {
   color: #212121;
 }
-.tab-content > div:last-child {
+.tab-content > div:last-child{
   display: none;
 }
+#login-tab-content > div:nth-last-child(2){
+    display: none;
+}
+  
 .cl-effect-4 div a {
 	position:relative;
 }
@@ -105,15 +105,8 @@ nav .navbar-brand
 	background:#a0da4f;
 	content: '';
 	opacity: 0;
-	-webkit-transition: height 0.3s, opacity 0.3s, -webkit-transform 0.3s;
-	-moz-transition: height 0.3s, opacity 0.3s, -moz-transform 0.3s;
-	transition: height 0.3s, opacity 0.3s, transform 0.3s;
-	-webkit-transform: translateY(-10px);
-	-moz-transform: translateY(-10px);
-	transform: translateY(-10px);
 }
 .cl-effect-4 div.active a::after, .cl-effect-4 div a:hover::after, .cl-effect-4 div a:focus::after {
-    height: 2px;
     opacity: 1;
     -webkit-transform: translateY(0px);
     -moz-transform: translateY(0px);
@@ -138,7 +131,7 @@ p.header {
 
 input[type="text"],input[type="email"], input[type="password"], input[type="number"], input[type="password"],select {
     width: 85%;
-    border-bottom: 2px solid #a0da4f;
+    border-bottom: 2px solid #537fbe;
     border-top: none;
     border-left: none;
     border-right: none;
@@ -184,7 +177,6 @@ input[type="text"]:focus,input[type="email"]:focus, input[type="password"]:focus
  .sign-in:hover {
 	background-color: #84bf31;
 	font-family: 'Sansita', sans-serif;
-
 	color: #000000;
 }
 
@@ -202,8 +194,8 @@ input[type="text"]:focus,input[type="email"]:focus, input[type="password"]:focus
 }
 
 .single_form{
-    margin-left: 15%;
-    margin-right: 15%;
+    margin-left: 8%;
+    margin-right: 8%;
     margin-top: 15%;
 }
 
@@ -247,5 +239,9 @@ input[type="text"]:focus,input[type="email"]:focus, input[type="password"]:focus
 
 .delete{
     background-color: #ea433b;
+}
+
+div > form > h4{
+    margin-top: 40px;
 }
 
