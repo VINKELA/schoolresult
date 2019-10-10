@@ -54,17 +54,23 @@ $(function() {
   event.preventDefault();
   if($('input[name="username"]').val() == ""){
     $('#signin_message').text("username is empty")
+    $('input[name="username"]').focus()
   }
 
  else if($('input[name="password"]').val() ==""){
   $('#password_message').text("password is empty")
+  $('input[name="password"]').focus()
+
 }
  else{
       $.post( $SCRIPT_ROOT + '/login_check',{
         username: $('input[name="username"]').val(),
         password: $('input[name="password"]').val()
       }, function(data) {
-          if (data == "fail"){    $('#signin_message').text("username or password is incorrect")
+          if (data == "fail"){
+            $('#signin_message').text("username or password is incorrect")
+            $('input[name="username"]').focus()
+
         }
           else{
             $("#login_form").submit();
@@ -78,24 +84,33 @@ $(function() {
   // Stop form from submitting normally
   event.preventDefault();
   if($('input[name="regnumber"]').val() == ""){
-    alert("exam number is empty");
+    $('#reg_message').text("exam number is empty");
+    $('input[name="regnumber"]').focus()
   }
   else{
     var str = $('input[name="regnumber"]').val();
   if(str.length < 6){
-    alert("exam number invalid");
+    $('#reg_message').text("exam number invalid");
+    $('input[name="regnumber"]').focus()
   }
 
   else if($('input[name="pin"]').val() ==""){
-    alert("pin is empty");
+    $('#pin_message').text("pin is empty");
+    $('input[name="pin"]').focus()
   }
   else{
       $.post( $SCRIPT_ROOT + '/result_check',{
         regnumber: $('input[name="regnumber"]').val(),
         pin: $('input[name="pin"]').val()
       }, function(data) {
-          if (data == "fail"){alert("invalid reg number")}
-          else if (data == "pin_invalid"){alert("pin invalid")}
+          if (data == "fail"){
+            $('#reg_message').text("exam number invalid");
+            $('input[name="regnumber"]').focus()        
+          }
+          else if (data == "pin_invalid"){
+            $('#pin_message').text("pin is invalid");
+            $('input[name="pin"]').focus()
+          }
           else{
             $("#check_results").submit();
           }
