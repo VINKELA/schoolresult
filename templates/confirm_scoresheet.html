@@ -3,7 +3,8 @@
     confirm classlist
 {% endblock %}
 {% block main %}
-<form action="/submitted" method="post">
+<form action="/submitted" id="submitted"method="post">
+  <input type="hidden" value="{{class_id}}" name="button">
  <table class="table table-striped">
   <thead>
     <tr>
@@ -35,14 +36,14 @@
 </table>
 <div class="row">
 <div class="form-w3ls col">
-      <button class="sign-in" name="button" type="submit" value="{{class_id}}">Confirm</button>
+      <button class="sign-in"  id="btnsubmit" type="submit" >Confirm</button>
 
  </div>
 
  </form>
  <div class="form-w3ls col">
      <form action="/submit_score" method="get">
- <button class="sign-in" id="btnsubmit" name="cancel" type="submit" value="submit">Cancel</button>
+ <button class="sign-in" name="cancel" type="submit" value="submit">Cancel</button>
  </form>
 </div>
  </div>

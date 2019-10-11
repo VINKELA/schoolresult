@@ -52,15 +52,17 @@ $(function() {
     $('#login').bind('click', function() {
   // Stop form from submitting normally
   event.preventDefault();
+  $('#login').attr('disabled',true);
   if($('input[name="username"]').val() == ""){
     $('#signin_message').text("username is empty")
     $('input[name="username"]').focus()
+    $('#login').attr('disabled',false)
   }
 
  else if($('input[name="password"]').val() ==""){
   $('#password_message').text("password is empty")
   $('input[name="password"]').focus()
-
+  $('#login').attr('disabled',false)
 }
  else{
       $.post( $SCRIPT_ROOT + '/login_check',{
@@ -70,10 +72,12 @@ $(function() {
           if (data == "fail"){
             $('#signin_message').text("username or password is incorrect")
             $('input[name="username"]').focus()
-
+            $('#login').attr('disabled',false)        
         }
           else{
+            $('#login').text("loging in ....")
             $("#login_form").submit();
+
           }
       });}
     });
@@ -83,20 +87,26 @@ $(function() {
     $('#check_result').bind('click', function() {
   // Stop form from submitting normally
   event.preventDefault();
+  $('#check_result').attr('disabled', true)
   if($('input[name="regnumber"]').val() == ""){
     $('#reg_message').text("exam number is empty");
     $('input[name="regnumber"]').focus()
+    $('#check_result').attr('disabled', false)
+
   }
   else{
     var str = $('input[name="regnumber"]').val();
   if(str.length < 6){
     $('#reg_message').text("exam number invalid");
     $('input[name="regnumber"]').focus()
+    $('#check_result').attr('disabled', false)
   }
 
   else if($('input[name="pin"]').val() ==""){
     $('#pin_message').text("pin is empty");
     $('input[name="pin"]').focus()
+    $('#check_result').attr('disabled', false)
+
   }
   else{
       $.post( $SCRIPT_ROOT + '/result_check',{
@@ -105,14 +115,20 @@ $(function() {
       }, function(data) {
           if (data == "fail"){
             $('#reg_message').text("exam number invalid");
-            $('input[name="regnumber"]').focus()        
+            $('input[name="regnumber"]').focus() 
+            $('#check_result').attr('disabled', false)
+       
           }
           else if (data == "pin_invalid"){
             $('#pin_message').text("pin is invalid");
             $('input[name="pin"]').focus()
+            $('#check_result').attr('disabled', false)
           }
           else{
+            $('#check_result').text('checking ....')
             $("#check_results").submit();
+            $('#check_result').attr('disabled', false)
+            $('#check_result').text('check result')
           }
       });}
     }

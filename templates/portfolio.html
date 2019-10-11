@@ -62,7 +62,7 @@
            <div id="scoresheet_form">
              <form action="/submit_score" id="submit_score" method="post">
                      <input name="subject_name" placeholder="FULL NAME OF SUBJECT" type="text" required/>
-  
+                      <div id="subject_message" class="red"></div>
          <div  class="pure-u-1-2 reg-month puree-dropdown dropdown">
                      <select name="the_class" id="your_class"  aria-required="true" required>
                      <option value="" selected="" disabled="">select&nbsp;Class</option>
@@ -72,7 +72,11 @@
                      </select>
                      <div class="arrow"></div>
                  </div>
+                 <div id="class_message" class="red"></div>
+
                      <input autocomplete="off"   name="subject_teacher" placeholder="subject_teacher" type="text" required/>
+                     <div id="teacher_message" class="red"></div>
+
             <button name = "submit_scoresheet"id="submit_scoresheet" class="sign-in" type="submit">SUBMIT</button>
              </form>
            </div>

@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block main %}
-<form action="/confirm_scoresheet" method="post">
+<form action="/confirm_scoresheet" id="confirm" method="post">
+  <input type="hidden" name="button" value="{{classinfo["id"]}}">
  <table class="table table-sm">
   <thead>
     <tr>
@@ -59,7 +60,10 @@
 {% endfor %}
 </table>
 <div class="form-w3ls row">
-  <div class=" col"><button class="sign-in" name="button" value="{{classinfo["id"]}}" type="submit">Submit</button></form></div>
+  <div class=" col"><button class="sign-in" id="empty" type="submit">Submit</button></form></div>
   <div class="col"><form action="/cancel_portfolio" method="POST"><button class="sign-in" id="password_button">CANCEL</button></div>
 </div>
+
+<script src="/static/js/empty_scoresheet.js"></script>
+
 {% endblock %}
