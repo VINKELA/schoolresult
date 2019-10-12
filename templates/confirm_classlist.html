@@ -7,12 +7,12 @@
 {% block main %}
 
 
-<form action="/classCreated" method="post">
+<form action="/classCreated" id="classlist"  method="post">
  <table class="table table-striped">
   <thead>
     <tr>
     <th scope="col">NO</th>
-      <th scope="col">fIRSTNAME</th>
+      <th scope="col">FIRSTNAME</th>
     <th scope="col">SURNAME</th>
       <th scope="col">OTHERNAME</th>
       <th scope="col">GENDER</th>
@@ -33,18 +33,22 @@
 
 {% endfor %}
 </table>
-<div class="row">
-<div class="form-w3ls col">
- <button class="sign-in" name="submit" type="submit" value="submit">Confirm</button>
+<div class="form-w3ls row">
+<div class="col">
+<button class="sign-in"  id="btnsubmiting" type="submit">Confirm</button></form>
  </div>
  
- </form>
  
  <div class="form-w3ls col">
      <form action="/createClass" method="get">
- <button class="sign-in" name="submit" type="submit" value="submit">Cancel</button>
+ <button class="sign-in" name="submit" type="submit"  value="submit">Cancel</button>
  </form>
  </div>
 </div>
+  <!-- js files -->
+  <script src='/static/js/jquery.min.js'></script>
+  <script src="/static/js/submit_classlist.js"></script>
+ <!-- /js files -->
+
 
 {% endblock %}

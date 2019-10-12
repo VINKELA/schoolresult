@@ -28,7 +28,7 @@ $(function() {
       }, function(data) {
           if (data == "false")
           {
-            $('#subject_message').text($('input[name="subject_name"]').val()+" scoresheet already submitted for "+$('#subject_message'))
+            $('#subject_message').text($('input[name="subject_name"]').val()+" scoresheet already submitted for selected class")
             $('#submit_scoresheet').attr('disabled', false)
           }
           else{
