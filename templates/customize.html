@@ -3,19 +3,19 @@
 {{classData[0]["classname"]}}
 {% endblock %}
 {% block main %}
-<form method="POST" action="/customize">
+<form method="POST" action="/customize" id="class_customize_form" >
 <input type="hidden" value="{{class_setting["id"]}}" name="class_id"/>
 <table class="table table-striped">
     <thead>
         <tr>
             <th></th>
-            <th>setting</th>
+            <th>Setting</th>
             <th>value</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-        <td>grading type</td>
+        <td>Grading type</td>
         <td></td>
 
         <td>
@@ -31,7 +31,7 @@
 
 <tr>
     <td rowspan="11">Result Table</td>
-    <td>table type</td>
+    <td>Table type</td>
     <td>
         <select  name="table_type" >
             <option selected="selected" disabled="">{{class_setting["table_type"]}}</option>
@@ -49,7 +49,7 @@
 
         <tr>
             <td>
-                cascore
+                Cascore
             </td>
             <td>
                 {%if class_setting["ca"]== 'on'%}
@@ -60,7 +60,7 @@
             </td>
         </tr>
         <tr>
-            <td>testscore</td>
+            <td>Testscore</td>
             {%if class_setting["test"]== 'on'%}
 
             <td><input type="checkbox" name="test" id="test" value="on" checked></td>
@@ -71,7 +71,7 @@
         </tr>
         <tr>
             <td>
-                combined test and ca as total ca
+                Combined test and ca as total ca
             </td>
             <td>
                 {%if class_setting["combined"]== 'on'%}
@@ -86,7 +86,7 @@
         </tr>
 
         <tr>
-            <td>examscore</td>
+            <td>Examscore</td>
             {%if class_setting["exam"]== 'on'%}
             <td><input type="checkbox" name="exam" id="exam"  checked></td>
             {%else%}
@@ -95,7 +95,7 @@
 
         </tr>
         <tr>
-            <td>subject_total</td>
+            <td>Subject_total</td>
             {%if class_setting["subject_total"]== 'on'%}
 
             <td><input type="checkbox" name="subject_total" id="subject_total" checked></td>
@@ -107,7 +107,7 @@
         </tr>
 
         <tr>
-            <td>class average for each subject</td>
+            <td>Class average for each subject</td>
             {%if class_setting["class_average"]== 'on'%}
             <td><input type="checkbox" name="class_average"  checked></td>
             {%else%}
@@ -116,7 +116,7 @@
 
         </tr>
         <tr>
-            <td>subject position</td>
+            <td>Subject position</td>
             {%if class_setting["subject_position"]== 'on' %}
             <td><input type="checkbox" name="subject_position"  checked></td>
             {%else%}
@@ -125,7 +125,7 @@
 
         </tr>
         <tr>
-            <td>grade</td>
+            <td>Grade</td>
             {%if class_setting["grade"]== 'on' %}
             <td><input type="checkbox" name="grade"  checked ></td>
             {%else%}
@@ -134,7 +134,7 @@
 
         </tr>
         <tr>
-            <td>subject comment</td>
+            <td>Subject comment</td>
             {%if class_setting["subject_comment"]== 'on' %}
             <td><input type="checkbox" name="subject_comment"  checked></td>
             {%else%}
@@ -144,7 +144,7 @@
         </tr>
 
         <tr>
-            <td>teachers initials</td>
+            <td>Teachers initials</td>
             {%if class_setting["teachers_initials"]== 'on' %}
             <td><input type="checkbox" name="teachers_initials" id=""  checked></td>
             {%else%}
@@ -163,7 +163,7 @@
 
             </tr>
         <tr>
-            <td>average score</td>
+            <td>Average score</td>
             {%if class_setting["average"]== 'on' %}
             <td><input type="checkbox" name="average_score" id=""  checked></td>
             {%else%}
@@ -172,7 +172,7 @@
 
         </tr>
         <tr>
-            <td>position</td>
+            <td>Position</td>
             {%if class_setting["position"] == 'on' %}
             <td><input type="checkbox" name="position" id=""  checked ></td>
             {%else%}
@@ -183,7 +183,7 @@
 
         <tr>
             
-            <td>number of comment line for teacher</td>
+            <td>Number of comment line for teacher</td>
             <td>
                 <select name="teachers_line"   aria-required="true">
                         <option   selected="">{{class_setting["teachers_line"]}}</option>
@@ -196,7 +196,7 @@
         </tr>
 
         <tr>
-            <td>number of comment line for principal</td>
+            <td>Number of comment line for principal</td>
             <td>
                 <select name="principal_line"   aria-required="true">
                         <option   selected="" >{{class_setting["principal_line"]}}</option>
@@ -209,7 +209,7 @@
 
         </tr>
         <tr>
-            <td>teachers signature</td>
+            <td>Teachers signature</td>
             {%if class_setting["teachers_signature"]== 'on'%}
             <td><input type="checkbox" name="teachers_signature" id=""  checked></td>
             {%else%}
@@ -219,7 +219,7 @@
         </tr>
                
         <tr>
-                <td>principal signature</td>
+                <td>Principal signature</td>
                 {%if class_setting["principal_signature"]== 'on'%}
                 <td><input type="checkbox" name="principal_signature" id="" value="{{class_setting["principal_signature"]}}" checked></td>
                 {%else%}
@@ -228,7 +228,7 @@
 
         </tr>
         <tr>
-            <td>number of subjects passed and those failed</td>
+            <td>Number of subjects passed and those failed</td>
             {%if class_setting["pandf"]== 'on'%}
             <td><input type="checkbox" name="pandf" id="" value="{{class_setting["pandf"]}}" checked></td>
             {%else%}
@@ -237,7 +237,7 @@
 
     </tr>
     <tr>
-        <td>grade summary</td>
+        <td>Grade summary</td>
         {%if class_setting["grade_summary"]== 'on'%}
         <td><input type="checkbox" name="grade_summary" id="" value="{{class_setting["grade_summary"]}}" checked></td>
         {%else%}
@@ -247,14 +247,17 @@
 </tr>
     </tbody>
 </table>
-<div class="row">
-<div class="form-w3ls col">
-        <button class="sign-in"  type="submit">Submit</button></div>
+<div class="row form-w3ls ">
+<div class="col">
+        <button class="sign-in" id="class_customize_button" type="submit">Submit</button></div>
 </form>
-<div class="form-w3ls col">
+<div class="col">
   <form action="/cancel" method="POST">  <input type="hidden" value="{{classData[0]["id"]}}" name="class_id"><button class="sign-in"  type="submit">Back</button></form>
 </div>
 </form>
-
 </div>
+    <!-- js files -->
+	<script src='/static/js/jquery.min.js'></script>
+	<script src="/static/js/veiwclass.js"></script>
+    <!-- /js files -->
 {% endblock %}

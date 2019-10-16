@@ -3,21 +3,32 @@
     confirm student
 {% endblock %}
 {% block main %}
-<form action="/student_added" method="post">
+<form action="/student_added" method="post" id="confirm_student_form">
   <div id="details">
-            <p> SURNAME: {{details["surname"].upper()}}</p>
-           <p> FIRSTNAME: {{details["firstname"].upper()}}</p>
-             <p>OTHERNAME: {{details["othername"].upper()}}</p>
-              <p>SEX: {{details["sex"].upper()}}</p>
-            <p>CLASS: {{details["class_name"].upper()}}</p>
+    <table class="table table-striped">
+      <th>SURNAME</th>
+      <th>FIRSTNAME</th>
+      <th>OTHERNAME</th>
+      <th>SEX</th>
+      <th>CLASS</th>
+      <tbody>
+        <tr>
+          <td>{{details["surname"].upper()}}</td>
+          <td>{{details["firstname"].upper()}}</td>
+          <td>{{details["othername"].upper()}}</td>
+          <td>{{details["sex"].upper()}}</td>
+          <td>{{details["class_name"].upper()}}</td>
+        </tr>
+      </tbody>
+    </table>
 </div>
  <table class="table table-striped">
   <thead>
     <tr>
-      <th>subject</th>
-      <th>ca</th>
-      <th>test</th>
-      <th>exam</th>
+      <th>SUBJECT</th>
+      <th>CA</th>
+      <th>TEST</th>
+      <th>EXAM</th>
     </tr>
   </thead>
   <tbody>
@@ -34,21 +45,20 @@
     </tr>
     {%endfor%}
   </tbody>
-
 </table>
-
-
-<div class="row">
-<div class="form-w3ls col">
-      <button class="sign-in" name="button" type="submit">Confirm</button>
-
+<div class="row form-w3ls">
+<div class="col">
+      <button class="sign-in" name="button" type="submit" id="confirm_student_button">Confirm</button>
  </div>
-
  </form>
- <div class="form-w3ls col">
+ <div class="col">
      <form action="/submit_score" method="get">
  <button class="sign-in" name="cancel" type="submit">Cancel</button>
  </form>
 </div>
  </div>
+ <!-- js files -->
+ <script src='/static/js/jquery.min.js'></script>
+ <script src="/static/js/veiwclass.js"></script>
+<!-- /js files -->
 {% endblock %}

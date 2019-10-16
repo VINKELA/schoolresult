@@ -1,2 +1,11 @@
+MAKE mastersheet printable
 change surname firstname and othernames to only names in add class be
 add result page
+repair for opera mini link to result on frontpage
+add change general password to school setting
+check for former and new class in backend
+manage password has been removed, general password in school setting and class password in edit class
+session update to be removed ca test and exam scores to changed in edit class
+add tiny text to describe classes interms of class teacher
+default color for school letter heading is blue
+set email notification

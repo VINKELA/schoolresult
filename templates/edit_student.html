@@ -1,5 +1,4 @@
 {% extends "layout.html" %}
-
 {% block title %}
 edit student details
 {% endblock %}
@@ -12,8 +11,10 @@ edit student details
         {% set othername = "o"+ student_id%}
         {% set sex = "g"+ student_id%}
 
-      <input type="text"  placeholder="surname" name =  "{{surname}}" value={{student["surname"]}} id="surname" required="required">
-     <input type="text"  placeholder="firstname" name="{{firstname}}" value={{student["firstname"]}} id="firstname" required="required">
+  <div> <input type="text"  placeholder="firstname" name="{{firstname}}" value={{student["firstname"]}} id="firstname" required="required">     <div class="red" id="firstname_msg"></div>
+  </div>
+  <div><input type="text"  placeholder="surname" name =  "{{surname}}" value={{student["surname"]}} id="surname" required="required"> <div class="red" id="surname_msg"></div>
+</div>
      <input type="text"  placeholder="othernames" name="{{othername}}" value={{student["othername"]}}>
      <div>
       {%if student["sex"] == "male" %}
@@ -29,7 +30,9 @@ edit student details
   <input type="hidden" name="student_id" value="{{student_id}}">
   <input type="hidden" name="class_id" value="{{classData[0]["id"]}}"> 
   </form></div>
- <div class="col"><form action="/unregister_student" method="post"><button  name="unregister_student" class="sign-in delete" type="submit">DELETE</button></form></div>
+ <div class="col"><form action="/unregister_student" method="post" id="unregister_form">  <input type="hidden" name="student_id" value="{{student_id}}">
+  <input type="hidden" name="class_id" value="{{classData[0]["id"]}}"> 
+  <button  name="unregister_student" class="sign-in delete" id="unregister_button" type="submit">UNREGISTER</button></form></div>
  <div class="col">
     <form action="/cancel" method="post">
       <input type="hidden"   value="{{classData[0]["id"]}}" name ="class_id"/>

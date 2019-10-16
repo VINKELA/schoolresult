@@ -221,6 +221,7 @@ def confirm_email():
     return render_template('login.html',)
 
 @app.route("/unconfirmed", methods=["GET", "POST"])
+@login_required
 def unconfirmed():
     user = db.execute("SELECT * FROM school WHERE id=:id", id = session["user_id"])
     if user[0]["confirmed"] == "true":
@@ -231,6 +232,7 @@ def unconfirmed():
     return render_template('unconfirmed.html', schoolInfo=rows)
 
 @app.route("/resend_confirmation", methods=["GET", "POST"])
+@login_required
 def resend_confirmation():
     user = db.execute("SELECT * FROM school WHERE id=:id", id = session["user_id"])
     token = generate_confirmation_token(user[0]["email"])
@@ -246,6 +248,8 @@ def resend_confirmation():
 
 
 @app.route("/subject_check", methods=["POST"])
+@login_required
+@check_confirmed
 def subject_check():
     tables = database(int(request.form.get("class_id")))
     # Query database for username
@@ -258,6 +262,8 @@ def subject_check():
 
 
 @app.route("/editclass_check", methods=["POST"])
+@login_required
+@check_confirmed
 def editclass_check():
     class_id = str(request.form.get("class_id"))
     password = request.form.get("password")
@@ -364,6 +370,8 @@ def login():
 
 
 @app.route("/change_password", methods=["POST", "GET"])
+@login_required
+@check_confirmed
 def change_password():
     if request.method == "POST":
         # Query database for email
@@ -389,6 +397,8 @@ def change_password():
 
 
 @app.route("/password_changed", methods=["GET", "POST"])
+@login_required
+@check_confirmed
 def password_changed():
     if request.method == "POST":
         email = request.form.get("email")
@@ -448,6 +458,8 @@ def email_ajax():
             return "pass"
 
 @app.route("/class_name", methods=["POST"])
+@login_required
+@check_confirmed
 def class_name():
     if request.method == "POST":
         tables = database(str(0))
@@ -458,11 +470,27 @@ def class_name():
         else:
             return "fail"
 
-
+@app.route("/class_name_check", methods=["POST"])
+@login_required
+@check_confirmed
+def class_name_check():
+    if request.method == "POST":
+        new_name = request.form.get("new_name")
+        formerly = request.form.get("former")
+        tables = database(str(0))
+        if new_name != formerly:
+            # Query database for username
+            rows = db.execute("SELECT * FROM :session_data WHERE classname = :classname",session_data=tables["session_data"],classname=request.form.get("new_name").lower())
+            if len(rows) == 0:
+                return "pass"
+            else:
+                return "fail"
+        else:
+            return "pass"
 
 @app.route("/createClass", methods=["GET", "POST"])
-@check_confirmed
 @login_required
+@check_confirmed
 def createClass():
     session["info"]={}
     tables = database(str(0))
@@ -550,6 +578,7 @@ def createClass():
         return render_template("createClassForm.html",schoolInfo = schoolrow)
 
 @app.route("/confirm_classlist", methods=["POST"])
+@check_confirmed
 @login_required
 def confirm_classlist():
     session["all_students"]=[]
@@ -570,6 +599,7 @@ def confirm_classlist():
 
 
 @app.route("/classCreated", methods=["POST"])
+@check_confirmed
 @login_required
 def classCreated():
     tables = database(str(0))
@@ -634,6 +664,7 @@ def about_us():
 
 @app.route("/delete_school", methods=["POST"])
 @login_required
+@check_confirmed
 def delete_school():
     #get school id
     school_id = request.form.get("id")
@@ -681,6 +712,7 @@ def delete_school():
 
 @app.route("/submit_score", methods =["POST","GET"])
 @login_required
+@check_confirmed
 def submit_score():
     session["subject_info"] = {}
     tables = database(str(0))
@@ -734,6 +766,7 @@ def submit_score():
 
 @app.route("/confirm_scoresheet", methods=["POST"])
 @login_required
+@check_confirmed
 def confirm_scoresheet():
     #declare an array of
     session["class_scores"] = []
@@ -751,6 +784,7 @@ def confirm_scoresheet():
 
 @app.route("/submitted", methods=["POST"])
 @login_required
+@check_confirmed
 def submitted():
     tables = database(request.form.get("button"))
     db.execute("INSERT INTO :subjects (name, teachers_name) VALUES (:subject, :teacher) ",subjects = tables["subjects"], subject = session["subject_info"]["subject"], teacher=session["subject_info"]["subject_teacher"])
@@ -845,12 +879,14 @@ def submitted():
 
 @app.route("/veiwclass", methods=["post", "get"])
 @login_required
+@check_confirmed
 def veiwclass():
     return render_class(request.form.get("veiw_class"))
 
 
 @app.route("/scoresheet", methods=["POST"])
 @login_required
+@check_confirmed
 def scoresheet():
     array_id = str(request.form.get("scoresheet")).split("_")
     subject_id = int(array_id[0])
@@ -872,6 +908,7 @@ def scoresheet():
 
 @app.route("/result_sheet", methods=["POST"])
 @login_required
+@check_confirmed
 def result_sheet():
     array_id = str(request.form.get("result_sheet")).split("_")
     student_id = int(array_id[0])
@@ -894,6 +931,8 @@ def result_sheet():
 
         
 @app.route("/edited_scoresheet", methods=["POST"])
+@login_required
+@check_confirmed
 def edited_scoresheet():
     array_id = str(request.form.get("edited_scoresheet")).split("_")
     subject_id = int(array_id[0])
@@ -1022,10 +1061,9 @@ def edited_scoresheet():
     return render_class(tables["class_id"],error)
 
 
-
-
-    
 @app.route("/delete_scoresheet", methods=["POST"])
+@login_required
+@check_confirmed
 def delete_scoresheet():
     class_id = str(request.form.get("class_id"))
     subject_id = str(request.form.get("subject_id"))
@@ -1073,16 +1111,23 @@ def delete_scoresheet():
 
 
 @app.route("/cancel", methods=["POST"])
+@login_required
+@check_confirmed
+
 def cancel():
     class_id = str(request.form.get("class_id"))
     return render_class(class_id)
 
 
 @app.route("/cancel_portfolio", methods=["POST"])
+@login_required
+@check_confirmed
 def cancel_portfolio():
     return render_portfolio()
 
 @app.route("/verify_scoresheet", methods=["POST"])
+@login_required
+@check_confirmed
 def verify_scoresheet():
     array_id = str(request.form.get("edit_scoresheet")).split("_")
     subject_id = int(array_id[0])
@@ -1095,6 +1140,8 @@ def verify_scoresheet():
     
     
 @app.route("/edit_student", methods=["POST"])
+@login_required
+@check_confirmed
 def edit_student():
     password = request.form.get("password")
     student_id = request.form.get("student_id")
@@ -1110,6 +1157,8 @@ def edit_student():
         return render_class(class_id, error)
 
 @app.route("/edit_scoresheet", methods=["POST"])
+@login_required
+@check_confirmed
 def edit_scoresheet():
     password = request.form.get("password")
     subject_id = request.form.get("subject_id")
@@ -1134,12 +1183,14 @@ def edit_scoresheet():
 
 
 @app.route("/edited_student", methods=["POST"])
+@login_required
+@check_confirmed
 def edited_student():
     student_id = request.form.get("student_id")
     class_id = request.form.get("class_id")
     tables= database(class_id)
     surname = "s"+str(student_id)
-    schoolrow = db.execute("SELECT * FROM schools WHERE id=:id", id = session["user_id"])
+    schoolrow = db.execute("SELECT * FROM school WHERE id=:id", id = session["user_id"])
     classrow = db.execute("SELECT * FROM :classes ", classes = tables["session_data"])
     if not request.form.get(surname):
         error= "provide surname"
@@ -1159,6 +1210,8 @@ def edited_student():
     return render_class(class_id)
 
 @app.route("/unregister_student", methods=["POST"])
+@login_required
+@check_confirmed
 def unregister_student():
     student_id = request.form.get("student_id")
     class_id = request.form.get("class_id")
@@ -1170,6 +1223,8 @@ def unregister_student():
     return render_class(class_id,error)
 
 @app.route("/verify_customize", methods=["POST"])
+@login_required
+@check_confirmed
 def verify_customize():
    class_id = request.form.get("class_id")
    tables= database(class_id)
@@ -1178,6 +1233,8 @@ def verify_customize():
    return render_template("verify_customize.html", classData = classrow, schoolInfo=schoolrow)
 
 @app.route("/verified_customize", methods=["POST"])
+@login_required
+@check_confirmed
 def verified_customize():
     class_id = request.form.get("class_id")
     tables = database(class_id)
@@ -1205,6 +1262,8 @@ def verified_customize():
 
 
 @app.route("/verify_add_student", methods=["POST"])
+@login_required
+@check_confirmed
 def verify_add_student():
    class_id = request.form.get("class_id")
    tables= database(class_id)
@@ -1214,6 +1273,8 @@ def verify_add_student():
 
 
 @app.route("/verified_add_student", methods=["POST"])
+@login_required
+@check_confirmed
 def verified_add_student():
     class_id = request.form.get("class_id")
     tables = database(class_id)
@@ -1237,9 +1298,11 @@ def verified_add_student():
         return render_class(class_id, error)
  
 @app.route("/confirm_details", methods=["POST"])
+@login_required
+@check_confirmed
 def confirm_details():
     session["single_details"]={}
-    session["single_subject"].clear()
+    session["single_subject"]=[]
     class_id = request.form.get("class_id")
     tables= database(class_id)
     class_session = db.execute("SELECT * FROM :class_s WHERE id=:id", class_s = tables["session_data"], id= class_id )
@@ -1266,7 +1329,10 @@ def confirm_details():
     session["single_details"]["surname"] = request.form.get("surname")
     session["single_details"]["firstname"] = request.form.get("firstname")
     session["single_details"]["othername"] = request.form.get("othername")
-    session["single_details"]["sex"] = request.form.get("sex")
+    if not request.form.get("sex"):
+        session["single_details"]["sex"] = "male"
+    else:
+        session["single_details"]["sex"] = request.form.get("sex")
     class_subjects = db.execute("SELECT * FROM :subs", subs = tables["subjects"])
     for subject in class_subjects:
         sub = {}
@@ -1285,6 +1351,8 @@ def confirm_details():
     return render_template("confirm_single_scoresheet.html", schoolInfo = rows, subjects= class_subjects, details = session["single_details"], student_subjects=session["single_subject"])
 
 @app.route("/student_added", methods=["POST"])
+@login_required
+@check_confirmed
 def student_added():
     class_id = session["single_details"]["class_id"]
     tables= database(class_id)
@@ -1320,6 +1388,8 @@ def student_added():
     return render_class(class_id)
 
 @app.route("/edit_class", methods=["GET"])
+@login_required
+@check_confirmed
 def edit_class():
    class_id = str(request.args.get("class_id"))
    tables= database(class_id)
@@ -1329,6 +1399,8 @@ def edit_class():
 
 
 @app.route("/verified_admin", methods=["POST"])
+@login_required
+@check_confirmed
 def verified_admin():        
     class_id = request.form.get("class_id")
     password = request.form.get("password")
@@ -1342,6 +1414,8 @@ def verified_admin():
         return render_portfolio(error)
 
 @app.route("/edited_class", methods=["POST"])
+@login_required
+@check_confirmed
 def edited_class():
     class_id = request.form.get("id")
     tables= database(class_id)
@@ -1358,6 +1432,8 @@ def edited_class():
 
 
 @app.route("/delete_class", methods=["POST"])
+@login_required
+@check_confirmed
 def delete_class():
     class_id = request.form.get("delete_class")
     tables= database(class_id)
@@ -1404,6 +1480,8 @@ def delete_class():
 
 
 @app.route("/verify_edit_student", methods=["GET"])
+@login_required
+@check_confirmed
 def verify_edit_student():
    class_id = request.args.get("class_id")
    student_id = request.args.get("student_id")
@@ -1414,6 +1492,8 @@ def verify_edit_student():
 
 
 @app.route("/verify_edit_scoresheet", methods=["GET"])
+@login_required
+@check_confirmed
 def verify_edit_scoresheet():
    class_id = request.args.get("class_id")
    subject_id = request.args.get("subject_id")
@@ -1424,6 +1504,7 @@ def verify_edit_scoresheet():
 
 @app.route("/mastersheet", methods=["POST"])
 @login_required
+@check_confirmed
 def mastersheet():
     class_id = request.form.get("class_id")
     tables = database(class_id)
@@ -1442,6 +1523,7 @@ def mastersheet():
 
 @app.route("/customize", methods=["POST"])
 @login_required
+@check_confirmed
 def customize():
     class_id = request.form.get("class_id")
     tables = database(class_id)
@@ -1581,6 +1663,8 @@ def customize():
     return render_class(class_id, error ="setting updated successfully")
 
 @app.route("/admin_verification", methods=["POST"])
+@login_required
+@check_confirmed
 def admin_verification():        
     password = request.form.get("password")
     tables= database(0)
@@ -1596,6 +1680,8 @@ def admin_verification():
 
 
 @app.route("/school_settings", methods=["GET"])
+@login_required
+@check_confirmed
 def school_settings():        
     tables= database(0)
     classrow = db.execute("SELECT * FROM :classes", classes = tables["session_data"],)
@@ -1604,6 +1690,7 @@ def school_settings():
 
 @app.route("/customize_school", methods=["POST"])
 @login_required
+@check_confirmed
 def customize_school():
     tables = database("0")
     school_info = db.execute("SELECT * FROM school WHERE id=:id", id=session["user_id"])
@@ -1717,6 +1804,7 @@ def customize_school():
 
 @app.route("/session_update", methods=["POST"])
 @login_required
+@check_confirmed
 def session_update():
     new_term( request.form.get("selected_session"),request.form.get("selected_term"))
     db.execute("UPDATE school SET current_session=:c_s WHERE id=:id", c_s = request.form.get("selected_session"), id = session["user_id"])
@@ -1750,6 +1838,8 @@ def session_update():
 
 
 @app.route("/check_results", methods=["POST"])
+@login_required
+@check_confirmed
 def check_results():
     if session:
         session.clear()
@@ -1835,6 +1925,8 @@ def check_results():
             
 
 @app.route("/result_check", methods=["POST"])
+@login_required
+@check_confirmed
 def result_check():
     if request.method == "POST":
             # get user digit
@@ -1886,11 +1978,11 @@ def result_check():
 
 
 @app.route("/admin_check", methods=["POST"])
+@login_required
+@check_confirmed
 def admin_check():
     password = request.form.get("password")
     school = db.execute("SELECT * FROM school WHERE id=:id", id= session["user_id"])
-    print(generate_password_hash(password))
-    print(school[0]["admin_password"])
     if check_password_hash(school[0]["admin_password"],password):
         return "correct"
     else:
@@ -1908,6 +2000,8 @@ def privacy():
 
 
 @app.route("/print_pins", methods=["GET"])
+@login_required
+@check_confirmed
 def print_pins():        
     tables= database(0)
     classrow = db.execute("SELECT * FROM :classes", classes = tables["session_data"],)
@@ -1916,6 +2010,8 @@ def print_pins():
 
 
 @app.route("/admin_verified", methods=["POST"])
+@login_required
+@check_confirmed
 def admin_verified():        
     password = request.form.get("password")
     tables= database(0)
@@ -1936,6 +2032,8 @@ def admin_verified():
         return render_template("pin_verification.html",schoolInfo = schoolrow, error=error)
 
 @app.route("/manage_password", methods=["GET"])
+@login_required
+@check_confirmed
 def manage_password():        
     tables= database(0)
     schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
@@ -1943,6 +2041,8 @@ def manage_password():
 
 
 @app.route("/password_verified", methods=["POST"])
+@login_required
+@check_confirmed
 def password_verified():        
     password = request.form.get("password")
     tables= database(0)
@@ -1957,6 +2057,8 @@ def password_verified():
 
 
 @app.route("/password_changer", methods=["POST"])
+@check_confirmed
+@login_required
 def password_changer():        
     tables= database(0)
     classrow = db.execute("SELECT * FROM :classes", classes = tables["session_data"])

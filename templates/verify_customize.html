@@ -10,12 +10,13 @@ verify add student
 <div class="single_form">
 <div class="form-w3ls">
 
-    <form action="/verified_customize" method="post" id="add_student_form">            
-    <input type="password" name="password" placeholder="form master password" id="password" required="required" />
+    <form action="/verified_customize" method="post" id="teacher_customize_form">            
+   <div><input type="password" name="password" placeholder="form master password" id="password" required="required" /><div class="red" id="teach_msg"></div></div> 
+    
     <input type="hidden" name="class_id" value="{{id}}" id="class_id" />
 
     <div class="row">
-            <div class="col"><button class="sign-in" type="submit" id="add_student_button">VERIFY </button></form></div> 
+            <div class="col"><button class="sign-in"id="teacher_customize_button" type="submit">VERIFY </button></form></div> 
             <div class="col">
                     <form action="/cancel" method="post">
                       <input type="hidden"   value="{{classData[0]["id"]}}" name ="class_id"/>

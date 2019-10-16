@@ -11,7 +11,7 @@ verify add student
 <div class="form-w3ls">
 
     <form action="/verified_add_student" method="post" id="add_student_form">            
-    <input type="password" name="password" placeholder="form master password" id="password" required="required" />
+   <div><input type="password" name="password" placeholder="form master password" id="password" required="required" /><div class="red" id="msg_pass"></div> 
     <input type="hidden" name="class_id" value="{{id}}" id="class_id" />
     <div class="row">
         <div class="col"><button class="sign-in" type="submit" id="add_student_button">VERIFY </button></form></div>

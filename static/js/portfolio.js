@@ -72,19 +72,10 @@ $(function() {
    $('#confirm_message').text("password and confirmation do not match");
   }
 else{
-  $.post( $SCRIPT_ROOT + '/class_name',{
-    classname: $('input[name="class_name"]').val(),
-  }, function(data) {
-      if (data == "fail"){
-        $('input[name="class_name"]').focus()
-        $('#message_class').text("class already existy");
-         }
-      else{
-        $("#create_button").attr("disabled", true)
-        $("#create_button").text("creating")
-        $("#create_form").submit();
-      }
-  });}
+  $("#create_button").attr("disabled", true)
+  $("#create_button").text("creating")
+  $("#create_form").submit();
+}
 
 });
 });

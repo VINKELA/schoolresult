@@ -13,6 +13,7 @@ new session update
     <th>ca is marked over?</th>
     <th>test is marked over?</th>
     <th>exam is marked over?</th>
+    <th>password</th>
   </thead>
   <tbody>
   {%for clas in session_data %}
@@ -22,6 +23,7 @@ new session update
   {%set ca = "ca"+id%}
   {%set test = "test"+id %}
   {%set exam = "exam"+id%}
+  {%set password = "password"+id%}
   {%set section = "section"+id%}
 <tr>
     <td><b>{{clas["classname"].upper()}}</b></td>
@@ -46,7 +48,7 @@ new session update
     <div class="arrow"></div></td>
                  <td><select name="{{test}}" id="test"  aria-required="true">
                     <option  value="{{clas["test"]}}" selected="">{{clas["test"]}}</option>
-                    <option  value="0" >0</option>
+                    <option  value="0">0</option>
                    {%for i in range(100)%}
                          <option  value="{{i+1}}">{{i+1}}</option>
                     {%endfor%}
@@ -60,6 +62,7 @@ new session update
                     {%endfor%}
                  </select>
                  <div class="arrow"></div></td>
+                 <td><input type="password"  name="new_password"></td>
 </tr>
   {%endfor%}
 </tbody>

@@ -82,14 +82,20 @@
      <td><form action="/scoresheet" method="post" target="_blank"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">VEIW </button></form></td>
      </tr>
      {% endfor %}
+     <tr>
+       <td></td>
+        <td colspan="2">
+           <form action ="/mastersheet" method = "post" target="_blank">
+             <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
+             <button class="btn btn-primary" type="submit"><h4>VEIW MASTERSHEET </h4></button>
+           </form>    
+        </td>
+        <td></td>
+      </tr>
      </tbody>
      </table>
 
      <div class=" form-w3ls ">
-      <form action ="/mastersheet" method = "post" target="_blank">
-        <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-        <button class="btn btn-primary" type="submit"> VEIW MASTERSHEET </button>
-      </form>
     </div>
       </form>
 

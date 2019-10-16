@@ -3,20 +3,26 @@
 {{classData[0]["classname"]}}
 {% endblock %}
 {% block main %}
-<form method="POST" action="/customize_school">
+<div class="blue">
+<form method="POST" action="/customize_school" id="customize_form">
 <input type="hidden" value="{{class_setting["id"]}}" name="class_id"/>
 <table class="table table-striped">
     <thead>
         <tr>
             <th></th>
-            <th>setting</th>
+            <th>Setting</th>
             <th>value</th>
         </tr>
     </thead>
     <tbody>
+            <tr>
+                    <td>General password</td>
+                    <td>Reset general password</td>
+                    <td><input name="general password" type="password" placeholder="password"></td>
+                </tr> 
         <tr>
-            <td rowspan="2">SET SESSION/TERM</td>
-            <td>SESSION</td>
+            <td rowspan="2">SET Session/Term</td>
+            <td>Session</td>
             <td>
                     <select name="session"   aria-required="true">
                             <option   selected="" disabled="">{{schoolInfo[0]["current_session"]}}</option>
@@ -29,7 +35,7 @@
             </td>
         </tr>
         <tr>
-            <td>TERM</td>
+            <td>Term</td>
             <td>
                     <select name="term"   aria-required="true">
                             <option   selected="" disabled="">{{schoolInfo[0]["current_term"]}}</option>
@@ -43,11 +49,11 @@
 {% if class_setting | length > 0%}
 <tr>
     <td rowspan="4">Background</td>
-    <td>background color</td>
+    <td>Background color</td>
     <td><input name="background_color" type="color" value="{{class_setting[0]["background_color"]}}"></td>
 </tr>
 <tr>
-        <td>choose text color</td>
+        <td>Choose text color</td>
         <td>
             <input name="text_color" type="color" value="{{class_setting[0]["text_color"]}}">
         </td>
@@ -60,7 +66,7 @@
 </tr>
 <tr>
     <td>
-        background font
+        Background font
     </td>
     <td>
         <select  name="background_font" >
@@ -140,7 +146,7 @@
             <option>Arial Narrow</option>
             <option>Arial Rounded MT Bold</option>
             <option>Avant Garde</option>
-           <option> Calibri</option>
+            <option> Calibri</option>
             <option>Candara</option>
             <option>Century Gothic</option>
             <option>Franklin Gothic Medium</option>
@@ -220,7 +226,7 @@
 </tr>
 <tr>
     <td>
-        add text shadow to header
+        Add text shadow to header
     </td>
     <td>
         {%if class_setting["shadow"]== 'on'%}
@@ -247,9 +253,9 @@
 
 </tr>
 <tr>
-<td rowspan="11">school detail and other information</td>
+<td rowspan="11">School detail and other information</td>
 <td>
-    school details font
+    School details font
 </td>
 <td>
     <select  name="sd_font" >
@@ -305,7 +311,7 @@
 </tr>
 <tr>
 <td>
-    school details color
+    School details color
 </td>
 <td>
     <input type="color"   name="sd_color" value="{{class_setting[0]["sd_color"]}}">
@@ -313,7 +319,7 @@
 </tr>
 <tr>
 <td>
-    school details font-size
+    School details font-size
 </td>
 <td>
         <select name="sd_fontsize"   aria-required="true">
@@ -327,7 +333,7 @@
 </tr>
 
 <tr>
-<td>school details position</td>
+<td>School details position</td>
 <td><select aria-required="true" name="sd_position">
         <option selected="selected" disabled="">{{class_setting[0]["sd_position"]}}</option>
         <option>center</option>
@@ -339,7 +345,7 @@
 </tr>
 <tr>
 <td>
-add school email
+Add school email
 </td>
 <td>
 <input type="text"  name="sd_email" value="{{class_setting[0]["sd_email"]}}">
@@ -347,7 +353,7 @@ add school email
 </tr>
 <tr>
 <td>
-use admin email
+Use admin email
 </td>
 <td>
 {%if class_setting[0]["admin_email"]== 'on'%}
@@ -359,7 +365,7 @@ use admin email
 </tr>
 <tr>
 <td>
-add address
+Add address
 </td>
 <td>
 <input type="text"  name="address" value="{{class_setting[0]["address"]}}">
@@ -367,7 +373,7 @@ add address
 </tr>
 <tr>
 <td>
-add P.O BOX
+Add P.O BOX
 </td>
 <td>
 <input type="text"  name="po_box" value="{{class_setting[0]["po_box"]}}">
@@ -375,7 +381,7 @@ add P.O BOX
 </tr>
 <tr>
 <td>
-add phone numbers
+Add phone numbers
 </td>
 <td>
 <input type="text"  name="phone" value="{{class_setting[0]["phone"]}}">
@@ -383,7 +389,7 @@ add phone numbers
 </tr>
 <tr>
 <td>
-next term
+Next term
 </td>
 <td>
 <input type="date"  name="next_term" value="{{class_setting[0]["next_term"]}}">
@@ -392,7 +398,7 @@ next term
 
 <tr>
 <td>
-other information
+Other information
 </td>
 <td>
 <input type="text" " name="sd_other" value="{{class_setting[0]["sd_other"]}}">
@@ -402,7 +408,7 @@ other information
 <tr>
 <td rowspan="4">student details</td>
 <td>
-student details font
+Student details font
 </td>
 <td>
 <select  name="std_font" >
@@ -459,7 +465,7 @@ student details font
 </tr>
 <tr>
 <td>
-student details color
+Student details color
 </td>
 <td>
 <input type="color"   name="std_color" value="{{class_setting[0]["std_color"]}}">
@@ -467,7 +473,7 @@ student details color
 </tr>
 <tr>
 <td>
-student details font-size
+Student details font-size
 </td>
 <td>
 <select name="std_fontsize"   aria-required="true">
@@ -480,9 +486,8 @@ student details font-size
 </td>
 
 </tr>
-
 <tr>
-<td>student details position</td>
+<td>Student details position</td>
 <td><select aria-required="true" name="std_position">
 <option selected="selected" disabled="">{{class_setting[0]["std_position"]}}</option>
 <option>center</option>
@@ -494,13 +499,12 @@ student details font-size
 
 </tr>
 <tr>
-    <td>watermark</td>
+    <td colspan="2">Watermark</td>
     {%if class_setting["watermark"]== 'on' %}
     <td><input type="checkbox" name="watermark" id=""  checked></td>
     {%else%}
     <td><input type="checkbox" name="watermark" id=""></td>
     {%endif%}
-
 </tr>
 
 {%endif%}
@@ -508,7 +512,7 @@ student details font-size
 </table>
 <div class="row">
 <div class="form-w3ls col">
-        <button class="sign-in"  type="submit">Submit</button>
+        <button class="sign-in"  id="customize_submit" type="submit">Submit</button>
 </div>
 </form>
 <div class="form-w3ls col">
@@ -516,4 +520,11 @@ student details font-size
 </div>
 </form>
 </div>
+</div>
+
+<!-- js files -->
+ <script src='/static/js/jquery.min.js'></script>
+ <script src="/static/js/school_settings.js"></script>
+<!-- /js files -->
+
 {% endblock %}

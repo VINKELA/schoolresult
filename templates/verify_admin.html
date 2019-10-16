@@ -10,6 +10,7 @@ verify admin
 <div class="form-w3ls">
 <form action="/verified_admin" method="post" id="password_form">            
 <input type="password" name="password" placeholder="admin password" />
+<div class="red" id="admin_msg"></div>
 <input type="hidden" name="class_id" value="{{classData[0]["id"]}}" />
 <div class="row">
 <div class="col"><button class="sign-in" id="password_button">VERIFY</button></form></div>

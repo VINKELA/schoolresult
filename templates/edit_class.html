@@ -7,36 +7,100 @@ edit student details
 {% block main %}
   <div class="form-w3ls">
 
-<form action="/edited_class" method="post">
+<form action="/edited_class" method="post" id="edit_class_form">
+  <input type="hidden" name="id" value={{classData[0]["id"]}} >
+    <input type="hidden" name="formerly" value={{classData[0]["classname"]}} >
+
   <hr>
       <h4 class="blue"> CHANGE CLASS TEACHER </h4>
 
   <div class="row">
 <div class="col">
 
-     <input type="text"  name =  "surname" placeholder="{{classData[0]["surname"]}}">
+     <input type="text"  name =  "surname" value="{{classData[0]["surname"]}}">
+     <div class="red" id="surname_msg"></div>
     </div>
     <div class="col">
 
-     <input type="text"  name="firstname" placeholder={{classData[0]["firstname"]}}>
+     <input type="text"  name="firstname" value={{classData[0]["firstname"]}}>
+     <div class="red" id="firstname_msg"></div>
     </div>
      <div class="col">
 
-      <input type="text"  name="othername" placeholder={{classData[0]["othername"]}}>
+      <input type="text"  name="othername" value={{classData[0]["othername"]}}>
   </div>
     </div>
     <hr>
-          <h4 class="blue"> CHANGE CLASS NAME</h4>
+    <h4 class="blue">CLASSNAME AND SECTION</h4>
+
+    <div class="row">
+          <div class="col">
+              <input type="text"  value="{{classData[0]["classname"]}}" name="class_name">
+              <div class="red" id="class_msg"></div>        
+          </div>
+          <div class="col"> 
+              <td><select name="section"  id="section"  aria-required="true">
+                <option   selected="" disabled="">section</option>
+                <option  value="pre-nursery">pre-nursery</option>
+                <option  value="nursery">nursery</option>
+                <option  value="primary">primary</option>
+                <option  value="secondary">secondary</option>
+                </select>
+                <div class="arrow"></div>
+                <div class="red" id="section_msg"></div>        
+          </div>
+        </div>
+        <hr>
+        <h4 class="blue">CHANGE CA, TEST, EXAM</h4>
+          <div class="row">
+              <div class="col"><select name="{{ca}}" id="ca"  aria-required="true">
+                  <option  value="ca" selected="">ca</option>
+                  <option  value="0">0</option>
+                    {%for i in range(100)%}
+                          <option  value="{{i+1}}">{{i+1}}</option>
+                    {%endfor%}
+                  </select>
+               <div class="arrow"></div> <div class="red" id="ca_msg"></div>        
+              </div>
+              <div class="col"><select name="{{test}}" id="test"  aria-required="true">
+                    <option  value="ca" selected="">test</option>
+                    <option  value="0">0</option>
+                    {%for i in range(100)%}
+                          <option  value="{{i+1}}">{{i+1}}</option>
+                    {%endfor%}
+                  </select>
+                  <div class="arrow"></div><div class="red" id="test_msg"></div>        
+                </div>
+                <div class="col"><select name="{{exam}}" id="exam"  aria-required="true">
+                <option  value="exam" selected="">exam</option>
+                <option  value="0" >0</option>
+                  {%for i in range(100)%}
+                        <option  value="{{i+1}}">{{i+1}}</option>
+                  {%endfor%}
+                </select>
+                <div class="arrow"></div><div class="red" id="exam_msg"></div>        
+              </div>            
+          </div>
+          <hr>
+
+      <h4 class="blue"> CHANGE CLASS PASSWORD</h4>
 
 
-      <input type="text"  placeholder="{{classData[0]["classname"]}}" name="class_name">
+      <input type="password"  value="{{classData[0]["password"]}}" name="password">
+      <div class="red" id="pass_msg"></div>
+
 
 <div class="row">
-  <div class="col"><button name="id" class="sign-in" type="submit" value={{classData[0]["id"]}}>Submit</button></form></div>
-<div class="col"><form action="/delete_class" method="post"><button name="delete_class" class="delete sign-in" type="submit" value={{classData[0]["id"]}}>DELETE</button></form></div>
-<div class="col"><form method="POST" action="/cancel_portfolio"><button class="sign-in" type="submit" >cancel</button></form></div>
+  <div class="col"><button id="edit_class_button" class="sign-in" type="submit" >Submit</button></form></div>
+<div class="col"><form action="/delete_class" method="post" id="delete_form"><input type="hidden"name="delete_class" value={{classData[0]["id"]}}><button id="delete" class="delete sign-in" type="submit">DELETE</button></form></div>
+<div class="col"><form method="POST" action="/cancel_portfolio"><button class="sign-in" id="cancel_button" type="submit" >cancel</button></form></div>
 </div>
 </div>
-    
+
+ <!-- js files -->
+ <script src='/static/js/jquery.min.js'></script>
+ <script src="/static/js/edit_class.js"></script>
+<!-- /js files -->
+
 
 {% endblock %}

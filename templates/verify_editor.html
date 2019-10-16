@@ -12,7 +12,7 @@ verify teacher
       <div class="form-w3ls">
 
 <form action="/edit_scoresheet" method="post" id="verify_teacher_form">            
-<input type="password" name="password" id="password"placeholder="password" />
+<div><input type="password" name="password" id="password"placeholder="password" /><div class="red" id="teacher_msg"></div>
 <input type="hidden" name="class_id" id="id" value="{{class_id}}"/>
 <input type="hidden" name="subject_id" value="{{subject_id}}"/>
 
