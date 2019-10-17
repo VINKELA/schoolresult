@@ -9,3 +9,5 @@ session update to be removed ca test and exam scores to changed in edit class
 add tiny text to describe classes interms of class teacher
 default color for school letter heading is blue
 set email notification
+refine inputs by removing spaces where necessary
+if nothing was changed do nothing

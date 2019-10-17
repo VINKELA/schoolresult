@@ -259,6 +259,21 @@ def subject_check():
     else:
         return "true"
 
+@app.route("/subject_name_check", methods=["POST"])
+@login_required
+@check_confirmed
+def subject_name_check():
+    tables = database(int(request.form.get("class_id")))
+    if request.form.get("previous") == request.form.get("subject_name"):
+        return "true"
+    else:
+        # Query database for subject name
+        subject_row = db.execute("SELECT * FROM :subjects WHERE name =:subject_name", subjects = tables["subjects"], subject_name = str(request.form.get("subject_name")).lower())
+        if len(subject_row) > 0:
+            return "false"
+        else:
+            return "true"
+
 
 
 @app.route("/editclass_check", methods=["POST"])

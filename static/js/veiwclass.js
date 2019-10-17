@@ -220,3 +220,50 @@ else{
     });}
   });
 });
+
+
+$(function() {
+  $('#edited_scoresheet_button').bind('click', function() {
+// Stop form from submitting normally
+event.preventDefault();
+if($('#subject_name').val() == ""){
+  $('#subject_msg').text("subject does not have a name");
+  $('#subject_name').focus()
+}
+else if($('#teachers_name').val() == ""){
+  $('#teachers_msg').text("Teachers name is empty")
+  $('#teachers_name').focus();
+}
+else if ($("#previous_name").val() == $("#subject_name").val()){
+  $('#edited_scoresheet_button').attr('disabled',true)
+  $('#edited_scoresheet_button').text('please wait')
+  $("#edited_scoresheet_form").submit();
+}
+
+else{
+  $.post( $SCRIPT_ROOT + '/subject_name_check',{
+    subject_name: $('input[name="subject_name"]').val(),class_id:$('#class_id').val(), previous:$("#previous").val()
+  }, function(data) {
+      if (data == "false")
+      {
+        $('#subject_msg').text($('input[name="subject_name"]').val()+" scoresheet already submitted for selected class")
+        $('#subject_name').focus()
+      }
+      else{
+        $('#edited_scoresheet_button').attr('disabled',true)
+        $('#edited_scoresheet_button').text('please wait')
+        $("#edited_scoresheet_form").submit();
+                };
+  });};
+  });
+});
+
+$(function() {
+  $('#delete_scoresheet_button').bind('click', function() {
+// Stop form from submitting normally
+event.preventDefault();
+  $('#delete_scoresheet_button').attr('disabled', true);
+  $('#delete_scoresheet_button').text("please wait");
+  $('#delete_scoresheet_form').submit()    
+  });
+});

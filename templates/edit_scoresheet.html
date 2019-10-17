@@ -9,7 +9,7 @@
 <h4 class="blue">SECTION: {{classData[0]["section"].upper()}} </h4>
 <h4 class="blue">SESSION: {{schoolInfo[0]["current_session"].upper()}} TERM: {{schoolInfo[0]["current_term"].upper()}}</h4>
 <div class="form-w3ls">
-  <form action="/edited_scoresheet" method="post">
+  <form action="/edited_scoresheet" method="post" id="edited_scoresheet_form">
   <table class="table table-striped">
     <thead>
         <th>Subject</th>
@@ -17,8 +17,8 @@
       </thead>
       <tbody>
         <tr>
-          <td><input type="text" value="{{subjectData[0]["name"]}}" name ="subject_name"/></td>
-          <td><input type="text" value="{{subjectData[0]["teachers_name"]}}" name ="teachers_name"/></td>
+          <td><div><input type="text" value="{{subjectData[0]["name"]}}" name ="subject_name" id="subject_name"/><div class="red" id="subject_msg"></div></div></td>
+          <td><div><input type="text" value="{{subjectData[0]["teachers_name"]}}" name ="teachers_name" id="teachers_name"/><div class="red" id="teachers_msg"></div></div></td>
         </tr>
       </tbody>
       
@@ -84,19 +84,22 @@
   </div>
 {% endfor %}
 </table>
-<input type="hidden"  value="{{scoresheet_id}}" name="edited_scoresheet" >
+<input type="hidden"  value="{{scoresheet_id}}" name="edited_scoresheet" id="edited_scoresheet" >
+<input type="hidden"   value="{{subjectData[0]["name"]}}" name ="previous" id="previous"/>
+<input type="hidden"   value="{{classData[0]["id"]}}" name ="class_id" id="class_id"/>
+
 <div class= "row">
   <div class="col">
 
-<button class="sign-in"  type="submit">Submit</button>
+<button class="sign-in"  type="submit" id="edited_scoresheet_button">Submit</button>
  </form>
- <form action="/delete_scoresheet" method="post">
+ <form action="/delete_scoresheet" id="delete_scoresheet_form" method="post">
   </div>
   <div class="col">
       <input type="hidden"   value="{{subjectData[0]["id"]}}" name ="subject_id"/>
       <input type="hidden"   value="{{classData[0]["id"]}}" name ="class_id"/>
 
- <button class="sign-in delete"  type="submit">Delete</button>
+ <button class="sign-in delete"  type="submit" id="delete_scoresheet_button">Delete</button>
  </form>
 </div>
 <div class="col">
@@ -106,4 +109,8 @@
   </form>
 </div>
 </div>
+    <!-- js files -->
+    <script src='/static/js/jquery.min.js'></script>
+    <script src="/static/js/veiwclass.js"></script>
+    <!-- /js files -->
 {% endblock %}
