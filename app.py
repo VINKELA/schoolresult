@@ -1533,7 +1533,7 @@ def mastersheet():
     mastersheet_rows = db.execute("SELECT * FROM :master", master= tables["mastersheet"])
     subject_p = db.execute("SELECT * FROM :subjectposition", subjectposition = tables["subject_position"])
     results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
-    return render_template("mastersheet.html",result = results[0], caData = carow, testData = testrow, examData = examrow, classData = classrow, schoolInfo = schoolrow, subjectData=subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position= subject_p)
+    return render_template("printable_mastersheet.html",result = results[0], caData = carow, testData = testrow, examData = examrow, classData = classrow, schoolInfo = schoolrow, subjectData=subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position= subject_p)
 
 
 @app.route("/customize", methods=["POST"])
