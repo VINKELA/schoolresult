@@ -385,8 +385,6 @@ def login():
 
 
 @app.route("/change_password", methods=["POST", "GET"])
-@login_required
-@check_confirmed
 def change_password():
     if request.method == "POST":
         # Query database for email
