@@ -75,9 +75,7 @@ nav .navbar-brand
 .tab-content > div:last-child{
   display: none;
 }
-#login-tab-content > div:nth-last-child(2){
-    display: none;
-}
+
   
 .cl-effect-4 div a {
 	position:relative;
