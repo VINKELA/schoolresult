@@ -161,7 +161,62 @@
   <div>CLASS: {{classData[0]["classname"].upper()}} </div>  
   <div>SECTION: {{classData[0]["section"].upper()}} </div>
   <div>SESSION: {{schoolInfo[0]["current_session"].upper()}} TERM: {{schoolInfo[0]["current_term"].upper()}}</div>
+  <div>
+        <h5>Result summary:</h5>
+        <h6>Total number of students: {{result["noOfStudents"]}}</h6>
+        <h6>Total number of subjects: {{result["noOfSubjects"]}}</h6>
+        <h6>Total number of passes: {{result["no_of_passes"]}}</h6>
+        <h6>Total number of failures: {{result["no_of_failures"]}}</h6>
+        {%if (result["no_of_passes"] + result["no_of_failures"])|int < 1%}
+        <h6>Percentage pass: 0%</h6>
+        <h6>Percentage failure: 0%</h6>
+        {%else%}
+        {%set percentage_pass = (result["no_of_passes"]*100)/(result["no_of_passes"] + result["no_of_failures"])%}
+        <h6>Percentage pass: {{percentage_pass}}%</h6>
+        <h6>Percentage failure: {{100-percentage_pass}}%</h6>
+        {%endif%}
+        
+        <h6>Class Teacher: {{classData[0]["surname"].upper()}} {{classData[0]["firstname"].upper()}}</h6>        
   </div>
+  </div>
+
+  <div>
+        <table class="table table-{{result["table_type"]}}">
+                        <thead>
+                        <tr>
+                        <th>NO</th>
+                        <th>RESULT SUMMARY</th>
+                        <th>TOTAL</th>
+                        <th>AVERAGE</th>
+                        <th>POSITION</th>
+                        <th>PASSES</th>
+                        <th>FAILURES</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                                {%for data in mastersheet%}
+                                {%set index =  loop.index - 1%}
+                              <tr>
+                                <td>{{data["id"]}}</td>
+                                <td>{{class_list[index]["surname"]}} {{class_list[index]["firstname"]}} {{class_list[index]["othername"]}}</td>
+                                <td>{{data["total_score"]}}</td>
+                                {%set subject_length = subjectData|length %}
+                                {%if subject_length < 1%}
+                                <td>{{"%.2f"|format(0)}}</td>
+                                {%else%}
+                                <td>{{"%.2f"|format(data["total_score"]/subject_length|float) }}</td>
+                                {%endif%}
+                                <td>{{data["position"]}}</td>
+                                <td>{{data["subject_passed"]}}</td>                                      
+                                <td>{{data["subject_failed"]}}</td>
+                              </tr>
+                              {%endfor%}
+
+                        </tbody>
+                        </table>
+        
+</div>
+
          {%for subject in subjectData%}
             <div class="table_area">
                 <table class="table table-{{result["table_type"]}}">
@@ -192,7 +247,7 @@
                       </tr>
                       {% endfor %}
                       <tr>
-                                <td > Number of students present: {{subject["no_failed"]+subject["no_passed"] }}</td>
+                                <td > Subject summary</td>
                                 <td > percentage pass: {{subject["ppass"]}}% percentage failure: {{100 - subject["ppass"]}}%</td>
                                 <td > Number of  failures: {{subject["no_failed"]}}</td>
                                 <td > Number of  passes: {{subject["no_passed"]}}</td>
@@ -204,56 +259,4 @@
                 </table>
             </div>
 {%endfor%}
-<div>
-                <table class="table table-{{result["table_type"]}}">
-                                <thead>
-                                <tr>
-                                <th>NO</th>
-                                <th>RESULT SUMMARY</th>
-                                <th>TOTAL</th>
-                                <th>AVERAGE</th>
-                                <th>POSITION</th>
-                                <th>PASSES</th>
-                                <th>FAILURES</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                        {%for data in mastersheet%}
-                                        {%set index =  loop.index - 1%}
-                                      <tr>
-                                        <td>{{data["id"]}}</td>
-                                        <td>{{class_list[index]["surname"]}} {{class_list[index]["firstname"]}} {{class_list[index]["othername"]}}</td>
-                                        <td>{{data["total_score"]}}</td>
-                                        {%set subject_length = subjectData|length %}
-                                        {%if subject_length < 1%}
-                                        <td>{{"%.2f"|format(0)}}</td>
-                                        {%else%}
-                                        <td>{{"%.2f"|format(data["total_score"]/subject_length|float) }}</td>
-                                        {%endif%}
-                                        <td>{{data["position"]}}</td>
-                                        <td>{{data["subject_passed"]}}</td>                                      
-                                        <td>{{data["subject_failed"]}}</td>
-                                      </tr>
-                                      {%endfor%}
-
-                                </tbody>
-                                </table>
-                
-</div>
-<h3>Class summary:</h3>
-<h4>Total number of students: {{result["noOfStudents"]}}</h4>
-<h4>Total number of subjects: {{result["noOfSubjects"]}}</h4>
-<h4>Total number of passes: {{result["no_of_passes"]}}</h4>
-<h4>Total number of failures: {{result["no_of_failures"]}}</h4>
-{%if (result["no_of_passes"] + result["no_of_failures"])|int < 1%}
-<h4>Percentage pass: 0%</h4>
-<h4>Percentage failure: 0%</h4>
-{%else%}
-{%set percentage_pass = (result["no_of_passes"]*100)/(result["no_of_passes"] + result["no_of_failures"])%}
-<h4>Percentage pass: {{percentage_pass}}%</h4>
-<h4>Percentage failure: {{100-percentage_pass}}%</h4>
-{%endif%}
-
-<h4>Class Teacher: {{classData[0]["surname"].upper()}} {{classData[0]["firstname"].upper()}}</h4>
-
 </body>

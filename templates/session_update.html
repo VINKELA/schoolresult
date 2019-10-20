@@ -3,27 +3,17 @@
 new session update
 {% endblock %}
 {% block main %}
-  <form action="/session_update" method="post">
+  <form action="/session_update" id="session_update_form" method="post">
 <table class="table table-striped">
   <thead>
     <th>Last session class name</th>
     <th>New session class name</th>
     <th>section</th>
-    <th>form master</th>
-    <th>ca is marked over?</th>
-    <th>test is marked over?</th>
-    <th>exam is marked over?</th>
-    <th>password</th>
   </thead>
   <tbody>
   {%for clas in session_data %}
   {%set id = clas["id"]|string %}
   {%set name = "name"+id%}
-  {%set formaster = "formaster"+id %}
-  {%set ca = "ca"+id%}
-  {%set test = "test"+id %}
-  {%set exam = "exam"+id%}
-  {%set password = "password"+id%}
   {%set section = "section"+id%}
 <tr>
     <td><b>{{clas["classname"].upper()}}</b></td>
@@ -37,39 +27,13 @@ new session update
       </select>
       <div class="arrow"></div>
     </td>
-    <td><input type = "text" value="{{clas["firstname"]}} {{clas["surname"]}} {{clas[othername]}}" name="formmaster" placeholder="new formaster"  /> </td>
-    <td><select name="{{ca}}" id="ca"  aria-required="true">
-    <option  value="{{clas["ca"]}}" selected="">{{clas["ca"]}}</option>
-    <option  value="0">0</option>
-      {%for i in range(100)%}
-            <option  value="{{i+1}}">{{i+1}}</option>
-      {%endfor%}
-    </select>
-    <div class="arrow"></div></td>
-                 <td><select name="{{test}}" id="test"  aria-required="true">
-                    <option  value="{{clas["test"]}}" selected="">{{clas["test"]}}</option>
-                    <option  value="0">0</option>
-                   {%for i in range(100)%}
-                         <option  value="{{i+1}}">{{i+1}}</option>
-                    {%endfor%}
-                 </select>
-                 <div class="arrow"></div></td>
-                 <td><select name="{{exam}}" id="exam"  aria-required="true">
-                  <option  value="{{clas["exam"]}}" selected="">{{clas["exam"]}}</option>
-                 <option  value="0" >0</option>
-                   {%for i in range(100)%}
-                         <option  value="{{i+1}}">{{i+1}}</option>
-                    {%endfor%}
-                 </select>
-                 <div class="arrow"></div></td>
-                 <td><input type="password"  name="new_password"></td>
 </tr>
   {%endfor%}
 </tbody>
 </table>
 <div class="row">
     <div class="form-w3ls col">
-            <button class="sign-in"  type="submit">Submit</button></div>
+            <button class="sign-in" id="session_update_button"  type="submit">Submit</button></div>
             <input type="hidden" name="selected_term" value="{{selected_term}}"/>
             <input type="hidden" name="selected_session" value="{{selected_session}}"/>
     </form>
@@ -78,4 +42,9 @@ new session update
     </div>
     </form>
       
+   <!-- js files -->
+	<script src='/static/js/jquery.min.js'></script>
+	<script src="/static/js/session_update.js"></script>
+  <!-- /js files -->
+
 {% endblock %}

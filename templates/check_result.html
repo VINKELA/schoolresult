@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+
+<div class="other_forms">
+    <div class="form-w3ls">
+    <h4><b>CHECK RESULT</b></h4>
+    <form  action="check_results" method="post" id="check_results"target="_blank">
+    <div><input type="number" name="regnumber"  placeholder="exam number"><div id="reg_message" class="red"></div></div>
+    <div><input type="number" name="pin" placeholder="pin"><div id="pin_message" class="red"></div></div>
+    <button type="submit" id ="check_result" class="sign-in" > check result</button>
+    </form>
+    </div>
+    </div>
+<!-- js files -->
+	<script src='/static/js/jquery.min.js'></script>
+	<script src="/static/js/index.js"></script>
+<!-- /js files -->
+
+
+{% endblock %}

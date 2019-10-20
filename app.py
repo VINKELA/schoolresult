@@ -1850,91 +1850,92 @@ def session_update():
          
 
 
-@app.route("/check_results", methods=["POST"])
-@login_required
-@check_confirmed
+@app.route("/check_results", methods=["POST","GET"])
 def check_results():
-    if session:
-        session.clear()
-    #if reg number is empty
-    if not request.form.get("regnumber"):
-        error = "provide students regnumber"
-        flash(error)
-        return render_template("login.html")
-    #if reg number is empty
-    if  not request.form.get("pin"):
-        error = "provide students pin"
-        flash(error)
-        return render_template("login.html")
+    if request.method == "POST":
+        if session:
+            session.clear()
+        #if reg number is empty
+        if not request.form.get("regnumber"):
+            error = "provide students regnumber"
+            flash(error)
+            return render_template("login.html")
+        #if reg number is empty
+        if  not request.form.get("pin"):
+            error = "provide students pin"
+            flash(error)
+            return render_template("login.html")
 
-    # get user digit
-    reg_number = request.form.get("regnumber")
-    pin = request.form.get("pin")
-    #if len of user string is less than 10 render invalid regnumber
-    if len(reg_number) < 6:
-        session.clear()
-        error = "reg number invalid"
-        flash(error)
-        return render_template("login.html")
+        # get user digit
+        reg_number = request.form.get("regnumber")
+        pin = request.form.get("pin")
+        #if len of user string is less than 10 render invalid regnumber
+        if len(reg_number) < 6:
+            session.clear()
+            error = "reg number invalid"
+            flash(error)
+            return render_template("login.html")
 
-    #collect student id class id and school id
-    student_id = reg_number[0]+reg_number[1]+reg_number[2]
-    while student_id[0] == "0":
-        student_id = student_id.strip("0")
+        #collect student id class id and school id
+        student_id = reg_number[0]+reg_number[1]+reg_number[2]
+        while student_id[0] == "0":
+            student_id = student_id.strip("0")
 
-    class_id = reg_number[3]+reg_number[4]
-    if class_id[0] == "0":
-        class_id = class_id.strip("0")
-    
-    code_length = len(reg_number)
-    school_length = len(reg_number) - 5
-    school_id = reg_number[-school_length:]
-    #check if school exist else
-    schoolInfo = db.execute("SELECT * FROM school WHERE id=:id", id = school_id)
-    if len(schoolInfo) != 1:
-        error ="reg number invalid"
-        flash(error)
-        return render_template("login.html")
+        class_id = reg_number[3]+reg_number[4]
+        if class_id[0] == "0":
+            class_id = class_id.strip("0")
         
-    session["user_id"] = schoolInfo[0]["id"]
-    tables = database(0)
-    #check if class exist else "reg doesnt exist"
-    classInfo = db.execute("SELECT * FROM :classes WHERE id = :id", classes = tables["classes"], id = class_id)
-    if len(classInfo) != 1:
-        error = "reg number invalid"
+        code_length = len(reg_number)
+        school_length = len(reg_number) - 5
+        school_id = reg_number[-school_length:]
+        #check if school exist else
+        schoolInfo = db.execute("SELECT * FROM school WHERE id=:id", id = school_id)
+        if len(schoolInfo) != 1:
+            error ="reg number invalid"
+            flash(error)
+            return render_template("login.html")
+            
+        session["user_id"] = schoolInfo[0]["id"]
+        tables = database(0)
+        #check if class exist else "reg doesnt exist"
+        classInfo = db.execute("SELECT * FROM :classes WHERE id = :id", classes = tables["classes"], id = class_id)
+        if len(classInfo) != 1:
+            error = "reg number invalid"
+            session.clear()
+            flash(error)
+            return render_template("login.html")
+        
+        tables = database(str(classInfo[0]["id"]))
+        #check if student exist in class else "reg doesnt exist"
+        studentInfo = db.execute("SELECT * FROM :classlist WHERE id=:id", classlist=tables["classlist"], id=student_id)
+        if len(studentInfo) != 1:
+            error = "regnumber invalid"
+            session.clear()
+            flash(error)
+            return render_template("login.html")
+        
+        #check if pin is same with given pin is students pin else pin is incorrect
+        if pin != str(studentInfo[0]["pin"]):
+            error = "pin invalid"
+            session.clear()
+            flash(error)
+            return render_template("login.html")
+        tables= database(class_id)
+        classrow = db.execute("SELECT * FROM :session_data WHERE id = :classId", session_data = tables["session_data"], classId = tables["class_id"])
+        schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = school_id)
+        carow = db.execute("SELECT * FROM :catable where id=:id",catable = tables["ca"], id= student_id)
+        testrow = db.execute("SELECT * FROM :testtable where id=:id",testtable = tables["test"], id= student_id)
+        examrow = db.execute("SELECT * FROM :examtable where id=:id",examtable = tables["exam"], id= student_id)
+        subjectrow = db.execute("SELECT * FROM :subjecttable",subjecttable = tables["subjects"])
+        grades = db.execute("SELECT * FROM :grade_s where id=:id ",grade_s = tables["grade"], id=student_id)
+        classlistrow = db.execute("SELECT * FROM :classlist where id=:id",classlist = tables["classlist"], id=student_id)
+        mastersheet_rows = db.execute("SELECT * FROM :mastersheet where id=:id", mastersheet = tables["mastersheet"], id= student_id)
+        subject_position_row = db.execute("SELECT * FROM :subject_position where id=:id", subject_position = tables["subject_position"], id= student_id)
+        results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
         session.clear()
-        flash(error)
-        return render_template("login.html")
-    
-    tables = database(str(classInfo[0]["id"]))
-    #check if student exist in class else "reg doesnt exist"
-    studentInfo = db.execute("SELECT * FROM :classlist WHERE id=:id", classlist=tables["classlist"], id=student_id)
-    if len(studentInfo) != 1:
-        error = "regnumber invalid"
-        session.clear()
-        flash(error)
-        return render_template("login.html")
-    
-    #check if pin is same with given pin is students pin else pin is incorrect
-    if pin != str(studentInfo[0]["pin"]):
-        error = "pin invalid"
-        session.clear()
-        flash(error)
-        return render_template("login.html")
-    tables= database(class_id)
-    classrow = db.execute("SELECT * FROM :session_data WHERE id = :classId", session_data = tables["session_data"], classId = tables["class_id"])
-    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = school_id)
-    carow = db.execute("SELECT * FROM :catable where id=:id",catable = tables["ca"], id= student_id)
-    testrow = db.execute("SELECT * FROM :testtable where id=:id",testtable = tables["test"], id= student_id)
-    examrow = db.execute("SELECT * FROM :examtable where id=:id",examtable = tables["exam"], id= student_id)
-    subjectrow = db.execute("SELECT * FROM :subjecttable",subjecttable = tables["subjects"])
-    grades = db.execute("SELECT * FROM :grade_s where id=:id ",grade_s = tables["grade"], id=student_id)
-    classlistrow = db.execute("SELECT * FROM :classlist where id=:id",classlist = tables["classlist"], id=student_id)
-    mastersheet_rows = db.execute("SELECT * FROM :mastersheet where id=:id", mastersheet = tables["mastersheet"], id= student_id)
-    subject_position_row = db.execute("SELECT * FROM :subject_position where id=:id", subject_position = tables["subject_position"], id= student_id)
-    results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
-    session.clear()
-    return render_template("result_sheet.html",gradeRows = grades,result = results[0], schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
+        return render_template("result_sheet.html",gradeRows = grades,result = results[0], schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
+    else:
+        return render_template("check_result.html")
             
 
 @app.route("/result_check", methods=["POST"])
