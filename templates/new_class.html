@@ -1,1 +1,54 @@
-<p>{{classInfo[0]["classname"]}}  was created by {{classInfo[0]["firstname"]}} for {{classInfo[0]["section"]}} section</p>
+
+<html>
+    <head>
+        <style>
+        #bodi{
+            background-color: #f2f3f3;
+            margin: 5%;
+        }
+        .form-w3ls {
+            background:#ffff;
+            text-align: center;
+            padding-bottom: 20px;
+            width:100%;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        #brand{
+                /* size for brand */
+                font-weight: bolder;
+                font-style: italic;
+                font-family: Georgia, 'Times New Roman', Times, serif;
+                text-align: center;
+
+        }
+        .blue{
+            color: blue;
+        }
+        .red{
+            color: red;
+        }
+        h5{
+            text-align: left;
+
+        }
+
+
+
+
+        </style>
+    </head>
+<body>
+<div id="bodi">
+<div class="form-w3ls">
+<div id="brand"><h1><span class="blue">Class</span><span class="red">result</span></h1></div>
+<h5>{{classInfo[0]["classname"]}}  has been Created!</h5>
+<h5>Class Teacher: {{subject["subject_teacher"].upper()}}</h5>
+<h5>Class:{{classInfo[0]["surname"]}}  {{classInfo[0]["firstname"]}}</h5> 
+<h5>Section: {{classInfo[0]["section"]}}</h5>
+click <a href="#">here</a> to see more
+
+</div>
+</div>
+</body>
+</html>

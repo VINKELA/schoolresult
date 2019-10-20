@@ -2,24 +2,52 @@
 <html>
     <head>
         <style>
-            body{
-	background-color: #f2f3f3;
-}
-
-                    .form-w3ls {
-            background:#ffffff;
+        #bodi{
+            background-color: #f2f3f3;
+            margin: 5%;
+        }
+        .form-w3ls {
+            background:#ffff;
             text-align: center;
             padding-bottom: 20px;
             width:100%;
             margin-top: 10px;
             margin-bottom: 10px;
         }
+        #brand{
+                /* size for brand */
+                font-weight: bolder;
+                font-style: italic;
+                font-family: Georgia, 'Times New Roman', Times, serif;
+                text-align: center;
+
+        }
+        .blue{
+            color: blue;
+        }
+        .red{
+            color: red;
+        }
+        h5{
+            text-align: left;
+
+        }
+
+
+
 
         </style>
     </head>
 <body>
+<div id="bodi">
 <div class="form-w3ls">
-<p>{{subject["subject"]}} scoresheet was submitted by {{subject["subject_teacher"]}} for {{class_info["classname"]}}</p>
+<div id="brand"><h1><span class="blue">Class</span><span class="red">result</span></h1></div>
+<h5>{{subject["subject"].upper()}} scoresheet has been submitted!</h5>
+<h5>Subject Teacher: {{subject["subject_teacher"].upper()}}</h5>
+<h5>Class: {{class_info["classname"].upper()}}</h5> 
+click <a href="#">here</a> to see more
+
+</div>
 </div>
 </body>
 </html>

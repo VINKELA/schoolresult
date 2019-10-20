@@ -172,19 +172,20 @@ $(function() {
   event.preventDefault();
 
  if($('input[name="password"]').val() ==""){
-    alert("you must provide a password");
+    $("#pass_msg").text("password is empty");
   }
    else if($('input[name="confirmation"]').val() ==""){
-    alert("you must provide a password confirmation");
+    $("#conf_msg").text("password confirmation is empty");
   }
    else if($('input[name="password"]').val() != $('input[name="confirmation"]').val()){
-    alert("password and confirmation do not match");
+    $("#conf_msg").text("password and confirmation do not match");
   }
 // Validate length
-  else if(myInput2.value.length < 8) {
-    alert(" password must be up to 8 digits");
+  else if($('input[name="password"]').val().length() < 8) {
+    $("#pass_msg").text(" password must be up to 8 digits");
   }
   else{
+    $('#but').attr('disabled',true)
     $("#change_form").submit();
   }
 });

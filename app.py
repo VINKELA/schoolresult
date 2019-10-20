@@ -404,14 +404,13 @@ def change_password():
         except Exception as e:
             print(e)
         error = "follow the link sent to "+request.form.get("email") +" to change password"
+        flash(error)
         return render_template("login.html", error=error)
     else:
         return render_template("change_password_form.html")
 
 
 @app.route("/password_changed", methods=["GET", "POST"])
-@login_required
-@check_confirmed
 def password_changed():
     if request.method == "POST":
         email = request.form.get("email")
@@ -432,12 +431,14 @@ def password_changed():
         db.execute("UPDATE school SET admin_password = :password WHERE email=:email ",password = generate_password_hash(request.form.get("password")), email = email)
         error = 'You have changed your password.  Thanks!'
         session.clear()
+        flash(error)
         return render_template('login.html',error=error)
     else:
         token = user = request.args.get('token')
         email = confirm_token(token)
         if  not email:
             error = 'The  link is invalid or has expired.'
+            flash(error)
             return render_template("login.html", error = error)
         else:
             return render_template("password_changed.html", email = email)
