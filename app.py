@@ -116,7 +116,8 @@ def index():
 def logout():
     """Log user out"""
     #clear cookies
-    db.execute("UPDATE school SET token_id = :series, token = :token WHERE id=:id", series = "", token = "", id=session["user_id"])
+    if session["user_id"]:
+        db.execute("UPDATE school SET token_id = :series, token = :token WHERE id=:id", series = "", token = "", id=session["user_id"])
     # Forget any user_id
     session.clear()
 
