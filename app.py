@@ -111,11 +111,12 @@ def index():
         # else if account is not confirmed render unconfirmed view
         else:
             return redirect('/unconfirmed')
-
+@login_required
 @app.route("/logout")
 def logout():
     """Log user out"""
-
+    #clear cookies
+    db.execute("UPDATE school SET token_id = :series, token = :token WHERE id=:id", series = "", token = "", id=session["user_id"])
     # Forget any user_id
     session.clear()
 
@@ -2087,3 +2088,5 @@ def password_changer():
     error="password changed successfully"
     return render_portfolio(error)
 
+if __name__ == '__main__':
+    app.run(debug=True)

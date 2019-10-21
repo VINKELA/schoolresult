@@ -52,17 +52,16 @@ $(function() {
     $('#login').bind('click', function() {
   // Stop form from submitting normally
   event.preventDefault();
-  $('#login').attr('disabled',true);
   if($('#username').val() == ""){
+    $('.red').text('')
     $('#signin_message').text("username is empty")
     $('input[name="username"]').focus()
-    $('#login').attr('disabled',false)
   }
 
  else if($('#password').val() ==""){
+  $('.red').text('')
   $('#password_message').text("password is empty")
   $('input[name="password"]').focus()
-  $('#login').attr('disabled',false)
 }
  else{
       $.post( $SCRIPT_ROOT + '/login_check',{
@@ -70,11 +69,13 @@ $(function() {
         password: $('input[name="password"]').val()
       }, function(data) {
           if (data == "fail"){
+            $('.red').text('')
             $('#signin_message').text("username or password is incorrect")
             $('input[name="username"]').focus()
-            $('#login').attr('disabled',false)        
         }
           else{
+            $('.red').text('')
+            $('#login').attr('disabled',true)        
             $('#login').text("loging in ....")
             $("#login_form").submit();
 
@@ -89,6 +90,7 @@ $(function() {
   event.preventDefault();
   $('#check_result').attr('disabled', true)
   if($('input[name="regnumber"]').val() == ""){
+    $('.red').text('')
     $('#reg_message').text("exam number is empty");
     $('input[name="regnumber"]').focus()
     $('#check_result').attr('disabled', false)
@@ -97,12 +99,14 @@ $(function() {
   else{
     var str = $('input[name="regnumber"]').val();
   if(str.length < 6){
+    $('.red').text('')
     $('#reg_message').text("exam number invalid");
     $('input[name="regnumber"]').focus()
     $('#check_result').attr('disabled', false)
   }
 
   else if($('input[name="pin"]').val() ==""){
+    $('.red').text('')
     $('#pin_message').text("pin is empty");
     $('input[name="pin"]').focus()
     $('#check_result').attr('disabled', false)
@@ -114,17 +118,20 @@ $(function() {
         pin: $('input[name="pin"]').val()
       }, function(data) {
           if (data == "fail"){
+            $('.red').text('')
             $('#reg_message').text("exam number invalid");
             $('input[name="regnumber"]').focus() 
             $('#check_result').attr('disabled', false)
        
           }
           else if (data == "pin_invalid"){
+            $('.red').text('')
             $('#pin_message').text("pin is invalid");
             $('input[name="pin"]').focus()
             $('#check_result').attr('disabled', false)
           }
           else{
+            $('.red').text('') 
             $('#check_result').text('checking ....')
             $("#check_results").submit();
             $('#check_result').attr('disabled', false)
@@ -172,19 +179,24 @@ $(function() {
   event.preventDefault();
 
  if($('input[name="password"]').val() ==""){
+    $('.red').text('')
     $("#pass_msg").text("password is empty");
   }
    else if($('input[name="confirmation"]').val() ==""){
+    $('.red').text('')
     $("#conf_msg").text("password confirmation is empty");
   }
    else if($('input[name="password"]').val() != $('input[name="confirmation"]').val()){
+    $('.red').text('')
     $("#conf_msg").text("password and confirmation do not match");
   }
 // Validate length
   else if($('input[name="password"]').val().length() < 8) {
+    $('.red').text('')
     $("#pass_msg").text(" password must be up to 8 digits");
   }
   else{
+    $('.red').text('')
     $('#but').attr('disabled',true)
     $("#change_form").submit();
   }
