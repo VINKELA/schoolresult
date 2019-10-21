@@ -111,7 +111,7 @@ def index():
         # else if account is not confirmed render unconfirmed view
         else:
             return redirect('/unconfirmed')
-@login_required
+
 @app.route("/logout")
 def logout():
     """Log user out"""
