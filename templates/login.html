@@ -17,9 +17,9 @@
 			 <div class="tab-content" id="login-tab-content">
 				<div id="signin-agile">
 					 <form  action = "/login" method="post" id="login_form">
-						 <input type="text" name="username" placeholder="User Name" required="required"/>
+						 <input type="text" id="username" name="username" placeholder="User Name" required="required"/>
 						 <div class="red" id="signin_message"></div>
-						 <input type="password" name="password" placeholder="password" required="required"/>
+						 <input type="password" id="password" name="password" placeholder="password" required="required"/>
 						 <div class="red" id="password_message"></div>
 						 <div class="psw">Forgot <a href="/change_password">password?</a></div>
 						 <div><input name="remember_me" type="checkbox" id="brand" value="checked">Remember me</div>
@@ -65,11 +65,11 @@
 
 							<hr>
 							<h3 class="message">login details</h3>
-							<input  name="username" placeholder="Username" type="text"/>
+							<input  name="username" placeholder="Username" type="text" id="user" required="required"/>
 							<div class="red" id="username_message"></div>
 
-							<input placeholder="password" type="password" id="psw" name="password" pattern=".{8,}" title="Must contain at least 8 or more characters" required="required">
-							<div class="red" id="password_message"></div>
+							<div><input placeholder="password" type="password" id="psw" name="password" pattern=".{8,}" title="Must contain at least 8 or more characters" required="required">
+								<div class="red" id="password_message"></div></div>
 							<div>
 							  <p id="length2" class="invalid">Minimum <b>8 characters</b></p>
 							</div>
@@ -88,7 +88,7 @@
 </div>
 <!-- js files -->
 	<script src='/static/js/jquery.min.js'></script>
-	<script src="/static/js/index.js"></script>
 	<script src="/static/js/register.js"></script>
+	<script src="/static/js/index.js"></script>
 <!-- /js files -->
 {% endblock %}

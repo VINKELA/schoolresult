@@ -53,13 +53,13 @@ $(function() {
   // Stop form from submitting normally
   event.preventDefault();
   $('#login').attr('disabled',true);
-  if($('input[name="username"]').val() == ""){
+  if($('#username').val() == ""){
     $('#signin_message').text("username is empty")
     $('input[name="username"]').focus()
     $('#login').attr('disabled',false)
   }
 
- else if($('input[name="password"]').val() ==""){
+ else if($('#password').val() ==""){
   $('#password_message').text("password is empty")
   $('input[name="password"]').focus()
   $('#login').attr('disabled',false)
