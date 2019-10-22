@@ -116,13 +116,22 @@ def index():
 def logout():
     """Log user out"""
     #clear cookies
-    if session["user_id"]:
-        db.execute("UPDATE school SET token_id = :series, token = :token WHERE id=:id", series = "", token = "", id=session["user_id"])
-    # Forget any user_id
-    session.clear()
+    try:
+        session["user_id"]
+    except KeyError:
+        # Forget any user_id
+        session.clear()
 
-    # Redirect user to login form
-    return render_template("/login.html")
+        # Redirect user to login form
+        return render_template("/login.html")
+    else:
+        db.execute("UPDATE school SET token_id = :series, token = :token WHERE id=:id", series = "", token = "", id=session["user_id"])
+
+        # Forget any user_id
+        session.clear()
+
+        # Redirect user to login form
+        return render_template("/login.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -392,10 +401,12 @@ def change_password():
         # Query database for email
         if request.form.get("email") == "":
             error = "provide the email your account was registered with"
+            flash(error)
             return render_template("change_password_form.html", error = error)
         rows = db.execute("SELECT * FROM school WHERE email = :email",email=request.form.get("email").lower())
         if len(rows) != 1:
             error = request.form.get("email")+" not associated with any registered account"
+            flash(error)
             return render_template("change_password_form.html", error = error)
         token = generate_confirmation_token(request.form.get("email"))
         confirm_url = url_for('password_changed', token=token, _external=True)
@@ -436,7 +447,7 @@ def password_changed():
         flash(error)
         return render_template('login.html',error=error)
     else:
-        token = user = request.args.get('token')
+        token = request.args.get('token')
         email = confirm_token(token)
         if  not email:
             error = 'The  link is invalid or has expired.'

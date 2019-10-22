@@ -4,6 +4,7 @@ $(function() {
   event.preventDefault();
 
      if($('#email_name').val() ==""){
+       $('.red').text('');
         $('#email_mess').text("please provide your account's email address");
         $('#email_name').focus();
       }
@@ -12,6 +13,7 @@ $(function() {
         email: $('input[name="email"]').val(),
       }, function(data) {
           if (data == "fail"){
+            $('.red').text('');
             $('#email_mess').text("no account is account is associated with this email")
             $('#email_name').focus();
           }
