@@ -88,12 +88,10 @@ $(function() {
     $('#check_result').bind('click', function() {
   // Stop form from submitting normally
   event.preventDefault();
-  $('#check_result').attr('disabled', true)
   if($('input[name="regnumber"]').val() == ""){
     $('.red').text('')
     $('#reg_message').text("exam number is empty");
     $('input[name="regnumber"]').focus()
-    $('#check_result').attr('disabled', false)
 
   }
   else{
@@ -102,14 +100,12 @@ $(function() {
     $('.red').text('')
     $('#reg_message').text("exam number invalid");
     $('input[name="regnumber"]').focus()
-    $('#check_result').attr('disabled', false)
   }
 
   else if($('input[name="pin"]').val() ==""){
     $('.red').text('')
     $('#pin_message').text("pin is empty");
     $('input[name="pin"]').focus()
-    $('#check_result').attr('disabled', false)
 
   }
   else{
@@ -117,24 +113,21 @@ $(function() {
         regnumber: $('input[name="regnumber"]').val(),
         pin: $('input[name="pin"]').val()
       }, function(data) {
-          if (data == "fail"){
+          if (data=="fail"){
             $('.red').text('')
             $('#reg_message').text("exam number invalid");
             $('input[name="regnumber"]').focus() 
-            $('#check_result').attr('disabled', false)
-       
           }
-          else if (data == "pin_invalid"){
+          else if (data=="pin_invalid"){
             $('.red').text('')
             $('#pin_message').text("pin is invalid");
             $('input[name="pin"]').focus()
-            $('#check_result').attr('disabled', false)
           }
           else{
             $('.red').text('') 
+            $('#check_result').attr('disabled', false)
             $('#check_result').text('checking ....')
             $("#check_results").submit();
-            $('#check_result').attr('disabled', false)
             $('#check_result').text('check result')
           }
       });}
@@ -191,7 +184,7 @@ $(function() {
     $("#conf_msg").text("password and confirmation do not match");
   }
 // Validate length
-  else if($('input[name="password"]').val().length() < 8) {
+  else if($('input[name="password"]').val().length < 8) {
     $('.red').text('')
     $("#pass_msg").text(" password must be up to 8 digits");
   }

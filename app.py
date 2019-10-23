@@ -206,7 +206,7 @@ def register():
         db.execute("CREATE TABLE :classes ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'identifier' TEXT )", classes = tables["classes"])
         db.execute("CREATE TABLE :setting ('id' INTEGER PRIMARY KEY NOT NULL, 'classname' TEXT, 'grading_type' INTEGER, 'comment_lines' INTEGER,'student_position' INTEGER DEFAULT 1, 'surname' TEXT, 'firstname' TEXT,'othername' TEXT,'password' TEXT,'section' TEXT, 'ca' INTEGER, 'test' INTEGER,'exam' INTEGER)", setting = tables["session_data"])
         # create result data
-        db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, 'no_of_failures' INTEGER DEFAULT 0, 'grading_type' TEXT DEFAULT 'WAEC','background_color' TEXT DEFAULT 'white','text_color' TEXT DEFAULT 'black','line_color' TEXT DEFAULT 'black','background_font' TEXT DEFAULT 'Ariel','ld_position' TEXT DEFAULT 'center','l_font' TEXT DEFAULT 'Ariel Black','l_weight' TEXT DEFAULT '900','l_color' TEXT DEFAULT '#00ff40','l_fontsize' TEXT DEFAULT '30px','sd_font' TEXT DEFAULT 'Ariel','sd_color' TEXT DEFAULT '#808000','sd_fontsize' TEXT DEFAULT '20px','sd_position' TEXT DEFAULT 'center','sd_email' TEXT,'admin_email' TEXT DEFAULT 'off', 'address' TEXT,'po_box' TEXT,'phone' TEXT,'next_term' TEXT,'sd_other' TEXT,'std_color' TEXT DEFAULT 'black','std_font' TEXT DEFAULT 'Arial Narrow','std_fontsize' TEXT DEFAULT '18px','std_position' TEXT DEFAULT 'left','table_type' TEXT DEFAULT 'bordered','ca' TEXT DEFAULT 'on','test' TEXT DEFAULT 'on','exam' TEXT DEFAULT 'on','combined' TEXT DEFAULT 'on','subject_total' TEXT DEFAULT 'on','class_average' TEXT DEFAULT 'on','subject_position' TEXT DEFAULT 'on','grade' TEXT DEFAULT 'on','subject_comment' TEXT DEFAULT 'off','teachers_initials' TEXT DEFAULT 'on','total_score' TEXT DEFAULT 'on','average' TEXT DEFAULT 'on','position' TEXT DEFAULT 'on','teachers_line' INTEGER DEFAULT 0,'shadow' TEXT DEFAULT 'on','principal_line' INTEGER DEFAULT 0,'teachers_signature' TEXT DEFAULT 'off','principal_signature' TEXT DEFAULT 'off','pandf' TEXT DEFAULT 'on','grade_summary' TEXT DEFAULT 'on','watermark' TEXT DEFAULT 'on')",result = tables["class_term_data"])
+        db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, 'no_of_failures' INTEGER DEFAULT 0, 'grading_type' TEXT DEFAULT 'WAEC','background_color' TEXT DEFAULT 'white','text_color' TEXT DEFAULT 'black','line_color' TEXT DEFAULT 'black','background_font' TEXT DEFAULT 'Ariel','ld_position' TEXT DEFAULT 'center','l_font' TEXT DEFAULT 'Ariel Black','l_weight' TEXT DEFAULT '900','l_color' TEXT DEFAULT 'blue','l_fontsize' TEXT DEFAULT '30px','sd_font' TEXT DEFAULT 'Ariel','sd_color' TEXT DEFAULT '#808000','sd_fontsize' TEXT DEFAULT '20px','sd_position' TEXT DEFAULT 'center','sd_email' TEXT,'admin_email' TEXT DEFAULT 'off', 'address' TEXT,'po_box' TEXT,'phone' TEXT,'next_term' TEXT,'sd_other' TEXT,'std_color' TEXT DEFAULT 'black','std_font' TEXT DEFAULT 'Arial Narrow','std_fontsize' TEXT DEFAULT '18px','std_position' TEXT DEFAULT 'left','table_type' TEXT DEFAULT 'bordered','ca' TEXT DEFAULT 'on','test' TEXT DEFAULT 'on','exam' TEXT DEFAULT 'on','combined' TEXT DEFAULT 'on','subject_total' TEXT DEFAULT 'on','class_average' TEXT DEFAULT 'on','subject_position' TEXT DEFAULT 'on','grade' TEXT DEFAULT 'on','subject_comment' TEXT DEFAULT 'off','teachers_initials' TEXT DEFAULT 'on','total_score' TEXT DEFAULT 'on','average' TEXT DEFAULT 'on','position' TEXT DEFAULT 'on','teachers_line' INTEGER DEFAULT 0,'shadow' TEXT DEFAULT 'on','principal_line' INTEGER DEFAULT 0,'teachers_signature' TEXT DEFAULT 'off','principal_signature' TEXT DEFAULT 'off','pandf' TEXT DEFAULT 'on','grade_summary' TEXT DEFAULT 'on','watermark' TEXT DEFAULT 'on')",result = tables["class_term_data"])
 
         return render_template("unconfirmed.html", schoolInfo=rows)
     else:
@@ -239,7 +239,6 @@ def unconfirmed():
         rows = db.execute("SELECT * FROM school WHERE id = :id",id = session["user_id"])
         return render_template("portfolio.html", schoolInfo = rows)
     rows = db.execute("SELECT * FROM school WHERE id = :id",id = session["user_id"])
-    error = "Your account have not been confirmed and you dont have full access to it"
     return render_template('unconfirmed.html', schoolInfo=rows)
 
 @app.route("/resend_confirmation", methods=["GET", "POST"])
@@ -251,7 +250,7 @@ def resend_confirmation():
     html = render_template('confirm_email.html', confirm_url=confirm_url)
     subject = "Please confirm your email"
     try:
-        send_email(user[0]["email"], subject, html,'classresultest@gmail.com')
+        send_email(user[0]["email"], subject, html,'Schoolresultest@gmail.com')
     except Exception as e:
         print(e)
     flash('A new confirmation ema il has been sent.', 'success')
@@ -413,7 +412,7 @@ def change_password():
         html = render_template('password.html', confirm_url=confirm_url)
         subject = "change password"
         try:
-            send_email(request.form.get("email"), subject, html, 'classresultest@gmail.com')
+            send_email(request.form.get("email"), subject, html, 'Schoolresultest@gmail.com')
         except Exception as e:
             print(e)
         error = "follow the link sent to "+request.form.get("email") +" to change password"
@@ -545,7 +544,7 @@ def createClass():
             error = "Provide the number of students in class"
             return render_template("createClassForm.html", error=error, schoolInfo=schoolrow)
         try:
-            val = int(request.form.get("no_of_students"))
+            int(request.form.get("no_of_students"))
         except ValueError:
             error = "Provide a number for the students in class"
             return render_template("createClassForm.html", error=error, schoolInfo=schoolrow)
@@ -559,17 +558,17 @@ def createClass():
             error = "Provide the maximum exam score"
             return render_template("createClassForm.html", error=error, schoolInfo=schoolrow)
         try:
-            val = int(request.form.get("ca"))
+            int(request.form.get("ca"))
         except ValueError:
             error = "Provide a number for the class maximum ca"
             return render_template("createClassForm.html", error=error, schoolInfo=schoolrow)
         try:
-            val = int(request.form.get("test"))
+            int(request.form.get("test"))
         except ValueError:
             error = "Provide a number for the class maximum test"
             return render_template("createClassForm.html", error=error, schoolInfo=schoolrow)
         try:
-            val = int(request.form.get("exam"))
+            int(request.form.get("exam"))
         except ValueError:
             error = "Provide a number for the class maximum exam"
             return render_template("createClassForm.html", error=error, schoolInfo=schoolrow)
@@ -610,7 +609,6 @@ def createClass():
 def confirm_classlist():
     session["all_students"]=[]
     #declare an array of dicts
-    tables = database(str(0))
     rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=session["user_id"])
     #fill classlist
     g = int(session["info"]["noOfStudents"])
@@ -631,7 +629,6 @@ def confirm_classlist():
 def classCreated():
     tables = database(str(0))
     rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=session["user_id"])
-    schoolClass = tables["classes"]
     identity = session["info"]["className"]+"_"+str(datetime.datetime.now())
     #insert class and identifer
     db.execute("INSERT INTO :classes (identifier) VALUES (:name_date)", classes = tables["classes"], name_date = identity)
@@ -659,7 +656,6 @@ def classCreated():
                 db.execute("INSERT INTO :subject_position DEFAULT VALUES",subject_position = tables["subject_position"])
                 db.execute("INSERT INTO :grades DEFAULT VALUES ",grades = tables["grade"])
                 i = i + 1
-    classRows = db.execute("SELECT * FROM :session_data ",session_data = tables["session_data"])
     classRow = db.execute("SELECT * FROM :session_data WHERE id=:id ",session_data = tables["session_data"], id=classId )
     # send email to admin about subject scoresheet
     html = render_template('new_class.html',classInfo = classRow)
@@ -816,7 +812,7 @@ def submitted():
     tables = database(request.form.get("button"))
     db.execute("INSERT INTO :subjects (name, teachers_name) VALUES (:subject, :teacher) ",subjects = tables["subjects"], subject = session["subject_info"]["subject"], teacher=session["subject_info"]["subject_teacher"])
     subject_list = db.execute("SELECT * FROM :subject WHERE name=:subject_name", subject = tables["subjects"],subject_name = session["subject_info"]["subject"])
-    db.execute("UPDATE :classresult SET noOfSubjects = noOfSubjects + 1 WHERE id= :class_id", classresult = tables["class_term_data"], class_id=tables["class_id"])
+    db.execute("UPDATE :Schoolresult SET noOfSubjects = noOfSubjects + 1 WHERE id= :class_id", Schoolresult = tables["class_term_data"], class_id=tables["class_id"])
     subject_id = str(subject_list[0]["id"])
     db.execute("ALTER TABLE :cascore_table ADD COLUMN :subject TEXT ", cascore_table = tables["ca"], subject = subject_id)
     db.execute("ALTER TABLE :test_table ADD COLUMN :subject TEXT ", test_table = tables["test"], subject = subject_id)
@@ -824,9 +820,8 @@ def submitted():
     db.execute("ALTER TABLE :grade_table ADD COLUMN :subject TEXT ", grade_table= tables["grade"], subject = subject_id)
     db.execute("ALTER TABLE :subject_p ADD COLUMN :subject TEXT", subject_p = tables["subject_position"], subject = subject_id)
     db.execute("ALTER TABLE :mastersheet ADD COLUMN :subject TEXT ", mastersheet = tables["mastersheet"], subject = subject_id)
-    class_list_row = db.execute("SELECT * FROM :classlist", classlist = tables["classlist"])
     rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
-    class_info = db.execute("SELECT * FROM :classresult WHERE id=:class_id", classresult = tables["class_term_data"], class_id = tables["class_id"])
+    class_info = db.execute("SELECT * FROM :Schoolresult WHERE id=:class_id", Schoolresult = tables["class_term_data"], class_id = tables["class_id"])
     subject_total = 0
     term_failed = 0
     term_passed = 0
@@ -895,7 +890,7 @@ def submitted():
     html = render_template('new_score.html',subject = session["subject_info"], class_info=classRows[0])
     subject = session["subject_info"]["subject"]+" scoreesheet submitted for  "+ classRows[0]["classname"]
     try:
-        send_email(rows[0]["email"], subject, html, 'classresultest@gmail.com')
+        send_email(rows[0]["email"], subject, html, 'Schoolresultest@gmail.com')
     except Exception as e:
         print(e)
     classRows = db.execute("SELECT * FROM :session_data ",session_data = tables["session_data"])
@@ -919,7 +914,6 @@ def scoresheet():
     subject_id = int(array_id[0])
     class_id = int(array_id[1])
     tables=database(class_id)
-    student_row = db.execute("SELECT * FROM :classlist", classlist=tables["classlist"])
     classrow = db.execute("SELECT * FROM :session_data WHERE id = :classId", session_data = tables["session_data"], classId = tables["class_id"])
     schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = session["user_id"])
     carow = db.execute("SELECT * FROM :catable",catable = tables["ca"])
@@ -965,19 +959,16 @@ def edited_scoresheet():
     subject_id = int(array_id[0])
     class_id = int(array_id[1])
     tables = database(class_id)
-    classes = tables["classes"]
     class_list = tables["classlist"]
     cascore_table = tables["ca"]
     test_table = tables["test"]
     exam_table = tables["exam"]
-    subject_position = tables["subject_position"]
-    mastersheet = tables["mastersheet"]
     subject_table = tables["subjects"]
     class_list_row = db.execute("SELECT * FROM :classlist", classlist = class_list)
     subject_row = db.execute("SELECT * FROM :subjects WHERE id=:id", subjects=subject_table, id=subject_id)
 
     rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
-    class_info = db.execute("SELECT * FROM :classresult WHERE id=:class_id", classresult = tables["class_term_data"], class_id = tables["class_id"])
+    class_info = db.execute("SELECT * FROM :Schoolresult WHERE id=:class_id", Schoolresult = tables["class_term_data"], class_id = tables["class_id"])
     subject_total = 0
     term_failed = 0
     term_passed = 0
@@ -1080,7 +1071,7 @@ def edited_scoresheet():
     # send email to admin about subject scoresheet
     html = render_template('new_score.html',subject = session["subject_info"], class_info=classRows[0])
     try:
-        send_email(rows[0]["email"], subject, html, 'classresultest@gmail.com')
+        send_email(rows[0]["email"], subject, html, 'Schoolresultest@gmail.com')
     except Exception as e:
         print(e)
     classRows = db.execute("SELECT * FROM :session_data ",session_data = tables["session_data"])
@@ -1162,7 +1153,6 @@ def verify_scoresheet():
     tables= database(class_id)
     classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["classes"], classId = tables["class_id"])
     schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
-    subjectrow = db.execute("SELECT * FROM :subjecttable WHERE id=:id",subjecttable = tables["subjects"], id=subject_id)
     return render_template("verify_scoresheet.html",sub_id=subject_id,  classData = classrow, schoolInfo=schoolrow)
     
     
@@ -1233,7 +1223,6 @@ def edited_student():
     othername = "o"+str(student_id)
     sex = "g"+str(student_id)
     db.execute("UPDATE :classlist SET surname = :surname, firstname=:firstname, othername=:othername, sex=:sex WHERE id =:student_id", classlist = tables["classlist"], surname = request.form.get(surname).upper(),firstname =request.form.get(firstname).upper(), othername = request.form.get(othername).upper(), sex=request.form.get(sex), student_id= student_id)
-    rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
     return render_class(class_id)
 
 @app.route("/unregister_student", methods=["POST"])
@@ -1242,10 +1231,7 @@ def edited_student():
 def unregister_student():
     student_id = request.form.get("student_id")
     class_id = request.form.get("class_id")
-    tables= database(class_id)
     remove_student(student_id, class_id)
-    rows = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
-    classrows = db.execute("SELECT * FROM :classes ", classes = tables["session_data"])
     error="student deleted successfully"
     return render_class(class_id,error)
 
@@ -1282,7 +1268,6 @@ def verified_customize():
     if check_password_hash(classRows[0]["password"], password) or check_password_hash(schoolrow[0]["admin_password"], password):
         return render_template("customize.html", schoolInfo = schoolrow,classData=classRows,subjects = subject, classInfo=class_info[0], class_setting=class_settings[0])
     else:
-        classrow = db.execute("SELECT * FROM :classes ", classes = tables["classes"])
         error = "admin or class password incorrect"
         return render_class(class_id, error)
 
@@ -1465,7 +1450,6 @@ def delete_class():
     class_id = request.form.get("delete_class")
     tables= database(class_id)
     sessions = db.execute("SELECT * FROM :terms WHERE id=:id", terms = tables["sessions"], id=class_id)
-    school_data = db.execute("SELECT * FROM school WHERE id = :school_id ",school_id = session["user_id"])
     removed = False
     for term in sessions[0]:
         if sessions[0][term] and term != "id":
@@ -1840,7 +1824,6 @@ def session_update():
     for  clas in classes:
         id = str(clas["id"])
         name = "name"+id
-        formmaster = "formmaster"+id
         ca = "ca"+id
         test ="test"+id
         exam = "exam"+id
@@ -1899,7 +1882,6 @@ def check_results():
         if class_id[0] == "0":
             class_id = class_id.strip("0")
         
-        code_length = len(reg_number)
         school_length = len(reg_number) - 5
         school_id = reg_number[-school_length:]
         #check if school exist else
@@ -1957,7 +1939,7 @@ def check_results():
 @check_confirmed
 def result_check():
     if request.method == "POST":
-            # get user digit
+        # get user digit
         reg_number = request.form.get("regnumber")
         pin = request.form.get("pin")
 
@@ -1974,7 +1956,6 @@ def result_check():
     if class_id[0] == "0":
         class_id = class_id.strip("0")
     
-    code_length = len(reg_number)
     school_length = len(reg_number) - 5
     school_id = reg_number[-school_length:]
     #check if school exist else
@@ -2050,7 +2031,6 @@ def admin_verified():
     if check_password_hash(schoolrow[0]["admin_password"], password ):
         for klass in classrow:
             tables=database(klass["id"])
-            classlist_id = "classlist"+ str(klass["id"])
             classlis= db.execute("SELECT * FROM :classlist",classlist=tables["classlist"])
             classlist.append(classlis)
         return render_template("pins.html", schoolInfo = schoolrow, classData=classrow, result = settings[0], classlists= classlist)
@@ -2090,7 +2070,6 @@ def password_verified():
 def password_changer():        
     tables= database(0)
     classrow = db.execute("SELECT * FROM :classes", classes = tables["session_data"])
-    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
     user_input = request.form.get("general")
     if user_input:
         db.execute("UPDATE school SET password = :general WHERE id=:id",general=generate_password_hash(request.form.get("general")), id=session["user_id"])

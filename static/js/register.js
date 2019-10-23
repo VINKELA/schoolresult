@@ -91,38 +91,46 @@ $(function() {
   // Stop form from submitting normally
   event.preventDefault();
   if($('input[name="school_name"]').val() ==""){
+    $('.red').text('')
     $('#schoolname_message').text("school name is empty");
     $('input[name="school_name"]').focus();
 
   }
   else if($('input[name="email"]').val() ==""){
+    $('.red').text('')
     $('#email_message').text("email is empty");
     $('input[name="email"]').focus()
   }
   else if(validateEmail($('input[name="email"]').val()) !=true){
+    $('.red').text('')
     $('#email_message').text("email is not valid");
     $('input[name="email"]').focus()
   }
   else if($('#term').find(":selected").val() ==""){
+    $('.red').text('')
     $('#term_message').text("current term is empty!");
     $('#term').focus()
   }
   else if($('#school_session').find(":selected").val() ==""){
+    $('.red').text('')
     $('#session_message').text("current session is empty!");
     $('#school_session').focus()
   }
 
   else if($('#user').val() == ""){
+    $('.red').text('')
     $('#username_message').text("username is empty");
     $('input[name="username"]').focus()
 
   }
    else if($('#psw').val() ==""){
+    $('.red').text('')
     $('#password_message').text("password is empty!")
     $('#psw').focus()
   }
   // Validate length
   else if(myInput2.value.length < 8) {
+    $('.red').text('')
     $('#password_message').text("password must be up to 8 digits")
     $('#psw').focus()
 
@@ -144,17 +152,22 @@ $(function() {
         username: $('#user').val()
       }, function(data) {
           if (data == "false")
-          {    $('#username_message').text("username already taken")
+          { 
+            $('.red').text('')   
+            $('#username_message').text("username already taken")
                 $('#user').focus()
         }
           else{ $.post( $SCRIPT_ROOT + '/email_check',{
         email: $('input[name="email"]').val()
       }, function(data) {
           if (data == "false")
-          {    $('#email_message').text("email already exist")
-                $('input[name="email"]').focus()
+          { 
+            $('.red').text('')   
+            $('#email_message').text("email already exist")
+            $('input[name="email"]').focus()
         }
           else{
+            $('.red').text('')
             $('#submit_registration').attr('disabled', true)
             $('#submit_registration').text('creating account .....')
             $("#register").submit();
