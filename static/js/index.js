@@ -88,51 +88,46 @@ $(function() {
     $('#check_result').bind('click', function() {
   // Stop form from submitting normally
   event.preventDefault();
+  var str = $('input[name="regnumber"]').val();
   if($('input[name="regnumber"]').val() == ""){
     $('.red').text('')
     $('#reg_message').text("exam number is empty");
     $('input[name="regnumber"]').focus()
-
   }
-  else{
-    var str = $('input[name="regnumber"]').val();
-  if(str.length < 6){
+  else if(str.length < 7){
     $('.red').text('')
     $('#reg_message').text("exam number invalid");
     $('input[name="regnumber"]').focus()
   }
-
   else if($('input[name="pin"]').val() ==""){
     $('.red').text('')
     $('#pin_message').text("pin is empty");
     $('input[name="pin"]').focus()
-
   }
   else{
       $.post( $SCRIPT_ROOT + '/result_check',{
         regnumber: $('input[name="regnumber"]').val(),
         pin: $('input[name="pin"]').val()
       }, function(data) {
-          if (data=="fail"){
+          if (data.value =="fail"){
             $('.red').text('')
             $('#reg_message').text("exam number invalid");
             $('input[name="regnumber"]').focus() 
           }
-          else if (data=="pin_invalid"){
+          else if (data.value =="pin invalid"){
             $('.red').text('')
             $('#pin_message').text("pin is invalid");
             $('input[name="pin"]').focus()
           }
-          else{
+          else if (data.value=="pass"){
             $('.red').text('') 
-            $('#check_result').attr('disabled', false)
             $('#check_result').text('checking ....')
             $("#check_results").submit();
             $('#check_result').text('check result')
           }
       });}
     }
-    });
+    );
   });
   
 var myInput2 = document.getElementById("psw");

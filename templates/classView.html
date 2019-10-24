@@ -12,6 +12,8 @@
       <td colspan="2">Classlist</td>
       {% set class_id = classData[0]["id"]|string %}
       {%if class_id|length == 1%}
+      {%set class_identifier = "00"+class_id|string%}
+      {%elif class_id|length == 2%}
       {%set class_identifier = "0"+class_id|string%}
       {%else%}
       {%set class_identifier = class_id|string%}
