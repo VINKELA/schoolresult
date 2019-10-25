@@ -100,6 +100,7 @@ else{
   }, function(data) {
       if (data == "fail"){
         $('#message_class').text("class already exist")
+        $('input[name="class_name"]').focus()
       }
       else{
         $('.red').text('')
