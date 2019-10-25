@@ -3,6 +3,9 @@
     confirm classlist
 {% endblock %}
 {% block main %}
+<div><h4 class="blue"> Subject: {{details2["subject"].upper()}}</h4></div>
+<div><h4 class="blue">Class: {{details[0]["classname"].upper()}}</h4></div>
+<div><h4 class="blue"> Subject Teacher: {{details2["subject_teacher"].upper()}}</h4></div> 
 <form action="/submitted" id="submitted" method="post">
   <input type="hidden" value="{{class_id}}" name="button">
  <table class="table table-striped">

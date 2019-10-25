@@ -198,7 +198,7 @@
                                 {%set index =  loop.index - 1%}
                               <tr>
                                 <td>{{data["id"]}}</td>
-                                <td>{{class_list[index]["surname"]}} {{class_list[index]["firstname"]}} {{class_list[index]["othername"]}}</td>
+                                <td>{{class_list[index]["surname"].upper()}} {{class_list[index]["firstname"].upper()}}</td>
                                 <td>{{data["total_score"]}}</td>
                                 {%set subject_length = subjectData|length %}
                                 {%if subject_length < 1%}

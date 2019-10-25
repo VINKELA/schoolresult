@@ -97,6 +97,7 @@ $(function() {
   // Stop form from submitting normally
   event.preventDefault();
   if($('input[name="password"]').val() == ""){
+    $('.red').text('')
     $('#admin_msg').text("please enter admin password");
     $('input[name="password"]').focus()
   }
@@ -106,10 +107,12 @@ $(function() {
       password: $('input[name="password"]').val()
     }, function(data) {
         if (data != 'correct'){ 
+          $('.red').text('')
           $('#admin_msg').text("incorrect password");
           $('input[name="password"]').focus()
               }
         else{
+          $('.red').text('')
           $("#password_form").submit();
         };
     });}

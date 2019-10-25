@@ -187,6 +187,7 @@ def register():
             error = "Make sure your password is at lest 8 letters"
             return render_template("register.html", error = error)
         general_password = passwordGen()
+        session['general_password'] = general_password
         token = generate_confirmation_token(request.form.get("email"))
         confirm_url = url_for('confirm_email', token=token, _external=True)
         html = render_template('confirm_email.html', confirm_url=confirm_url, password = general_password)
@@ -204,7 +205,7 @@ def register():
         column = request.form.get("school_session")+"_"+str(request.form.get("term"))
         db.execute("CREATE TABLE :sessions ('id' INTEGER PRIMARY KEY NOT NULL, :column TEXT)", sessions = tables["sessions"], column=column)
         db.execute("CREATE TABLE :classes ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'identifier' TEXT )", classes = tables["classes"])
-        db.execute("CREATE TABLE :setting ('id' INTEGER PRIMARY KEY NOT NULL, 'classname' TEXT, 'grading_type' INTEGER, 'comment_lines' INTEGER,'student_position' INTEGER DEFAULT 1, 'surname' TEXT, 'firstname' TEXT,'othername' TEXT,'password' TEXT,'section' TEXT, 'ca' INTEGER, 'test' INTEGER,'exam' INTEGER)", setting = tables["session_data"])
+        db.execute("CREATE TABLE :setting ('id' INTEGER PRIMARY KEY NOT NULL, 'classname' TEXT, 'grading_type' INTEGER, 'comment_lines' INTEGER,'student_position' INTEGER DEFAULT 1, 'surname' TEXT, 'firstname' TEXT,'password' TEXT,'section' TEXT, 'ca' INTEGER, 'test' INTEGER,'exam' INTEGER)", setting = tables["session_data"])
         # create result data
         db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, 'no_of_failures' INTEGER DEFAULT 0, 'grading_type' TEXT DEFAULT 'WAEC','background_color' TEXT DEFAULT 'white','text_color' TEXT DEFAULT 'black','line_color' TEXT DEFAULT 'black','background_font' TEXT DEFAULT 'Ariel','ld_position' TEXT DEFAULT 'center','l_font' TEXT DEFAULT 'Ariel Black','l_weight' TEXT DEFAULT '900','l_color' TEXT DEFAULT 'blue','l_fontsize' TEXT DEFAULT '30px','sd_font' TEXT DEFAULT 'Ariel','sd_color' TEXT DEFAULT '#808000','sd_fontsize' TEXT DEFAULT '20px','sd_position' TEXT DEFAULT 'center','sd_email' TEXT,'admin_email' TEXT DEFAULT 'off', 'address' TEXT,'po_box' TEXT,'phone' TEXT,'next_term' TEXT,'sd_other' TEXT,'std_color' TEXT DEFAULT 'black','std_font' TEXT DEFAULT 'Arial Narrow','std_fontsize' TEXT DEFAULT '18px','std_position' TEXT DEFAULT 'left','table_type' TEXT DEFAULT 'bordered','ca' TEXT DEFAULT 'on','test' TEXT DEFAULT 'on','exam' TEXT DEFAULT 'on','combined' TEXT DEFAULT 'on','subject_total' TEXT DEFAULT 'on','class_average' TEXT DEFAULT 'on','subject_position' TEXT DEFAULT 'on','grade' TEXT DEFAULT 'on','subject_comment' TEXT DEFAULT 'off','teachers_initials' TEXT DEFAULT 'on','total_score' TEXT DEFAULT 'on','average' TEXT DEFAULT 'on','position' TEXT DEFAULT 'on','teachers_line' INTEGER DEFAULT 0,'shadow' TEXT DEFAULT 'on','principal_line' INTEGER DEFAULT 0,'teachers_signature' TEXT DEFAULT 'off','principal_signature' TEXT DEFAULT 'off','pandf' TEXT DEFAULT 'on','grade_summary' TEXT DEFAULT 'on','watermark' TEXT DEFAULT 'on')",result = tables["class_term_data"])
 
@@ -245,15 +246,17 @@ def unconfirmed():
 @login_required
 def resend_confirmation():
     user = db.execute("SELECT * FROM school WHERE id=:id", id = session["user_id"])
+    general_password = passwordGen()
+    db.execute("UPDATE school SET password = :gen ", gen= generate_password_hash(general_password))
     token = generate_confirmation_token(user[0]["email"])
     confirm_url = url_for('confirm_email', token=token, _external=True)
-    html = render_template('confirm_email.html', confirm_url=confirm_url)
+    html = render_template('confirm_email.html', confirm_url=confirm_url, password=general_password)
     subject = "Please confirm your email"
     try:
         send_email(user[0]["email"], subject, html,'Schoolresultest@gmail.com')
     except Exception as e:
         print(e)
-    flash('A new confirmation ema il has been sent.', 'success')
+    flash('A new confirmation email has been sent.', 'success')
     return redirect('/unconfirmed')
 
 
@@ -579,6 +582,9 @@ def createClass():
         if not request.form.get("password"):
             error = "Provide a class password"
             return render_template("createClassForm.html", error=error)
+        if len(request.form.get("password")) < 6:
+            error = "password should be at least 6 digit long"
+            return render_template("createClassForm.html", error=error)
         if not request.form.get("confirmation"):
             error = "Provide a password confirmation"
             return render_template("createClassForm.html", error=error)
@@ -588,7 +594,6 @@ def createClass():
             return render_template("createClassForm.html", error=error)
         session["info"]["surname"] = request.form.get("surname")
         session["info"]["firstname"] = request.form.get("firstname")
-        session["info"]["othername"] = request.form.get("othername")
         session["info"].update({"className":request.form.get("class_name").upper()})
         session["info"]["ca_max"] = request.form.get("ca")
         session["info"]["test_max"] = request.form.get("test")
@@ -597,7 +602,7 @@ def createClass():
         session["info"]["password"] = request.form.get("password")
         session["info"]["section"] = request.form.get("section")
         schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = session["user_id"])
-        return render_template("classListForm.html",n = int(request.form.get("no_of_students")), schoolInfo = schoolrow )
+        return render_template("classListForm.html",n = int(request.form.get("no_of_students")), schoolInfo = schoolrow, class_name=session["info"]["className"] )
     else:
         schoolId = session['user_id']
         schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = schoolId)
@@ -620,7 +625,7 @@ def confirm_classlist():
         sex = "g"+str(i)
         session["all_students"].append((request.form.get(surname), request.form.get(firstname), request.form.get(othername), request.form.get(sex)))
     #return classlist.html
-    return render_template("confirm_classlist.html",schoolInfo = rows, students= session["all_students"] )
+    return render_template("confirm_classlist.html",schoolInfo = rows, students= session["all_students"], classinfo=session['info'])
 
 
 @app.route("/classCreated", methods=["POST"])
@@ -638,7 +643,7 @@ def classCreated():
     session_term =str(rows[0]["current_session"])+"_"+str(rows[0]["current_term"])
     db.execute("INSERT INTO :results (id, noOfStudents) values (:id, :no_of_students)",results = tables["class_term_data"],id = classId, no_of_students = session["info"]["noOfStudents"] )
     db.execute("INSERT INTO :sessions (id,:current_term) VALUES(:id, :term)", sessions = tables["sessions"], current_term = session_term,id = classId, term = session_term)
-    db.execute("INSERT INTO :session_data (id,surname,firstname,othername, classname, password,section,ca, test, exam) values (:id,:surname,:firstname,:othername,:className,:password,:section,:ca,:test,:exam)",session_data = tables["session_data"],id = classId, surname =  session["info"]["surname"],firstname =  session["info"]["firstname"],othername =  session["info"]["othername"], className = session["info"]["className"].lower(),password = generate_password_hash(session["info"]["password"]),section=session["info"]["section"],ca=session["info"]["ca_max"], test=session["info"]["test_max"], exam=session["info"]["exam_max"])
+    db.execute("INSERT INTO :session_data (id,surname,firstname,classname, password,section,ca, test, exam) values (:id,:surname,:firstname,:className,:password,:section,:ca,:test,:exam)",session_data = tables["session_data"],id = classId, surname =  session["info"]["surname"],firstname =  session["info"]["firstname"], className = session["info"]["className"].lower(),password = generate_password_hash(session["info"]["password"]),section=session["info"]["section"],ca=session["info"]["ca_max"], test=session["info"]["test_max"], exam=session["info"]["exam_max"])
     term_tables(classId)
     tables = database(classId)
     # fill classlist
@@ -795,6 +800,7 @@ def confirm_scoresheet():
     session["class_scores"] = []
     tables = database(session["subject_info"]["class_id"])
     rows = db.execute("SELECT * FROM school WHERE id = :school_id",school_id=session["user_id"])
+    session_setting = db.execute("SELECT * FROM :session_data WHERE id = :id", session_data = tables["session_data"], id = tables["class_id"]  )
     class_list = db.execute("SELECT * FROM :classlist", classlist = tables["classlist"])
     # each student will be an element of the array
     for student  in class_list:
@@ -803,7 +809,7 @@ def confirm_scoresheet():
         exam = "examscore"+str(student["id"])
         session["class_scores"].append((student["id"], student["firstname"], student["surname"], request.form.get(ca), request.form.get(test), request.form.get(exam)))
     #return classlist.html
-    return render_template("confirm_scoresheet.html",schoolInfo = rows, students=session["class_scores"], class_id = session["subject_info"]["class_id"])
+    return render_template("confirm_scoresheet.html",schoolInfo = rows, students=session["class_scores"], class_id = session["subject_info"]["class_id"], details=session_setting, details2 = session["subject_info"])
 
 @app.route("/submitted", methods=["POST"])
 @login_required

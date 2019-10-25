@@ -28,7 +28,7 @@
         .red{
             color: red;
         }
-        h5{
+        h4{
             text-align: left;
 
         }
@@ -42,10 +42,9 @@
 <div id="bodi">
 <div class="form-w3ls">
 <div id="brand"><h1><span class="blue">School</span><span class="red">result</span></h1></div>
-<h4>{{classInfo[0]["classname"]}}  has been Created!</h4>
-<h4>Class Teacher: {{subject["subject_teacher"].upper()}}</h4>
-<h4>Class:{{classInfo[0]["surname"]}}  {{classInfo[0]["firstname"]}}</h4> 
-<h4>Section: {{classInfo[0]["section"]}}</h4>
+<h4>{{classInfo[0]["classname"].upper()}}  has been Created!</h4>
+<h4>class teacher:{{classInfo[0]["surname"].upper()}}  {{classInfo[0]["firstname"].upper()}}</h4> 
+<h4>Section: {{classInfo[0]["section"].upper()}}</h4>
 click <a href="#">here</a> to see more
 
 </div>

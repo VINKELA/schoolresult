@@ -8,18 +8,20 @@
     {% if clas | length < 1 %}
 <div class="row main_pages">
     <div class="col welcome_message">
-        <h3>HOW TO USE CLASS RESULT? </h3>
-        <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. <p>Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. </p> <p>The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32. </p>
-        <p>The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham. </p>
-    </div>
+      <h2 class="blue">How to use Schoolresult? </h2>
+      <p>Share the general password and the username  to the teachers</p>
+      <p>With the general password and the username, they can login and create their classes</p>
+      <p>Once a class is created, a notification will be sent to your email and subject teachers can then go to submit their scores for the class or classes</p>
+      <p>The result is generated and updated for all students in class once the subject is updated or uploaded</p>
+  </div>
     <div class="col form-w3ls">
-    <form id="create_form" action="/createClass" method="post">
-      <h2>Add Class</h2>
+      <form id="create_form" action="/createClass" method="post">
         <div class="row">
         <div class="col">
             <input  id="class_name"  name="class_name" placeholder="class name" type="text" required="required"/>
+            <div class="red" id="message_class"></div>
         </div>
-    <div class="col">
+      <div class="col">
         <select name="section" id="section"  aria-required="true">
         <option  value="" selected="" disabled="">section</option>
                 <option  value="pre-nursery">pre-nursery</option>
@@ -27,27 +29,33 @@
                 <option  value="primary">primary</option>
                 <option  value="secondary">secondary</option>
         </select>
-        <div class="arrow"></div>
-     </div>
-     </div>
+        <div class="arrow"></div>                    
+        <div class="red" id="section_message"></div>
+      </div>
+      </div>
           <div class="row">
-           <input class="col"  name="ca" placeholder="ca is over?" id="ca" type="number" required="required"/>
-            <input  class ="col" name="test" placeholder="test over?" id="test" type="number" required="required"/>
-           <input class="col" name="exam" placeholder="exam over?" id="exam" type="number" required="required"/>
+          <div class="col"> <input   name="ca" placeholder="ca is over?" id="ca" type="number" required="required"/> 
+           <div class="red" id="ca_message"></div>
+         </div>
+          <div class="col"><input   name="test" placeholder="test over?" id="test" type="number" required="required"/> <div class="red" id="test_message"></div>
+         </div> 
+          <div class="col"><input  name="exam" placeholder="exam over?" id="exam" type="number" required="required"/><div class="red" id="exam_message"></div>
+         </div> 
            </div>
-            <input  id="no_of_students"  name="no_of_students" placeholder="The number of students in class" type="number" required="required"/>
-         <span class="row">
-           <input class="col"  name="firstname" placeholder=" firstname" type="text" required="required"/>
-            <input  class ="col" name="surname" placeholder="surname" type="text" required="required"/>
-           <input class="col" name="othernames" placeholder="othername" type="text" required="required"/>
-           </span>
-            <input  id="password"  name="password" placeholder="choose Password for class" type="password" required="required"/>
-            <input  id="confirmation"  name="confirmation" placeholder="confirm password" type="password" required="required"/>
-<div class="row">
-    <div class="col"> <button  id="create_button" class="sign-in" type="submit" value="create" >create</button></div>
-    </form>
-    <div class="col"><form action="/cancel_portfolio" method="POST"><button class="sign-in" id="password_button">cancel</button></form>
-</div>
+            <div><input  id="no_of_students"  name="no_of_students" placeholder="The number of students in class" type="number" required="required"/>
+            <div class="red" id="students_message"></div></div>
+          <div class="row">
+              <div class="col"> <input class="col"  name="firstname" placeholder=" firstname" type="text" required="required"/>                   <div class="red" id="firstname_message"></div>
+             </div>
+                <div class="col"><input  class ="col" name="surname" placeholder="surname" type="text" required="required"/><div class="red" id="surname_message"></div>
+               </div>
+             </div>
+             <div><input  id="password"  name="password" placeholder="choose Password for class" type="password" required="required"/>
+              <div class="red" id="pass_message"></div></div>
+        
+             <div><input  id="confirmation"  name="confirmation" placeholder="confirm password" type="password" required="required"/>
+              <div class="red" id="confirm_message"></div></div>         
+           <button  id="create_button" class="sign-in" type="submit" value="create" >create</button>
     </div>
   </div>
     {%else%}
@@ -74,7 +82,7 @@
                  </div>
                  <div id="class_message" class="red"></div>
 
-                     <input autocomplete="off"   name="subject_teacher" placeholder="subject_teacher" type="text" required/>
+                     <input autocomplete="off"   name="subject_teacher" placeholder="subject teachers firstname surname" type="text" required/>
                      <div id="teacher_message" class="red"></div>
 
             <button name = "submit_scoresheet"id="submit_scoresheet" class="sign-in" type="submit">SUBMIT</button>
@@ -116,7 +124,6 @@
                   </div>
                      <div class="col"><input  class ="col" name="surname" placeholder="surname" type="text" required="required"/><div class="red" id="surname_message"></div>
                     </div>
-                    <div class="col"><input class="col" name="othernames" placeholder="othername(optional)" type="text" required="required"/></div>
                   </div>
                      <div><input  id="password"  name="password" placeholder="choose Password for class" type="password" required="required"/>
                      <div class="red" id="pass_message"></div></div>
