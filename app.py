@@ -1516,7 +1516,7 @@ def delete_class():
     current_term = school[0]["current_term"]
     col = current_session+"_"+current_term
     db.execute("UPDATE :session_d SET :coln=:value  where id=:id", session_d= tables["sessions"], id=tables["class_id"], coln = col, value = None)
-    error = class_details[0]["classname"]+" successfully deleted from "+current_term+" term "+current_session+" academic session"
+    error = class_details[0]["classname"].upper()+" successfully deleted from "+current_term+" term "+current_session+" academic session"
     return render_portfolio(error)
 
 

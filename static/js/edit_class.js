@@ -55,7 +55,7 @@ $(function() {
   // Stop form from submitting normally
   event.preventDefault();
   $("#delete").attr("disabled", true);
-  var con = confirm("Are you sure you want to delete "+$('input[name="class_name"]').val())
+  var con = confirm("Are you sure you want to delete "+$('input[name="class_name"]').val().toUpperCase())
   if (con == true){
     $("#delete").text("please wait");
     $("#delete_form").submit();  
