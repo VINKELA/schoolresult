@@ -492,12 +492,17 @@ def email_ajax():
 def class_name():
     if request.method == "POST":
         tables = database(str(0))
-        # Query database for username
-        rows = db.execute("SELECT * FROM :session_data WHERE classname = :classname",session_data=tables["session_data"],classname=request.form.get("classname").lower())
-        if len(rows) == 0:
-            return "pass"
-        else:
-            return "fail"
+        class_name=request.form.get("classname").lower()
+        old_name = request.form.get("oldname").lower()
+        if class_name != old_name:
+            row_class = db.execute("SELECT * FROM :classes WHERE classname = :check_name", classes = tables["session_data"], check_name = class_name)
+            if len(row_class) < 1: 
+                return jsonify(value="pass")
+            else:
+                return jsonify(value="fail")
+        return jsonify(value="pass")
+
+        
 
 @app.route("/class_name_check", methods=["POST"])
 @login_required
@@ -831,13 +836,12 @@ def submitted():
     subject_total = 0
     term_failed = 0
     term_passed = 0
+
     for  student in session["class_scores"]:
-        total_score = 0
         subject_list = db.execute("SELECT * FROM :subject WHERE name=:subject_name", subject = tables["subjects"],subject_name = session["subject_info"]["subject"])
         student_row = db.execute("SELECT * FROM :master WHERE id=:student_id", master=tables["mastersheet"],student_id=student[0])
-        db.execute("UPDATE :catable SET :subject = :score WHERE id =:id", catable = tables["ca"], subject = subject_id,score =student[3], id = student[0])
-        db.execute("UPDATE :testtable SET :subject = :score WHERE id =:id", testtable = tables["test"], subject = subject_id,score =student[4], id = student[0])
-        db.execute("UPDATE :examtable SET :subject = :score WHERE id =:id", examtable = tables["exam"], subject = subject_id,score =student[5], id = student[0])
+        no_of_grade = db.execute("SELECT * FROM :grade WHERE id=:student_id", grade=tables["grade"],student_id=student[0])
+        total_score = 0
         if student[3]:
             total_score = total_score + int(student[3])
         if student[4]:
@@ -845,16 +849,6 @@ def submitted():
         if student[5]:
             total_score = total_score + int(student[5])
 
-        db.execute("UPDATE :master SET :subject = :score WHERE id =:id", master = tables["mastersheet"], subject = subject_id,score =total_score, id = student[0])
-
-        if int(total_score) < 40:
-            db.execute("UPDATE :master SET subject_failed = :value WHERE id=:id", master = tables["mastersheet"], value = int(student_row[0]["subject_failed"])+1, id = student[0])
-            db.execute("UPDATE :subject SET no_failed = :value WHERE id=:id", subject = tables["subjects"], value = int(subject_list[0]["no_failed"])+1, id = subject_id)
-        else:
-            db.execute("UPDATE :master SET subject_passed = :value WHERE id=:id", master = tables["mastersheet"], value = int(student_row[0]["subject_passed"])+1, id = student[0])
-            db.execute("UPDATE :subject SET no_passed = :value WHERE id=:id", subject = tables["subjects"], value = int(subject_list[0]["no_passed"])+1, id = subject_id)
-
-        no_of_grade = db.execute("SELECT * FROM :grade WHERE id=:student_id", grade=tables["grade"],student_id=student[0])
         new_total = student_row[0]["total_score"] + total_score
         student_grade = grade(total_score)
         subject_total = subject_total + total_score
@@ -865,24 +859,29 @@ def submitted():
         else:
             term_failed = term_failed + 1
 
-        db.execute("UPDATE :master SET total_score=:n_total WHERE id=:student_id", master = tables["mastersheet"], n_total = new_total, student_id = student[0])
-        db.execute("UPDATE :master SET average = :n_average WHERE id=:student_id ", master = tables["mastersheet"],  n_average =new_average, student_id = student[0])
-        db.execute("UPDATE :grades SET :subject = :subject_grade WHERE id =:id", grades = tables["grade"], subject = subject_id,subject_grade = grade(total_score), id = student[0])
-        db.execute("UPDATE :grade_table SET :no_of_g = :value  WHERE id =:id", grade_table = tables["grade"], no_of_g = grade_col,value = int(no_of_grade[0][str(grade_col)]) + 1, id = student[0])
-        db.execute("UPDATE :subject_table SET :no_of_g = :no_subject  WHERE id =:id", subject_table = tables["subjects"], no_of_g = grade_col, no_subject = int(subject_list[0][grade_col]+1), id = subject_id)
+
+        db.execute("UPDATE :catable SET :subject = :score WHERE id =:id", catable = tables["ca"], subject = subject_id,score =student[3], id = student[0])
+        db.execute("UPDATE :testtable SET :subject = :score WHERE id =:id", testtable = tables["test"], subject = subject_id,score =student[4], id = student[0])
+        db.execute("UPDATE :examtable SET :subject = :score WHERE id =:id", examtable = tables["exam"], subject = subject_id,score =student[5], id = student[0])
+
+
+        if int(total_score) < 40:
+            db.execute("UPDATE :master SET subject_failed = :value:subject = :score,total_score=:n_total,average = :n_average WHERE id=:id", master = tables["mastersheet"], value = int(student_row[0]["subject_failed"])+1, id = student[0],subject = subject_id,score =total_score, n_total = new_total,n_average =new_average)
+            db.execute("UPDATE :subject SET no_failed = :value,:no_of_g = :no_subject WHERE id=:id", subject = tables["subjects"], value = int(subject_list[0]["no_failed"])+1, id = subject_id,no_of_g = grade_col, no_subject = int(subject_list[0][grade_col]+1))
+        else:
+            db.execute("UPDATE :master SET subject_passed = :value,:subject = :score,total_score=:n_total,average = :n_average  WHERE id=:id", master = tables["mastersheet"], value = int(student_row[0]["subject_passed"])+1, id = student[0],subject = subject_id,score =total_score, n_total = new_total,n_average =new_average)
+            db.execute("UPDATE :subject SET no_passed = :value,:no_of_g = :no_subject WHERE id=:id", subject = tables["subjects"], value = int(subject_list[0]["no_passed"])+1, id = subject_id,no_of_g = grade_col, no_subject = int(subject_list[0][grade_col]+1))
+
+        db.execute("UPDATE :grades SET :subject = :subject_grade,:no_of_g = :value WHERE id =:id", grades = tables["grade"], subject = subject_id,subject_grade = grade(total_score), id = student[0], no_of_g = grade_col,value = int(no_of_grade[0][str(grade_col)]) + 1)
     #sort students position
     assign_student_position(int(tables["class_id"]))
-    db.execute("UPDATE :result SET no_of_passes = :new_passes  WHERE id =:id", result = tables["class_term_data"],new_passes = term_passed, id = tables["class_id"])
-    db.execute("UPDATE :result SET no_of_failures = :new_fails  WHERE id =:id", result = tables["class_term_data"],new_fails = term_failed, id = tables["class_id"])
+    db.execute("UPDATE :result SET no_of_passes = :new_passes,no_of_failures = :new_fails  WHERE id =:id",new_fails = term_failed, result = tables["class_term_data"],new_passes = term_passed, id = tables["class_id"])
 
     classRows = db.execute("SELECT * FROM :session_data WHERE id=:id ",session_data = tables["session_data"], id =tables["class_id"])
     #sort subject position
     assign_subject_position(int(tables["class_id"]),subject_id)
-    class_result = db.execute("SELECT * FROM :results WHERE id=:id", results = tables["class_term_data"], id = tables["class_id"])
-    no_of_students = class_result[0]["noOfStudents"]
+    no_of_students = class_info[0]["noOfStudents"]
     subject_average = subject_total / no_of_students
-    db.execute("UPDATE :subject SET class_average = :n_average WHERE id=:id ", subject = tables["subjects"],  n_average =subject_average, id = subject_id)
-    db.execute("UPDATE :subject SET total_score = :total WHERE id=:id ", subject = tables["subjects"],  total =subject_total, id = subject_id)
     # calculate and insert ppass for subject and class and repair passed and failed for class 
     initial_array = str(session["subject_info"]["subject_teacher"]).split()
     teacher_initials = ""
@@ -891,7 +890,8 @@ def submitted():
             teacher_initials = initials(name)
         else:
             teacher_initials = teacher_initials+initials(name)
-    db.execute("UPDATE :subject SET teachers_initial = :abbr WHERE id=:id ", subject = tables["subjects"],  abbr =teacher_initials, id = subject_id)
+    db.execute("UPDATE :subject SET class_average = :n_average,total_score = :total,teachers_initial = :abbr WHERE id=:id ",abbr =teacher_initials, total =subject_total,subject = tables["subjects"],  n_average =subject_average, id = subject_id)
+
     # send email to admin about subject scoresheet
     html = render_template('new_score.html',subject = session["subject_info"], class_info=classRows[0])
     subject = session["subject_info"]["subject"]+" scoreesheet submitted for  "+ classRows[0]["classname"]
@@ -903,6 +903,8 @@ def submitted():
     error = session["subject_info"]["subject"]+" scoresheet submitted successfully"
     # return classlist.html
     return render_class(tables["class_id"],error)
+
+
 
 
 @app.route("/veiwclass", methods=["post", "get"])
@@ -1437,22 +1439,91 @@ def verified_admin():
 def edited_class():
     class_id = request.form.get("id")
     tables= database(class_id)
-    if  request.form.get("firstname") != " ":
-        db.execute("UPDATE :classes set firstname=:firstname where id=:id", classes = tables["session_data"], firstname=request.form.get("firstname").upper(), id = tables["class_id"])
-    if(request.form.get("surname") != ""):
-        db.execute("UPDATE :classes set surname=:surname where id=:id", classes = tables["session_data"], surname=request.form.get("surname").upper(), id = tables["class_id"])
-    if(request.form.get("othername") != ""):
-        db.execute("UPDATE :classes set othername=:othername where id=:id", classes = tables["session_data"], othername=request.form.get("othername").upper(), id = tables["class_id"])
-    if(request.form.get("class_name") != ""):
-        db.execute("UPDATE :classes set classname=:name where id=:id", classes = tables["session_data"], name=request.form.get("class_name").upper(), id = tables["class_id"])
+    firstname = request.form.get("firstname")
+    surname = request.form.get("surname")
+    class_name = request.form.get("class_name")
+    section = request.form.get("section")
+    password = request.form.get("password")
+    classrow = db.execute("SELECT * FROM :classes WHERE id = :classId", classes = tables["session_data"], classId = class_id)
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+    if  firstname == " ":
+        error = "class teachers firstname is empty"
+        flash(error)
+        return render_template("edit_class.html", schoolInfo = schoolrow, classData=classrow)
+    if  surname == " ":
+        error = "class teacher's surname is empty"
+        flash(error)
+        return render_template("edit_class.html", schoolInfo = schoolrow, classData=classrow)
+
+    if  section == " ":
+        error = "class section  is empty"
+        flash(error)
+        return render_template("edit_class.html", schoolInfo = schoolrow, classData=classrow)
+
+    if  class_name == " ":
+        error = "class name is empty"
+        flash(error)
+        return render_template("edit_class.html", schoolInfo = schoolrow, classData=classrow)
+   
+    if  password == " ":
+        error = "password is empty"
+        flash(error)
+        return render_template("edit_class.html", schoolInfo = schoolrow, classData=classrow)
+    class_name = class_name.lower()
+    if class_name != classrow[0]["classname"]:
+        row_class = db.execute("SELECT * FROM :classes WHERE classname = :check_name", classes = tables["session_data"], check_name = request.form.get("class_name").lower())
+        if len(row_class) < 1: 
+            db.execute("UPDATE :classes set classname=:name where id=:id", classes = tables["session_data"], name=request.form.get("class_name").lower(), id = tables["class_id"])
+        else:
+            error = "class with name "+class_name+" already exist"
+            flash(error)
+            return render_template("edit_class.html", schoolInfo = schoolrow, classData=classrow)
+    firstname = firstname.lower()
+    if  firstname != classrow[0]["firstname"]:
+        db.execute("UPDATE :classes set firstname=:new_firstname where id=:id", classes = tables["session_data"], new_firstname=firstname, id = tables["class_id"])
+    
+    if  password != classrow[0]["password"]:
+        db.execute("UPDATE :classes set password=:new_password where id=:id", classes = tables["session_data"], new_password=generate_password_hash(password), id = tables["class_id"])
+    surname = surname.lower()
+    if surname != classrow[0]["surname"]:
+        db.execute("UPDATE :classes set surname=:new_surname where id=:id", classes = tables["session_data"], new_surname=surname, id = tables["class_id"])
+    section = section.lower()
+    if section != classrow[0]["section"]:
+        db.execute("UPDATE :classes set section=:new_section where id=:id", classes = tables["session_data"], new_section = section, id = tables["class_id"])
+
     error = "class edited successfully"
     return render_portfolio(error)
-
 
 @app.route("/delete_class", methods=["POST"])
 @login_required
 @check_confirmed
 def delete_class():
+    class_id = request.form.get("delete_class")
+    tables= database(class_id)
+    class_details = db.execute("SELECT * FROM :this_class WHERE id=:id", this_class=tables["session_data"], id=class_id)
+    db.execute("DROP TABLE :cascore", cascore= tables["ca"])
+    db.execute("DROP TABLE :test", test= tables["test"])
+    db.execute("DROP TABLE :exam", exam= tables["exam"])
+    db.execute("DROP TABLE :grade", grade= tables["grade"])
+    db.execute("DROP TABLE :mastersheet", mastersheet= tables["mastersheet"])
+    db.execute("DROP TABLE :subject_position", subject_position= tables["subject_position"])
+    db.execute("DROP TABLE :subjects", subjects= tables["subjects"])
+    db.execute("DROP TABLE :classlist", classlist= tables["classlist"])
+    db.execute("DELETE  FROM :class_term where id=:id", class_term= tables["class_term_data"], id=tables["class_id"])
+    db.execute("DELETE  FROM :session_term where id=:id", session_term= tables["session_data"], id=tables["class_id"])
+    school = db.execute("SELECT * FROM school WHERE id=:id", id=session["user_id"])
+    current_session = school[0]["current_session"]
+    current_term = school[0]["current_term"]
+    col = current_session+"_"+current_term
+    db.execute("UPDATE :session_d SET :coln=:value  where id=:id", session_d= tables["sessions"], id=tables["class_id"], coln = col, value = None)
+    error = class_details[0]["classname"]+" successfully deleted from "+current_term+" term "+current_session+" academic session"
+    return render_portfolio(error)
+
+
+@app.route("/delete_clas", methods=["POST"])
+@login_required
+@check_confirmed
+def delete_clas():
     class_id = request.form.get("delete_class")
     tables= database(class_id)
     sessions = db.execute("SELECT * FROM :terms WHERE id=:id", terms = tables["sessions"], id=class_id)

@@ -15,23 +15,20 @@ edit student details
       <h4 class="blue"> CHANGE CLASS TEACHER </h4>
 
   <div class="row">
-<div class="col">
+      <div class="col">
 
-     <input type="text"  name =  "surname" value="{{classData[0]["surname"]}}">
+          <input type="text"  name="firstname" value={{classData[0]["firstname"]}}>
+          <div class="red" id="firstname_msg"></div>
+         </div>
+     
+<div class="col">
+     <input type="text"  name = "surname" value="{{classData[0]["surname"]}}">
      <div class="red" id="surname_msg"></div>
     </div>
-    <div class="col">
-
-     <input type="text"  name="firstname" value={{classData[0]["firstname"]}}>
-     <div class="red" id="firstname_msg"></div>
-    </div>
-     <div class="col">
-
-      <input type="text"  name="othername" value={{classData[0]["othername"]}}>
-  </div>
     </div>
     <hr>
     <h4 class="blue">CLASSNAME AND SECTION</h4>
+    <input type="hidden"  value="{{classData[0]["classname"]}}" name="old_name">
 
     <div class="row">
           <div class="col">
@@ -40,7 +37,7 @@ edit student details
           </div>
           <div class="col"> 
               <td><select name="section"  id="section"  aria-required="true">
-                <option   selected="" disabled="">section</option>
+                <option   selected="" value="{{classData[0]["section"]}}">{{classData[0]["section"]}}</option>
                 <option  value="pre-nursery">pre-nursery</option>
                 <option  value="nursery">nursery</option>
                 <option  value="primary">primary</option>
@@ -51,37 +48,6 @@ edit student details
           </div>
         </div>
         <hr>
-        <h4 class="blue">CHANGE CA, TEST, EXAM</h4>
-          <div class="row">
-              <div class="col"><select name="{{ca}}" id="ca"  aria-required="true">
-                  <option  value="ca" selected="">ca</option>
-                  <option  value="0">0</option>
-                    {%for i in range(100)%}
-                          <option  value="{{i+1}}">{{i+1}}</option>
-                    {%endfor%}
-                  </select>
-               <div class="arrow"></div> <div class="red" id="ca_msg"></div>        
-              </div>
-              <div class="col"><select name="{{test}}" id="test"  aria-required="true">
-                    <option  value="ca" selected="">test</option>
-                    <option  value="0">0</option>
-                    {%for i in range(100)%}
-                          <option  value="{{i+1}}">{{i+1}}</option>
-                    {%endfor%}
-                  </select>
-                  <div class="arrow"></div><div class="red" id="test_msg"></div>        
-                </div>
-                <div class="col"><select name="{{exam}}" id="exam"  aria-required="true">
-                <option  value="exam" selected="">exam</option>
-                <option  value="0" >0</option>
-                  {%for i in range(100)%}
-                        <option  value="{{i+1}}">{{i+1}}</option>
-                  {%endfor%}
-                </select>
-                <div class="arrow"></div><div class="red" id="exam_msg"></div>        
-              </div>            
-          </div>
-          <hr>
 
       <h4 class="blue"> CHANGE CLASS PASSWORD</h4>
 

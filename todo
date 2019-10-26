@@ -1,6 +1,4 @@
 
-change surname firstname and othernames to only names in add class be
-add result page
 repair for opera mini link to result on frontpage
 add change general password to school setting
 check for former and new class in backend
@@ -14,3 +12,7 @@ if nothing was changed do nothing
 student average is incorrect
 no of subjects in result is wrong
 make 999 classes possible
+
+
+
+change class  test exam and ca only during session change

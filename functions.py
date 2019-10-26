@@ -109,7 +109,6 @@ def database(id):
     school = db.execute("SELECT * FROM school WHERE id=:id", id=session["user_id"])
     current_session = school[0]["current_session"]
     current_term = school[0]["current_term"]
-    tables["session_data"] = "session_data"+"_"+str(session["user_id"])+"_"+str(current_session)
     tables["class_id"] = id
     tables["school_id"] = session["user_id"]
     schoolId = session["user_id"]

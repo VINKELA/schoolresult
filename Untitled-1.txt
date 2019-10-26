@@ -1,0 +1,20 @@
+@app.route("/delete_class", methods=["POST"])
+@login_required
+@check_confirmed
+def delete_class():
+    class_id = request.form.get("delete_class")
+    tables= database(class_id)
+    sessions = db.execute("SELECT * FROM school WHERE id=:id", , id=session["user_id"])
+    db.execute("DROP TABLE :cascore", cascore= tables["ca"])
+    db.execute("DROP TABLE :test", test= tables["test"])
+    db.execute("DROP TABLE :exam", exam= tables["exam"])
+    db.execute("DROP TABLE :grade", grade= tables["grade"])
+    db.execute("DROP TABLE :mastersheet", mastersheet= tables["mastersheet"])
+    db.execute("DROP TABLE :subject_position", subject_position= tables["subject_position"])
+    db.execute("DROP TABLE :subjects", subjects= tables["subjects"])
+    db.execute("DROP TABLE :classlist", classlist= tables["classlist"])
+    db.execute("DELETE  FROM :class_term where id=:id", class_term= tables["class_term_data"], id=tables["class_id"])
+    col = tables["current_session"]+tables["current_term"]
+    db.execute("UPDATE :session_d SET :coln=:value  where id=:id", session_d= session_data, id=tables["class_id"], coln = col, value = NULL)
+    error = "Class successfully deleted from term!"
+    return render_portfolio(error)
