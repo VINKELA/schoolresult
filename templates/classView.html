@@ -85,14 +85,18 @@
      </tr>
      {% endfor %}
      <tr>
-       <td></td>
         <td colspan="2">
            <form action ="/mastersheet" method = "post" target="_blank">
              <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
              <button class="btn btn-primary" type="submit"><h6>VEIW MASTERSHEET </h6></button>
            </form>    
         </td>
-        <td></td>
+        <td colspan="2">
+          <form action ="/mastersheet_pdf" method = "post" target="_blank">
+            <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
+            <button class="btn btn-primary" type="submit"><h6>MASTERSHEET PDF </h6></button>
+          </form>    
+       </td>
       </tr>
      </tbody>
      </table>

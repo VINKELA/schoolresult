@@ -12,6 +12,7 @@ from itsdangerous import URLSafeTimedSerializer
 import random
 import string
 from requests.models import Response
+from flask_weasyprint import HTML, render_pdf
 
 from operator import itemgetter, attrgetter
 
@@ -1620,6 +1621,25 @@ def mastersheet():
     results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
     return render_template("printable_mastersheet.html",result = results[0], caData = carow, testData = testrow, examData = examrow, classData = classrow, schoolInfo = schoolrow, subjectData=subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position= subject_p)
 
+@app.route("/mastersheet_pdf", methods=["POST"])
+@login_required
+@check_confirmed
+def mastersheet_pdf():
+    class_id = request.form.get("class_id")
+    tables = database(class_id)
+    classrow = db.execute("SELECT * FROM :session_data WHERE id = :classId", session_data = tables["session_data"], classId = tables["class_id"])
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = session["user_id"])
+    subjectrow = db.execute("SELECT * FROM :subjecttable",subjecttable = tables["subjects"])
+    classlistrow = db.execute("SELECT * FROM :classlist",classlist = tables["classlist"])
+    carow = db.execute("SELECT * FROM :ca",ca = tables["ca"])
+    testrow = db.execute("SELECT * FROM :te",te = tables["test"])
+    examrow = db.execute("SELECT * FROM :ex",ex = tables["exam"])
+    mastersheet_rows = db.execute("SELECT * FROM :master", master= tables["mastersheet"])
+    subject_p = db.execute("SELECT * FROM :subjectposition", subjectposition = tables["subject_position"])
+    results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
+    html =  render_template("printable_mastersheet.html",result = results[0], caData = carow, testData = testrow, examData = examrow, classData = classrow, schoolInfo = schoolrow, subjectData=subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position= subject_p)
+    return render_pdf(HTML(string=html))
+
 
 @app.route("/customize", methods=["POST"])
 @login_required
@@ -1913,7 +1933,6 @@ def session_update():
     for  clas in classes:
         id = str(clas["id"])
         name = "name"+id
-        section = "section"+id
         db.execute("UPDATE :data SET classname=:name,section =:sec",data = tables["session_data"], name=request.form.get(name))
     error = "session changed successfully"
     return render_portfolio(error)
@@ -2109,10 +2128,11 @@ def admin_verified():
             tables=database(klass["id"])
             classlis= db.execute("SELECT * FROM :classlist",classlist=tables["classlist"])
             classlist.append(classlis)
-        return render_template("pins.html", schoolInfo = schoolrow, classData=classrow, result = settings[0], classlists= classlist)
+        html = render_template("pins.html", schoolInfo = schoolrow, classData=classrow, result = settings[0], classlists= classlist)
     else:
         error = "admin password incorrect"
         flash(error)
+        
         return render_template("pin_verification.html",schoolInfo = schoolrow, error=error)
 
 @app.route("/manage_password", methods=["GET"])
