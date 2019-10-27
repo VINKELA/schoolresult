@@ -58,7 +58,6 @@ pylint==2.3.1
 PyMySQL==0.9.3
 Pyphen==0.9.5
 pyshp==2.1.0
-pyshpgeocode==0.1
 python-dateutil==2.8.0
 python-docx==0.8.10
 pytz==2019.2
