@@ -16,11 +16,9 @@ edit student details
 
   <div class="row">
       <div class="col">
-
           <input type="text"  name="firstname" value={{classData[0]["firstname"]}}>
           <div class="red" id="firstname_msg"></div>
          </div>
-     
 <div class="col">
      <input type="text"  name = "surname" value="{{classData[0]["surname"]}}">
      <div class="red" id="surname_msg"></div>
@@ -48,14 +46,9 @@ edit student details
           </div>
         </div>
         <hr>
-
       <h4 class="blue"> CHANGE CLASS PASSWORD</h4>
-
-
       <input type="password"  value="{{classData[0]["password"]}}" name="password">
       <div class="red" id="pass_msg"></div>
-
-
 <div class="row">
   <div class="col"><button id="edit_class_button" class="sign-in" type="submit" >Submit</button></form></div>
 <div class="col"><form action="/delete_class" method="post" id="delete_form"><input type="hidden"name="delete_class" value={{classData[0]["id"]}}><button id="delete" class="delete sign-in" type="submit">DELETE</button></form></div>
@@ -67,6 +60,4 @@ edit student details
  <script src='/static/js/jquery.min.js'></script>
  <script src="/static/js/edit_class.js"></script>
 <!-- /js files -->
-
-
 {% endblock %}

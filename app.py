@@ -486,6 +486,7 @@ def email_ajax():
         else:
             return "pass"
 
+
 @app.route("/class_name", methods=["POST"])
 @login_required
 @check_confirmed
@@ -501,6 +502,17 @@ def class_name():
             else:
                 return jsonify(value="fail")
         return jsonify(value="pass")
+
+@app.route("/class_name2", methods=["POST"])
+def class_name2():
+    if request.method == "POST":
+        tables = database(str(0))
+        # Query database for username
+        rows = db.execute("SELECT * FROM :session_data WHERE classname = :classname",session_data=tables["session_data"],classname=request.form.get("classname").lower())
+        if len(rows) == 0:
+            return "pass"
+        else:
+            return "fail"
 
         
 
@@ -866,7 +878,7 @@ def submitted():
 
 
         if int(total_score) < 40:
-            db.execute("UPDATE :master SET subject_failed = :value:subject = :score,total_score=:n_total,average = :n_average WHERE id=:id", master = tables["mastersheet"], value = int(student_row[0]["subject_failed"])+1, id = student[0],subject = subject_id,score =total_score, n_total = new_total,n_average =new_average)
+            db.execute("UPDATE :master SET subject_failed = :value,:subject = :score,total_score=:n_total,average = :n_average WHERE id=:id", master = tables["mastersheet"], value = int(student_row[0]["subject_failed"])+1, id = student[0],subject = subject_id,score =total_score, n_total = new_total,n_average =new_average)
             db.execute("UPDATE :subject SET no_failed = :value,:no_of_g = :no_subject WHERE id=:id", subject = tables["subjects"], value = int(subject_list[0]["no_failed"])+1, id = subject_id,no_of_g = grade_col, no_subject = int(subject_list[0][grade_col]+1))
         else:
             db.execute("UPDATE :master SET subject_passed = :value,:subject = :score,total_score=:n_total,average = :n_average  WHERE id=:id", master = tables["mastersheet"], value = int(student_row[0]["subject_passed"])+1, id = student[0],subject = subject_id,score =total_score, n_total = new_total,n_average =new_average)
@@ -1901,24 +1913,8 @@ def session_update():
     for  clas in classes:
         id = str(clas["id"])
         name = "name"+id
-        ca = "ca"+id
-        test ="test"+id
-        exam = "exam"+id
         section = "section"+id
-        form = request.form.get("formmaster").split(" ")
-        firstname = None
-        secondname = None
-        othername = None
-        if request.form.get("formmaster"):
-            form = request.form.get("formmaster").split(" ")
-            length = len(form)
-            if length  > 0:
-                firstname = form[0]
-            if length > 1:
-                secondname = form[1]
-            if length > 2:
-                othername = form[2]
-        db.execute("UPDATE :data SET classname=:name,firstname = :first, surname = :sur, othername = :other, ca=:cs, test = :ts, exam =:ex, section =:sec",data = tables["session_data"], name=request.form.get(name), first = firstname, sur = secondname, other = othername, cs = request.form.get(ca), ts = request.form.get(test), ex = request.form.get(exam), sec=request.form.get(section))
+        db.execute("UPDATE :data SET classname=:name,section =:sec",data = tables["session_data"], name=request.form.get(name))
     error = "session changed successfully"
     return render_portfolio(error)
          

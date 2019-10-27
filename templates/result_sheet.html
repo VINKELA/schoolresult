@@ -162,8 +162,8 @@
 <div>GENDER: {{class_list[0]["sex"].upper()}} CLASS: {{classData[0]["classname"].upper()}}</div>
 </div>
 <div id="table_area">
-   <table class="table table-{{result["table_type"]}}">
-     <thead>
+<table class="table table-{{result["table_type"]}} table table-bordered table table-sm">
+                <thead>
        <th>NO</th>
         <th>SUBJECT</th>
 {%if result["ca"] == 'on' %}

@@ -95,7 +95,7 @@ $(function() {
    $('#confirm_message').text("password and confirmation do not match");
   }
 else{
-  $.post( $SCRIPT_ROOT + '/class_name',{
+  $.post( $SCRIPT_ROOT + '/class_name2',{
     classname: $('input[name="class_name"]').val(),
   }, function(data) {
       if (data == "fail"){
