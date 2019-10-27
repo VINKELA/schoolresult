@@ -84,27 +84,23 @@
      <td><div id="veiw"><form action="/scoresheet" method="post" target="_blank"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">VEIW </button></form></div> <div id="veiw"><form action="/scoresheet_pdf" method="post" target="_blank"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">PDF </button></form></div></td>
     </tr>
      {% endfor %}
-     <tr>
-       <td></td>
-        <td >
-           <form action ="/mastersheet" method = "post" target="_blank">
-             <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-             <button class="btn btn-primary" type="submit">VEIW MASTERSHEET</button>
-           </form>
-        </td>
-        <td>
-              <form action ="/mastersheet_pdf" method = "post" target="_blank">
-                <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-                <button class="btn btn-primary" type="submit">MASTERSHEET IN PDF</button>
-              </form>    
-        </td>
-      </tr>
      </tbody>
      </table>
 
-     <div class=" form-w3ls ">
+     <div class="row form-w3ls ">
+        
+                <div class="col" id="mas"><form action ="/mastersheet" method = "post" target="_blank">
+                  <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
+                  <button class="btn btn-primary" type="submit">VEIW MASTERSHEET</button>
+                </form></div>
+               <div class="col"><form action ="/mastersheet_pdf" method = "post" target="_blank">
+                     <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
+                     <button class="btn btn-primary" type="submit">MASTERSHEET IN PDF</button>
+                   </form>   
+                 </div>
+     
+     
     </div>
-      </form>
 
 
 {% endblock %}
