@@ -157,6 +157,8 @@
        {%endif%}
 </div>
 {% for klass in classlists%}
+<div id="classname"><b> CLASS: {{classData[loop.index-1]["classname"].upper()}}</b></div>
+
 {% set class_id = classData[loop.index-1]["id"]|string %}
 {%if class_id|length == 1%}
 {%set class_identifier = "00"+class_id|string%}
@@ -165,8 +167,16 @@
 {%else%}
 {%set class_identifier = class_id|string%}
 {%endif%}
- <div id="classname"  class="row"><b> CLASS: {{classData[loop.index-1]["classname"].upper()}}</b></div>
- <div class="row" >
+<table class="table table-{{result["table_type"]}} table table-bordered table table-sm">
+
+        <thead>
+                <tr>
+                <th>Exam number</th>
+                <th>Name</th>
+                <th>Pin</th>
+                </tr>
+        </thead>
+        <tbody>
 {%for student in klass%}
 {% set student_id = student["id"]|string %}
 {% set button_id = student_id+"_"+class_id %}
@@ -178,13 +188,13 @@
 {%set student_identifier = student_id|string%}
 {%endif%}
 {%set final_identifier = student_identifier+class_identifier+schoolInfo[0]["id"]|string%}
-      <div class="col" >
-      <hr> <p>Exam number: {{final_identifier}}</p>
-        <hr> <p>Name: {{student["firstname"].upper()}} {{student["surname"].upper()}} {{student["othername"].upper()}}</p>
-        <hr> <p>Pin: {{student["pin"]}}</p><hr>
-      </div>  
-      {%endfor%}
-  </div>
-  </div>
+        <tr>
+        <td>{{final_identifier}}</td>
+        <td>{{student["firstname"].upper()}} {{student["surname"].upper()}} {{student["othername"].upper()}}</td>
+        <td>{{student["pin"]}}</td>
+        </tr>      
+{%endfor%}
+</tbody>
+</table>
  {%endfor%}
 </body>

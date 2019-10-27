@@ -41,10 +41,10 @@
     <tr>
       <td>{{final_identifier}}</td>
       <td>{{data["surname"]}} {{data["firstname"]}} {{data["othername"]}}<a href="/verify_edit_student?student_id={{student_id}}&&class_id={{class_id}}"> edit</a></td>
-      <td><form method="post" action="/result_sheet" target="_blank"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}" target="_blank">VEIW</button>
-      </form></td> 
-      <td><form method="post" action="/result_sheet_pdf" target="_blank"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}" target="_blank">PDF</button>
-      </form></td>
+      <td colspan="2"><div><form method="post" action="/result_sheet" target="_blank"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}" target="_blank">VEIW</button>
+      </form></div> 
+<div id="veiw"><form method="post" action="/result_sheet_pdf" target="_blank"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}" target="_blank">PDF</button>
+      </form></div></td>
     </tr>
     {% endfor %}  
   </tbody>
@@ -71,7 +71,7 @@
      <thead>
        <th>No</th>
         <th>Scoresheets</th>
-        <th colspan="2">Veiw</th>
+        <th>Veiw</th>
      </thead>
      <tbody>
 
@@ -81,23 +81,23 @@
      <tr>
      <td>{{loop.index}}</td>
      <td>{{subject["name"].upper()}} <a href="/verify_edit_scoresheet?subject_id={{subject["id"]}}&&class_id={{class_id}}"> edit</a></td>
-     <td><form action="/scoresheet" method="post" target="_blank"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">VEIW </button></form></td>
-     <td><form action="/scoresheet_pdf" method="post" target="_blank"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">PDF </button></form></td>
+     <td><div id="veiw"><form action="/scoresheet" method="post" target="_blank"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">VEIW </button></form></div> <div id="veiw"><form action="/scoresheet_pdf" method="post" target="_blank"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">PDF </button></form></div></td>
     </tr>
      {% endfor %}
      <tr>
-        <td colspan="2">
+       <td></td>
+        <td >
            <form action ="/mastersheet" method = "post" target="_blank">
              <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-             <button class="btn btn-primary" type="submit"><h6>VEIW MASTERSHEET </h6></button>
-           </form>    
+             <button class="btn btn-primary" type="submit">VEIW MASTERSHEET</button>
+           </form>
         </td>
-        <td colspan="2">
-          <form action ="/mastersheet_pdf" method = "post" target="_blank">
-            <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-            <button class="btn btn-primary" type="submit"><h6>MASTERSHEET PDF </h6></button>
-          </form>    
-       </td>
+        <td>
+              <form action ="/mastersheet_pdf" method = "post" target="_blank">
+                <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
+                <button class="btn btn-primary" type="submit">MASTERSHEET IN PDF</button>
+              </form>    
+        </td>
       </tr>
      </tbody>
      </table>
