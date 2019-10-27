@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block main %}
-<div><h4 class="blue">Hi {{subject_info["subject_teacher"].upper()}}!</h4></div> 
-<div><h4 class="blue">Enter scores for {{setting[0]["classname"].upper()}} students in {{subject_info["subject"].upper()}}</h4></div>
+<div><h5 class="blue">Hi {{subject_info["subject_teacher"].upper()}}!</h5></div> 
+<div><h5 class="blue">Enter scores for {{setting[0]["classname"].upper()}} students in {{subject_info["subject"].upper()}}</h5></div>
 
 <form action="/confirm_scoresheet" id="confirm" method="post">
   <input type="hidden" name="button" value="{{classinfo["id"]}}">
