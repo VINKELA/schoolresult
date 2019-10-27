@@ -924,7 +924,10 @@ def submitted():
 @login_required
 @check_confirmed
 def veiwclass():
-    return render_class(request.form.get("veiw_class"))
+    if request.form.get("veiw_class"):
+        return render_class(request.form.get("veiw_class"))
+    else:
+        return redirect('/')
 
 
 @app.route("/scoresheet", methods=["POST"])
