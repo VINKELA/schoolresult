@@ -2171,7 +2171,8 @@ def admin_verified():
             tables=database(klass["id"])
             classlis= db.execute("SELECT * FROM :classlist",classlist=tables["classlist"])
             classlist.append(classlis)
-        html = render_template("pins.html", schoolInfo = schoolrow, classData=classrow, result = settings[0], classlists= classlist)
+        return render_template("pins.html", schoolInfo = schoolrow, classData=classrow, result = settings[0], classlists= classlist)
+
     else:
         error = "admin password incorrect"
         flash(error)
