@@ -947,6 +947,26 @@ def scoresheet():
     results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
     return render_template("scoresheet.html",result = results[0],sub_id=subject_id, schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
 
+@app.route("/scoresheet_pdf", methods=["POST"])
+@login_required
+@check_confirmed
+def scoresheet_pdf():
+    array_id = str(request.form.get("scoresheet")).split("_")
+    subject_id = int(array_id[0])
+    class_id = int(array_id[1])
+    tables=database(class_id)
+    classrow = db.execute("SELECT * FROM :session_data WHERE id = :classId", session_data = tables["session_data"], classId = tables["class_id"])
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = session["user_id"])
+    carow = db.execute("SELECT * FROM :catable",catable = tables["ca"])
+    testrow = db.execute("SELECT * FROM :testtable",testtable = tables["test"])
+    examrow = db.execute("SELECT * FROM :examtable",examtable = tables["exam"])
+    subjectrow = db.execute("SELECT * FROM :subjecttable WHERE id=:id",subjecttable = tables["subjects"], id=subject_id)
+    classlistrow = db.execute("SELECT * FROM :classlist",classlist = tables["classlist"])
+    mastersheet_rows = db.execute("SELECT * FROM :mastersheet", mastersheet = tables["mastersheet"])
+    subject_position_row = db.execute("SELECT * FROM :subject_position", subject_position = tables["subject_position"])
+    results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
+    html =  render_template("scoresheet.html",result = results[0],sub_id=subject_id, schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
+    return render_pdf(HTML(string=html))
 
 @app.route("/result_sheet", methods=["POST"])
 @login_required
@@ -970,8 +990,28 @@ def result_sheet():
     return render_template("result_sheet.html",gradeRows = grades,result = results[0], schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
 
 
-
-        
+@app.route("/result_sheet_pdf", methods=["POST"])
+@login_required
+@check_confirmed
+def result_sheet_pdf():
+    array_id = str(request.form.get("result_sheet")).split("_")
+    student_id = int(array_id[0])
+    class_id = int(array_id[1])
+    tables= database(class_id)
+    classrow = db.execute("SELECT * FROM :session_data WHERE id = :classId", session_data = tables["session_data"], classId = tables["class_id"])
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+    carow = db.execute("SELECT * FROM :catable where id=:id",catable = tables["ca"], id= student_id)
+    testrow = db.execute("SELECT * FROM :testtable where id=:id",testtable = tables["test"], id= student_id)
+    examrow = db.execute("SELECT * FROM :examtable where id=:id",examtable = tables["exam"], id= student_id)
+    subjectrow = db.execute("SELECT * FROM :subjecttable",subjecttable = tables["subjects"])
+    grades = db.execute("SELECT * FROM :grade_s where id=:id ",grade_s = tables["grade"], id=student_id)
+    classlistrow = db.execute("SELECT * FROM :classlist where id=:id",classlist = tables["classlist"], id=student_id)
+    mastersheet_rows = db.execute("SELECT * FROM :mastersheet where id=:id", mastersheet = tables["mastersheet"], id= student_id)
+    subject_position_row = db.execute("SELECT * FROM :subject_position where id=:id", subject_position = tables["subject_position"], id= student_id)
+    results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
+    html =  render_template("result_sheet.html",gradeRows = grades,result = results[0], schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
+    return render_pdf(HTML(string=html))
+   
 @app.route("/edited_scoresheet", methods=["POST"])
 @login_required
 @check_confirmed

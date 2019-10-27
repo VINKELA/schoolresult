@@ -8,8 +8,8 @@
 <h4 class="blue">CLASS: {{classData[0]["classname"].upper()}} </h4>
  <table id="classview" class = "table table-striped">
     <tr>
-      <td>EXAM NO</td>
-      <td colspan="2">Classlist</td>
+      <th>Exam no</th>
+      <th>Classlist</th>
       {% set class_id = classData[0]["id"]|string %}
       {%if class_id|length == 1%}
       {%set class_identifier = "00"+class_id|string%}
@@ -18,6 +18,7 @@
       {%else%}
       {%set class_identifier = class_id|string%}
       {%endif%}
+      <th colspan="2">Result</th>
 
   </tr>
 
@@ -40,8 +41,10 @@
     <tr>
       <td>{{final_identifier}}</td>
       <td>{{data["surname"]}} {{data["firstname"]}} {{data["othername"]}}<a href="/verify_edit_student?student_id={{student_id}}&&class_id={{class_id}}"> edit</a></td>
-      <td><form method="post" action="/result_sheet" target="_blank"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}" target="_blank">VEIW RESULT</button>
-</form></td>
+      <td><form method="post" action="/result_sheet" target="_blank"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}" target="_blank">VEIW</button>
+      </form></td> 
+      <td><form method="post" action="/result_sheet_pdf" target="_blank"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}" target="_blank">PDF</button>
+      </form></td>
     </tr>
     {% endfor %}  
   </tbody>
@@ -69,7 +72,7 @@
        <th>No</th>
         <th>Subject List</th>
         <th>Subject Average</th>
-        <th></th>
+        <th colspan="2">Veiw scoresheet</th>
      </thead>
      <tbody>
 
@@ -82,7 +85,8 @@
      <td>{{subject["name"].upper()}} <a href="/verify_edit_scoresheet?subject_id={{subject["id"]}}&&class_id={{class_id}}"> edit</a></td>
      <td>{{ "%.2f"|format(subject["class_average"]|float) }}</td>
      <td><form action="/scoresheet" method="post" target="_blank"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">VEIW </button></form></td>
-     </tr>
+     <td><form action="/scoresheet_pdf" method="post" target="_blank"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">PDF </button></form></td>
+    </tr>
      {% endfor %}
      <tr>
         <td colspan="2">
