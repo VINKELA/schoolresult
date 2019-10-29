@@ -18,7 +18,7 @@
             <tr>
                     <td>General password</td>
                     <td>Reset general password</td>
-                    <td><input name="general password" type="password" placeholder="password"></td>
+                    <td><input name="general_password" type="password" placeholder="password"></td>
                 </tr> 
         <tr>
             <td rowspan="2">SET Session/Term</td>
@@ -499,8 +499,17 @@ Student details font-size
 
 </tr>
 <tr>
+    <td colspan="2">Email notification</td>
+    {%if class_setting[0]["email_notification"]== 'on' %}
+    <td><input type="checkbox" name="email_notification" id=""  checked></td>
+    {%else%}
+    <td><input type="checkbox" name="email_notification" id=""></td>
+    {%endif%}
+</tr>
+   
+<tr>
     <td colspan="2">Watermark</td>
-    {%if class_setting["watermark"]== 'on' %}
+    {%if class_setting[0]["watermark"]== 'on' %}
     <td><input type="checkbox" name="watermark" id=""  checked></td>
     {%else%}
     <td><input type="checkbox" name="watermark" id=""></td>
@@ -516,7 +525,7 @@ Student details font-size
 </div>
 </form>
 <div class="form-w3ls col">
-<form action="/cancel_portfolio" method="POST"> <button class="sign-in"  type="submit">Back</button></form>
+<form action="/cancel_portfolio" id="cancel" method="POST"> <button class="sign-in"  type="submit">Back</button></form>
 </div>
 </form>
 </div>
