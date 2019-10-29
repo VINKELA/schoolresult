@@ -41,6 +41,11 @@
                 font-style: {{result["background_font"]}};
                 font-family: "{{result["background_font"]}}", "Times New Roman", Garamond, "Bookman Old Style",Georgia;
         }
+        @page{
+                  size: Legal;
+                  margin: 1cm
+          }
+
         .signature{
                 border: 0;
                 border-bottom: 1px solid {{result["line_color"]}}
@@ -115,10 +120,6 @@
                 position: relative;
                 z-index: 1;
         }
-        @page{
-                  size: Legal;
-                  margin: 1cm
-          }
 
 {%endif%}
         </style>

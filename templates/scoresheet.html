@@ -40,6 +40,10 @@
                   font-style: {{result["background_font"]}};
                   font-family: "{{result["background_font"]}}", "Times New Roman", Garamond, "Bookman Old Style",Georgia;
           }
+          @page{
+                  size: Letter;
+                  margin: 1cm
+          }
           #letter_heading{
                   text-align: {{result["ld_position"]}};
                   color: {{result["l_color"]}};
@@ -111,10 +115,6 @@
           #content{
                   position: relative;
                   z-index: 1;
-          }
-          @page{
-                  size: Letter;
-                  margin: 1cm
           }
 
   {%endif%}
