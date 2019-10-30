@@ -53,7 +53,10 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbar">
-                {% if session.user_id %}
+                {% if session.user_id %}                  
+                     <ul class="navbar-nav ml-auto mt-2">
+                    <li class="nav-item"><a class="nav-link" href="/login">Home</a></li>
+                     </ul>
                     <ul class="navbar-nav ml-auto mt-2">
                         <li class="nav-item"><a class="nav-link" href="/createClass">Add Class</a></li>
                     </ul>
@@ -64,7 +67,7 @@
                             <li class="nav-item"><a class="nav-link" href="/print_pins">Print Pins </a></li>
                     </ul>        
                     <ul class="navbar-nav ml-auto mt-2">
-                        <li class="nav-item"><a class="nav-link" href="/school_settings">School setting</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/school_settings">School settings</a></li>
                     </ul>
                    <!-- <ul class="navbar-nav ml-auto mt-2">
                         <li class="nav-item"><a class="nav-link" href="/manage_password">Manage Password </a></li>
