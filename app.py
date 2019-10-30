@@ -16,7 +16,7 @@ from flask_weasyprint import HTML, render_pdf
 
 from operator import itemgetter, attrgetter
 
-from functions import login_required, database, random_string_generator, render_portfolio, term_tables, drop_tables, grade, assign_student_position, assign_subject_position, passwordGen, initials, add_student, remove_student, render_class, render_portfolio, update_grade, session_term_check, new_term, new_session, generate_pins,check_confirmed
+from functions import has_duplicate, login_required, database, random_string_generator, render_portfolio, term_tables, drop_tables, grade, assign_student_position, assign_subject_position, passwordGen, initials, add_student, remove_student, render_class, render_portfolio, update_grade, session_term_check, new_term, new_session, generate_pins,check_confirmed
 
 # Configure application
 app = Flask(__name__)
@@ -1982,22 +1982,22 @@ def customize_school():
     # if new term is selected or new session is selected 
     if (request.form.get("term") or request.form.get("session")):
         session_data = db.execute("SELECT * FROM :school_session", school_session = tables["session_data"])
-        selected_session = request.form.get("session")
-        selected_term = request.form.get("term")
-        if not selected_session:
-            selected_session = school_info[0]["current_session"]
-        if not selected_term:
-            selected_term = "1"
+        session["selected_session"] = request.form.get("session")
+        session["selected_term"] = request.form.get("term")
+        if not session["selected_session"]:
+            session["selected_session"] = school_info[0]["current_session"]
+        if not session["selected_term"]:
+            session["selected_term"] = "1"
 
         # if term and session combination is not in existence  
-        if not session_term_check(selected_session, selected_term):
+        if not session_term_check(session["selected_session"], session["selected_term"]):
             # if the selected session is the current session
-            if selected_session == school_info[0]["current_session"]:
-                new_term(selected_session, selected_term)
+            if session["selected_session"] == school_info[0]["current_session"]:
+                new_term(session["selected_session"], session["selected_term"])
             else:
-                return render_template("session_update.html", selected_session = selected_session, selected_term = selected_term, schoolInfo = school_info, session_data = session_data)
+                return render_template("session_update.html", selected_session = session["selected_session"], selected_term =  session["selected_term"], schoolInfo = school_info, session_data = session_data)
         else:
-            db.execute("UPDATE school SET current_term = :cur, current_session=:sess WHERE id=:id", cur= selected_term, sess=selected_session, id= session["user_id"])
+            db.execute("UPDATE school SET current_term = :cur, current_session=:sess WHERE id=:id", cur=  session["selected_term"], sess=session["selected_session"], id= session["user_id"])
     flash("Settings updated successfully!")
     return render_portfolio()
 
@@ -2006,15 +2006,41 @@ def customize_school():
 @login_required
 @check_confirmed
 def session_update():
+    all_classes = []
+    tables = database(0)
+    classes = db.execute("SELECT * FROM :session_data", session_data = tables["session_data"])
+    school_info = db.execute("SELECT * FROM school WHERE id=:id", id=session["user_id"])
+    for klass in classes:
+        name = "name"+str(klass["id"])
+        # check for new name
+        if request.form.get(name) == "":
+            error = klass["classname"].upper() +" do not have a new name for the new session"
+            flash(error)
+            return render_template("session_update.html", selected_session = session["selected_session"], selected_term =  session["selected_term"], schoolInfo = school_info, session_data = classes)
+
+        # check if new name is equal to old name
+        if request.form.get(name).lower() == klass["classname"]:
+            error = klass["classname"].upper()+ " cannot have the same name for different sessions"
+            flash(error)
+            return render_template("session_update.html", selected_session = session["selected_session"], selected_term =  session["selected_term"], schoolInfo = school_info, session_data = classes)
+        # add new name to array
+        all_classes.append(request.form.get(name).lower())
+	
+    if has_duplicate(all_classes):
+        error = "Two or more classes have the same name"
+        flash(error)
+        return render_template("session_update.html", selected_session = session["selected_session"], selected_term =  session["selected_term"], schoolInfo = school_info, session_data = classes)
+
     new_term( request.form.get("selected_session"),request.form.get("selected_term"))
     db.execute("UPDATE school SET current_session=:c_s WHERE id=:id", c_s = request.form.get("selected_session"), id = session["user_id"])
-    tables = database(0)
     classes = db.execute("SELECT * FROM :session_data", session_data = tables["session_data"])
     for  clas in classes:
         id = str(clas["id"])
         name = "name"+id
-        db.execute("UPDATE :data SET classname=:name,section =:sec",data = tables["session_data"], name=request.form.get(name))
+        section = "section"+id
+        db.execute("UPDATE :data SET classname=:name,section =:sec",data = tables["session_data"], name=request.form.get(name),sec = request.form.get(section))
     error = "session changed successfully"
+    flash(error)
     return render_portfolio(error)
          
 

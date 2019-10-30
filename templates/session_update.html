@@ -4,6 +4,7 @@ new session update
 {% endblock %}
 {% block main %}
   <form action="/session_update" id="session_update_form" method="post">
+    <input type="hidden" value="{{session_data}}"/>
 <table class="table table-striped">
   <thead>
     <th>Last session class name</th>
@@ -12,22 +13,24 @@ new session update
   </thead>
   <tbody>
   {%for clas in session_data %}
-  {%set id = clas["id"]|string %}
-  {%set name = "name"+id%}
-  {%set section = "section"+id%}
-<tr>
-    <td><b>{{clas["classname"].upper()}}</b></td>
-    <td><input type = "text" name="{{name}}" placeholder="new name"  /> </td>
-    <td><select name="{{section}}"   aria-required="true">
-      <option   selected="" disabled="">{{clas["section"]}}</option>
-      <option  value="pre-nursery">pre-nursery</option>
-      <option  value="nursery">nursery</option>
-      <option  value="primary">primary</option>
-      <option  value="secondary">secondary</option>
-      </select>
-      <div class="arrow"></div>
-    </td>
-</tr>
+    {%set id = clas["id"]|string %}
+    {%set name = "name"+id%}
+    {%set old_name = "old_name"+id%}
+    {%set section = "section"+id%}
+        <tr>
+            <td><b>{{clas["classname"].upper()}}</b></td>
+            <input type="hidden" name="{{old_name}}" value="{{clas["classname"]}}"/>
+            <td><input type = "text" name="{{name}}" placeholder="new name" class="new_name" /> </td>
+            <td><select name="{{section}}"   aria-required="true">
+              <option   selected="" value="{{clas["section"]}}">{{clas["section"]}}</option>
+              <option  value="pre-nursery">pre-nursery</option>
+              <option  value="nursery">nursery</option>
+              <option  value="primary">primary</option>
+              <option  value="secondary">secondary</option>
+              </select>
+              <div class="arrow"></div>
+            </td>
+        </tr>
   {%endfor%}
 </tbody>
 </table>

@@ -16,14 +16,12 @@
     <th scope="col">CA</th>
       <th scope="col">TEST</th>
     <th scope="col">EXAM</th>
-      <th scope="col">TOTAL</th>
 
     </tr>
   </thead>
   <tbody>
 {% for student in students %}
     <tr>
-        {% set total = student[4]|int + student[5]|int + student[3]|int %}
         {% set id = student["id"]|string %}
         {% set id = student["id"]|string %}
             <td>{{loop.index}}.</td>
@@ -31,7 +29,6 @@
             <td>{{student[3]}}</td>
             <td>{{student[4]}}</td>
             <td>{{student[5]}}</td>
-            <td>{{total}}</td>
     </tr>
 {% endfor %}
       </tbody>
