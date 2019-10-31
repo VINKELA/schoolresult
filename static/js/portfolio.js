@@ -105,6 +105,7 @@ else{
       else{
         $('.red').text('')
         $("#create_button").attr("disabled", true)
+        $('#cancel').attr('disabled', true)
         $("#create_button").text("creating")
         $("#create_form").submit();
             }

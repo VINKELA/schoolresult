@@ -5,7 +5,10 @@
 {% endblock %}
 
 {% block main %}
-<h5 class="blue">CLASS: {{classData[0]["classname"].upper()}} </h5>
+<h5 class="blue">Class: {{classData[0]["classname"].upper()}} </h5>
+<h5 class="blue">Section: {{classData[0]["section"].upper()}} 
+</h5><h5 class="blue">Class Teacher: {{classData[0]["firstname"].upper()}} {{classData[0]["surname"].upper()}}</h5>
+
  <table id="classview" class = "table table-striped">
     <tr>
       <th>Exam no</th>

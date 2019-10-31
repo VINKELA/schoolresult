@@ -167,6 +167,7 @@ $(function() {
           else{
             $('.red').text('')
             $('#submit_registration').attr('disabled', true)
+            $('#cancel').attr('disabled', true)
             $('#submit_registration').text('creating account .....')
             $("#register").submit();
 };

@@ -113,6 +113,7 @@ $(function() {
               }
         else{
           $('.red').text('')
+          $("#cancel").attr('disabled',true)
           $("#password_form").submit();
         };
     });}
@@ -125,6 +126,7 @@ $(function() {
 // Stop form from submitting normally
 event.preventDefault();
 if($('input[name="password"]').val() == ""){
+  $('.red').text("")
   $('#msg_pass').text("password is empty");
   $('input[name="password"]').focus()
 }
@@ -133,12 +135,16 @@ if($('input[name="password"]').val() == ""){
       password: $('input[name="password"]').val()
     }, function(data) {
         if (data == "incorrect password"){
-          $('#msg_pass').text("incorrect  password")
+            $('.red').text("")
+            $('#msg_pass').text("password is empty");
+            $('input[name="password"]').focus()
         }
         else{
+          $('.red').text(" ")
           $('#admin_button').attr('disabled', true)
+          $('#cancel').attr("disabled", true)
           $('#admin_form').submit()
-                }
+       }
     });}
 
     
@@ -151,6 +157,8 @@ $(function() {
 // Stop form from submitting normally
 event.preventDefault();
   $('#unregister_button').attr('disabled', true);
+  $('#confirm_student_button').attr('disabled', true);
+  $('#cancel').attr("disabled", true)
   $('#unregister_button').text("please wait");
   $('#unregister_form').submit()    
   });
@@ -160,7 +168,9 @@ $(function() {
   $('#confirm_student_button').bind('click', function() {
 // Stop form from submitting normally
 event.preventDefault();
+  $('#unregister_button').attr('disabled', true);
   $('#confirm_student_button').attr('disabled', true);
+  $('#cancel').attr("disabled", true)
   $('#confirm_student_button').text("please wait");
   $('#confirm_student_form').submit()    
   });
@@ -171,6 +181,7 @@ $(function() {
 // Stop form from submitting normally
 event.preventDefault();
 if($('#password').val() == ""){
+  $('.red').text("")
   $('#teacher_customize_button').focus();
   $('#teach_msg').text("password is empty");
 }
@@ -181,9 +192,11 @@ else{
       password: $('#password').val()
     }, function(data) {
         if (data == "false"){
+          $(".red").text("")
           $('#teach_msg').text("incorrect password");
         }
         else{
+          $('.red').text("")
           $("#teacher_customize_form").submit();
         }
     });}
@@ -194,6 +207,7 @@ $(function() {
   $('#class_customize_button').bind('click', function() {
 // Stop form from submitting normally
 event.preventDefault();
+
   $('#class_customize_button').attr('disabled', true);
   $('#class_customize_button').text("please wait");
   $('#class_customize_form').submit()    
@@ -205,6 +219,7 @@ $(function() {
 // Stop form from submitting normally
 event.preventDefault();
 if($('#password').val() == ""){
+  $('.red').text("")
   $('#password').focus()
   $('#teacher_msg').text("provide password");
 }
@@ -215,9 +230,11 @@ else{
       password: $('#password').val()
     }, function(data) {
         if (data == "false"){
+          $('.red').text("")
           $('#teacher_msg').text("incorrect password");
         }
         else{
+          $('.red').text("")
           $("#edit_scoresheet_form").submit();
         }
     });}
@@ -230,15 +247,19 @@ $(function() {
 // Stop form from submitting normally
 event.preventDefault();
 if($('#subject_name').val() == ""){
+  $('.red').text('')
   $('#subject_msg').text("subject does not have a name");
   $('#subject_name').focus()
 }
 else if($('#teachers_name').val() == ""){
+  $('.red').text('')
   $('#teachers_msg').text("Teachers name is empty")
   $('#teachers_name').focus();
 }
 else if ($("#previous_name").val() == $("#subject_name").val()){
   $('#edited_scoresheet_button').attr('disabled',true)
+  $('#cancel').attr('disabled', true)
+  $('#delete').attr('disabled', true)
   $('#edited_scoresheet_button').text('please wait')
   $("#edited_scoresheet_form").submit();
 }

@@ -121,7 +121,8 @@ $(function() {
           }
           else if (data.value=="pass"){
             $('.red').text('') 
-            $('#check_result').text('checking ....')
+            $('#check_result').text('checking ....')  
+            $('#cancel').attr('disabled',true)
             $("#check_results").submit();
             $('#check_result').text('check result')
           }

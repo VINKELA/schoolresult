@@ -18,6 +18,8 @@ $(function() {
             $('#email_name').focus();
           }
           else{
+            $("#email_submit").attr("disabled", true)
+            $('#cancel').attr('disabled',true)
             $("#email_check").submit();
           }
       });}

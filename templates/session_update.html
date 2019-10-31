@@ -5,6 +5,9 @@ new session update
 {% block main %}
   <form action="/session_update" id="session_update_form" method="post">
     <input type="hidden" value="{{session_data}}"/>
+    {%set lent = session_data|length%}
+    <input type="hidden" id="class_length" value="{{lent}}"/>
+
 <table class="table table-striped">
   <thead>
     <th>Last session class name</th>
@@ -17,10 +20,13 @@ new session update
     {%set name = "name"+id%}
     {%set old_name = "old_name"+id%}
     {%set section = "section"+id%}
+    {%set n = "new"+loop.index|string%}
+    {%set o = "old"+loop.index|string%}  
+    {%set message = "message"+loop.index|string%}
         <tr>
             <td><b>{{clas["classname"].upper()}}</b></td>
-            <input type="hidden" name="{{old_name}}" value="{{clas["classname"]}}"/>
-            <td><input type = "text" name="{{name}}" placeholder="new name" class="new_name" /> </td>
+            <input type="hidden" id="{{o}}" name="{{old_name}}" value="{{clas["classname"]}}"/>
+            <td><input type = "text" id="{{n}}" name="{{name}}" placeholder="new name"/><div id="{{message}}" class="red"></div> </td>
             <td><select name="{{section}}"   aria-required="true">
               <option   selected="" value="{{clas["section"]}}">{{clas["section"]}}</option>
               <option  value="pre-nursery">pre-nursery</option>
@@ -41,7 +47,7 @@ new session update
             <input type="hidden" name="selected_session" value="{{selected_session}}"/>
     </form>
     <div class="form-w3ls col">
-      <form action="/cancel_portfolio" method="POST">  <input type="hidden"  name="class_id"><button class="sign-in"  type="submit">Back</button></form>
+      <form action="/cancel_portfolio"  method="POST">  <input type="hidden"  name="class_id"><button class="sign-in" id="cancel"  type="submit">Back</button></form>
     </div>
     </form>
       
