@@ -176,10 +176,6 @@
 {%if result["test"] == 'on' %}
         <th>TEST</th>
 {%endif%}
-{%if result["combined"] == 'on' %}
-        <th>CA TOTAL</th>
-{%endif%}
-
 {%if result["exam"] == 'on' %}
         <th>EXAM</th>
 {%endif%}
@@ -216,10 +212,6 @@
      {%if result["test"] == 'on' %}
      <td>{{testData[0][subject_id]}}</td>
      {%endif%}
-     {%if result["combined"] == 'on' %}
-     <td>{{ testData[0][subject_id]|int +caData[0][subject_id]|int}}</td>
-     {%endif%}
-
      {%if result["exam"] == 'on' %}
      <td>{{examData[0][subject_id]}}</td>
      {%endif%}
@@ -248,21 +240,24 @@
  </div>
  <div id="result_summary">
  {%if result["total_score"] == 'on' %}
-      <p>TOTAL SCORE: {{mastersheet[0]["total_score"]}} {%if result["average"] == 'on' %} AVERAGE: {{ "%.2f"|format(mastersheet[0]["average"]|float) }} {%endif%}
+      <p>Total score: {{mastersheet[0]["total_score"]}} 
 </p>
+{%endif%}
+{%if result["average"] == 'on' %} 
+Average: {{ "%.2f"|format(mastersheet[0]["average"]|float) }} 
 {%endif%}
 
 {%if result["position"] == 'on' %}
-        <p> <h5> POSITION: {{mastersheet[0]["position"]}} OUT OF {{result["noOfStudents"]}}</h5></p> 
+        <p> <h5> position: <b>{{mastersheet[0]["position"]}}</b> out of  {{result["noOfStudents"]}}</h5></p> 
  {%endif%}
 
 {%if result["pandf"] == 'on' %}
-        <p> NUMBER OF SUBJECTS PASSED: {{mastersheet[0]["subject_passed"]}} NUMBER OF SUBJECTS FAILED: {{mastersheet[0]["subject_failed"]}}</p> 
+        <p> Number of Subjects passed: {{mastersheet[0]["subject_passed"]}}</p>  <p> Number of subjects failed: {{mastersheet[0]["subject_failed"]}}</p> 
 {%endif%}
 </div>
 <div id="grade_summary">
 {%if result["grade_summary"] == 'on' %}
-        <p>NUMBER OF A'S: {{gradeRows[0]["no_of_A"]}}  NUMBER OF B'S: {{gradeRows[0]["no_of_B"]}} NUMBER OF C'S: {{gradeRows[0]["no_of_C"]}}  NUMBER OF D'S: {{gradeRows[0]["no_of_D"]}}  NUMBER OF E'S: {{gradeRows[0]["no_of_E"]}} NUMBER OF F'S: {{gradeRows[0]["no_of_F"]}}</p>
+        <p>Number of A's: {{gradeRows[0]["no_of_A"]}} &nbsp; &nbsp;Number of  B's:{{gradeRows[0]["no_of_B"]}}&nbsp; &nbsp;Number of  C's: {{gradeRows[0]["no_of_C"]}}&nbsp; &nbsp;Number of  D's: {{gradeRows[0]["no_of_D"]}}&nbsp; &nbsp;Number of  E's: {{gradeRows[0]["no_of_E"]}}&nbsp; &nbsp;NUMBER OF F's: {{gradeRows[0]["no_of_F"]}}</p>
 {%endif%}
 </div>
 {% if classData[0]["section"].upper() == 'PRE-NURSERY' or classData[0]["section"].upper() == 'NURSERY' or classData[0]["section"] == 'PRIMARY' %}
@@ -295,12 +290,12 @@ principal's comment
 {%endfor%}
 {%endif%}
 {%endif%}
-                                
+                            
 </div>
 <div id="signature_lines" class="row" >
 {%if result["teachers_signature"] == 'on' %}
 <div class="col">
-teacheres signature <input type="text" class="signature" disabled>
+Teacheres signature <input type="text" class="signature" disabled>
 </div> 
 {%endif%}
 {%if result["principal_signature"] == 'on' %}

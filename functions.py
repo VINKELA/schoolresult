@@ -51,9 +51,10 @@ def check_confirmed(func):
 def initials (name):
     return name[0].upper()
 # returns the grade of any given score
-def grade(score,grading_type="WAEC",a_min=False, a_max=False,b_min=False,b_max=False,c_min=False,c_max=False,d_max=False,d_min=False,e_max=False,e_min=False):
+def grade(score,grading_type="WAEC",from_user= False, a_min=False, a_max=False,b_min=False,b_max=False,c_min=False,c_max=False,d_max=False,d_min=False,e_max=False,e_min=False):
 	score = int(score)
 	if grading_type == "WAEC":
+		pass_mark = 40
 		if score < 40:
 			score_grade = "F9"
 		elif score > 39 and score < 46:
@@ -73,6 +74,7 @@ def grade(score,grading_type="WAEC",a_min=False, a_max=False,b_min=False,b_max=F
 		else:
 			score_grade = "A1"
 	elif grading_type == "SUBEB":
+		pass_mark = 30
 		if score < 29:
 			score_grade = "F"
 		elif score > 29 and score < 40:
@@ -86,6 +88,7 @@ def grade(score,grading_type="WAEC",a_min=False, a_max=False,b_min=False,b_max=F
 		else:
 			score_grade = "A"
 	else:
+		pass_mark = from_user
 		if score > (e_min - 1) and score < (e_max + 1):
 			score_grade = "E"
 		if score > (d_min - 1) and score < (d_max + 1):
@@ -100,7 +103,10 @@ def grade(score,grading_type="WAEC",a_min=False, a_max=False,b_min=False,b_max=F
 			score_grade = "F"
 		else:
 			score_grade = "Non"
-	return score_grade
+	grading ={}
+	grading["score_grade"] = score_grade
+	grading["pass_mark"] = pass_mark
+	return grading
 
 # forms the result data given the id of the class
 def database(id):
@@ -212,6 +218,15 @@ def render_portfolio(error=None):
     if error:
     	flash(error,'failure')
     return render_template("portfolio.html", schoolInfo = rows, clas = classrows, error=error)
+def ith_position(num):
+	if num == 1:
+		return str(1) + "st"
+	elif num == 2:
+		return str(2) + "nd"
+	elif num == 3:
+		return str(3) + "rd"
+	else:
+		return str(num)+"th"
 
 def assign_student_position(class_id):
 	tables = database(class_id)
@@ -222,10 +237,10 @@ def assign_student_position(class_id):
 	previous = 101
 	for person in student_position:
 		if previous == person["average"]:
-			db.execute("UPDATE :mastersheet SET position = :sposition  WHERE id =:id", mastersheet = tables["mastersheet"],  sposition = j, id = person["id"])
+			db.execute("UPDATE :mastersheet SET position = :sposition  WHERE id =:id", mastersheet = tables["mastersheet"],  sposition = ith_position(j), id = person["id"])
 		else:
 			j = i + 1
-			db.execute("UPDATE :mastersheet SET position = :sposition  WHERE id =:id", mastersheet = tables["mastersheet"],  sposition = j, id = person["id"])
+			db.execute("UPDATE :mastersheet SET position = :sposition  WHERE id =:id", mastersheet = tables["mastersheet"],  sposition = ith_position(j), id = person["id"])
 		i = i + 1
 		previous = person["average"]
 
@@ -241,10 +256,10 @@ def assign_subject_position(class_id, subject_id):
 	previous = 101
 	for person in subject_position:
 		if previous == person[subject]:
-			db.execute("UPDATE :positIon_table SET :subject = :position    WHERE id =:id", positIon_table = tables["subject_position"],subject = subject,  position = j, id = person["id"])
+			db.execute("UPDATE :positIon_table SET :subject = :position    WHERE id =:id", positIon_table = tables["subject_position"],subject = subject,  position = ith_position(j), id = person["id"])
 		else:
 			j = i + 1
-			db.execute("UPDATE :positIon_table SET :subject = :position    WHERE id =:id", positIon_table = tables["subject_position"],subject = subject,  position = j, id = person["id"])
+			db.execute("UPDATE :positIon_table SET :subject = :position    WHERE id =:id", positIon_table = tables["subject_position"],subject = subject,  position = ith_position(j), id = person["id"])
 		i = i + 1
 		previous = person[subject]
 
@@ -270,7 +285,7 @@ def term_tables(classid):
 	db.execute("CREATE TABLE :examtable ('id' INTEGER PRIMARY KEY  NOT NULL)",examtable = tables["exam"] )
 	
 	# create mastersheet
-	db.execute("CREATE TABLE :mastersheet ('id' INTEGER PRIMARY KEY  NOT NULL, 'total_score' INTEGER DEFAULT 0, 'average' INTEGER DEFAULT 0, 'subject_passed' INTEGER DEFAULT 0,'subject_failed' INTEGER DEFAULT 0, 'position' INTEGER )",mastersheet = tables["mastersheet"] )
+	db.execute("CREATE TABLE :mastersheet ('id' INTEGER PRIMARY KEY  NOT NULL, 'total_score' INTEGER DEFAULT 0, 'average' INTEGER DEFAULT 0, 'subject_passed' INTEGER DEFAULT 0,'subject_failed' INTEGER DEFAULT 0, 'position' TEXT )",mastersheet = tables["mastersheet"] )
 
 	# create subject_position
 	db.execute("CREATE TABLE :subjectposition ('id' INTEGER PRIMARY KEY  NOT NULL)",subjectposition = tables['subject_position'] )

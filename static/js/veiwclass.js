@@ -17,6 +17,7 @@ $(function() {
             $('#password').focus()
           }
           else{
+            $('.red').text(" ")
             $("#verify_teacher_form").submit();
           }
       });}
@@ -29,16 +30,22 @@ $(function() {
   // Stop form from submitting normally
   event.preventDefault();
   if($('#firstname').val() == ""){
+    $('.red').text(" ")
     $('#firstname_msg').text('firstname is empty!')
     $('#firstname').focus()
   }
   else if($('#surname').val() == ""){   
+    $('.red').text(" ")
      $('#surname_msg').text('surname is empty!')
      $('#surname').focus()
   }
  else{
+  $('.red').text(" ")
+  $('#unregister_button').attr('disabled', true)
+  $('#cancel').attr('disabled', true)
    $('#edit_student_button').attr('disabled', true)
     $("#edit_student_button").text('please wait');
+    
     $("#edit_student_form").submit();
       }
     });
@@ -134,7 +141,9 @@ if($('input[name="password"]').val() == ""){
     $.post( $SCRIPT_ROOT + '/admin_check',{
       password: $('input[name="password"]').val()
     }, function(data) {
+
         if (data == "incorrect password"){
+          
             $('.red').text("")
             $('#msg_pass').text("password is empty");
             $('input[name="password"]').focus()
@@ -157,7 +166,7 @@ $(function() {
 // Stop form from submitting normally
 event.preventDefault();
   $('#unregister_button').attr('disabled', true);
-  $('#confirm_student_button').attr('disabled', true);
+  $('#edit_student_button').attr('disabled', true);
   $('#cancel').attr("disabled", true)
   $('#unregister_button').text("please wait");
   $('#unregister_form').submit()    
@@ -168,7 +177,6 @@ $(function() {
   $('#confirm_student_button').bind('click', function() {
 // Stop form from submitting normally
 event.preventDefault();
-  $('#unregister_button').attr('disabled', true);
   $('#confirm_student_button').attr('disabled', true);
   $('#cancel').attr("disabled", true)
   $('#confirm_student_button').text("please wait");

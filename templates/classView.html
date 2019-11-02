@@ -68,7 +68,7 @@
 </div>
 
   </div>
-
+{%if subjectData|length > 0%}
 
    <table id="classview" class = "table table-striped">
      <thead>
@@ -89,7 +89,9 @@
      {% endfor %}
      </tbody>
      </table>
-
+     {%else%}
+     <h6 class="blue" id="no_subject"> No scoresheet submitted yet!</h6>
+      {%endif%}
      <div class="row form-w3ls ">
         
                 <div class="col" id="mas"><form action ="/mastersheet" method = "post" target="_blank">
