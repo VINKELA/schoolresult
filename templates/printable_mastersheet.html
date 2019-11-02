@@ -210,8 +210,8 @@
                                 <td>{{"%.2f"|format(data["total_score"]/subject_length|float) }}</td>
                                 {%endif%}
                                 <td>{{data["position"]}}</td>
-                                <td>{{data["subject_passed"]}}</td>                                      
-                                <td>{{data["subject_failed"]}}</td>
+                                <td>{{subjectData|length - gradeData[index]["no_of_F"]|int}}</td>
+                                <td>{{gradeData[index]["no_of_F"]}}</td>                                      
                               </tr>
                               {%endfor%}
 
@@ -253,8 +253,8 @@
                       {%set fail_percent = 100 - pass_percent%}
                       <tr>
                                 <td colspan="7">Subject summary:
-                                Number of  failures: {{subject["no_failed"]}}&nbsp; &nbsp;
-                                 Number of  passes: {{subject["no_passed"]}}&nbsp; &nbsp;
+                                Number of  failures: {{subject["no_of_F"]}}&nbsp; &nbsp;
+                                 Number of  passes: {{subjectData|length - subject["no_of_F"]}}&nbsp; &nbsp;
                                 percentage pass: {{"%.1f"|format(pass_percent|float) }}%&nbsp; &nbsp; percentage failure: {{"%.1f"|format(fail_percent|float) }}%&nbsp; &nbsp;
                                  Name of teacher: {{subject["teachers_name"].upper()}}&nbsp; &nbsp;
                                  Total score: {{subject["total_score"]}}&nbsp; &nbsp;

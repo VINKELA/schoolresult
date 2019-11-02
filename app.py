@@ -1111,6 +1111,7 @@ def edited_scoresheet():
             new_total = int(student_row[0]["total_score"]) - int(student_row[0][str(subject_id)])
             new_total = new_total + total_score
             student_grade = grade(total_score, str(class_info[0]["grading_type"]))
+            student_grade = student_grade["score_grade"]
             grade_col = "no_of_"+str(student_grade[0]).upper()
             new_average = new_total / class_info[0]["noOfSubjects"]
             # no of students that passed overall or failed, remember to edit old record instead changing it completely
@@ -1203,6 +1204,7 @@ def delete_scoresheet():
         else:
             student_fail = student_fail + 1
         student_grade = grade(subject_total,class_details[0]["grading_type"])
+        student_grade = student_grade["score_grade"]
         grade_col = "no_of_"+student_grade[0]
         grades = db.execute("SELECT * FROM :grades WHERE id =:id", grades = tables["grade"], id = student["id"])
         db.execute("UPDATE :grading SET :no_col = :col WHERE id = :id", grading = tables["grade"], no_col = grade_col, col = int(grades[0][grade_col])-1, id = student["id"])
@@ -1489,9 +1491,9 @@ def student_added():
         if subject["test"]:
             ntotal = ntotal + int(subject["test"])
         if subject["exam"]:
-            ntotal = ntotal + int(subject["exam"])
+            ntotal = ntotal + int(subject["exam"])                                                             
         db.execute("UPDATE :mastersheet SET :col=:subject_score WHERE id=:id",mastersheet = tables["mastersheet"], col=str(subject["id"]), subject_score = ntotal, id=student_id)
-        db.execute("UPDATE :grades SET :col=:subject_grade WHERE id=:id", grades = tables["grade"], col=str(subject["id"]), subject_grade = grade(ntotal),id=student_id )
+        db.execute("UPDATE :grades SET :col=:subject_grade WHERE id=:id", grades = tables["grade"], col=str(subject["id"]), subject_grade = grade(ntotal)["score_grade"],id=student_id )
 
     add_student(student_id, class_id)
     # return classlist.html
@@ -1692,11 +1694,12 @@ def mastersheet():
     classlistrow = db.execute("SELECT * FROM :classlist",classlist = tables["classlist"])
     carow = db.execute("SELECT * FROM :ca",ca = tables["ca"])
     testrow = db.execute("SELECT * FROM :te",te = tables["test"])
+    grades = db.execute("SELECT * FROM :ge", ge=tables["grade"])
     examrow = db.execute("SELECT * FROM :ex",ex = tables["exam"])
     mastersheet_rows = db.execute("SELECT * FROM :master", master= tables["mastersheet"])
     subject_p = db.execute("SELECT * FROM :subjectposition", subjectposition = tables["subject_position"])
     results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
-    return render_template("printable_mastersheet.html",result = results[0], caData = carow, testData = testrow, examData = examrow, classData = classrow, schoolInfo = schoolrow, subjectData=subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position= subject_p)
+    return render_template("printable_mastersheet.html",gradeData = grades,result = results[0], caData = carow, testData = testrow, examData = examrow, classData = classrow, schoolInfo = schoolrow, subjectData=subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position= subject_p)
 
 @app.route("/mastersheet_pdf", methods=["POST"])
 @login_required
