@@ -75,7 +75,7 @@ def grade(score,grading_type="WAEC",from_user= False, a_min=False, a_max=False,b
 			score_grade = "A1"
 	elif grading_type == "SUBEB":
 		pass_mark = 30
-		if score < 29:
+		if score <= 30:
 			score_grade = "F"
 		elif score > 29 and score < 40:
 			score_grade = "E"
@@ -180,7 +180,6 @@ def assign_student_position(class_id):
 		student["average"] = int(student["average"])
 
 	student_position = sorted(student_position, key = itemgetter('average'), reverse=True)
-
 	j = 0
 	i = 0
 	previous = None
@@ -201,7 +200,6 @@ def assign_subject_position(class_id, subject_id):
 	for student in subject_position:
 		student[subject] = int(student[subject])
 	subject_pos = sorted(subject_position, key = itemgetter(subject), reverse=True)
-	print(subject_pos)
 	j = 0
 	i = 0
 	previous = 101
