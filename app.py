@@ -208,7 +208,7 @@ def register():
         db.execute("CREATE TABLE :classes ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,'identifier' TEXT )", classes = tables["classes"])
         db.execute("CREATE TABLE :setting ('id' INTEGER PRIMARY KEY NOT NULL, 'classname' TEXT, 'grading_type' INTEGER, 'comment_lines' INTEGER,'student_position' INTEGER DEFAULT 1, 'surname' TEXT, 'firstname' TEXT,'password' TEXT,'section' TEXT, 'ca' INTEGER, 'test' INTEGER,'exam' INTEGER)", setting = tables["session_data"])
         # create result data
-        db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, 'no_of_failures' INTEGER DEFAULT 0, 'grading_type' TEXT DEFAULT 'WAEC','background_color' TEXT DEFAULT '#fffff','text_color' TEXT DEFAULT 'black','line_color' TEXT DEFAULT 'black','background_font' TEXT DEFAULT 'Ariel','ld_position' TEXT DEFAULT 'center','l_font' TEXT DEFAULT 'Ariel Black','l_weight' TEXT DEFAULT '900','l_color' TEXT DEFAULT '#537fbe','l_fontsize' TEXT DEFAULT '30px','sd_font' TEXT DEFAULT 'Ariel','sd_color' TEXT DEFAULT '#808000','sd_fontsize' TEXT DEFAULT '20px','sd_position' TEXT DEFAULT 'center','sd_email' TEXT,'admin_email' TEXT DEFAULT 'off', 'address' TEXT,'po_box' TEXT,'phone' TEXT,'next_term' TEXT,'sd_other' TEXT,'std_color' TEXT DEFAULT 'black','std_font' TEXT DEFAULT 'Arial Narrow','std_fontsize' TEXT DEFAULT '18px','std_position' TEXT DEFAULT 'left','table_type' TEXT DEFAULT 'striped','ca' TEXT DEFAULT 'on','test' TEXT DEFAULT 'on','exam' TEXT DEFAULT 'on','combined' TEXT DEFAULT 'on','subject_total' TEXT DEFAULT 'on','class_average' TEXT DEFAULT 'on','subject_position' TEXT DEFAULT 'on','grade' TEXT DEFAULT 'on','subject_comment' TEXT DEFAULT 'off','teachers_initials' TEXT DEFAULT 'off','total_score' TEXT DEFAULT 'on','average' TEXT DEFAULT 'on','position' TEXT DEFAULT 'on','teachers_line' INTEGER DEFAULT 0,'shadow' TEXT DEFAULT 'on','principal_line' INTEGER DEFAULT 0,'teachers_signature' TEXT DEFAULT 'off','principal_signature' TEXT DEFAULT 'off','pandf' TEXT DEFAULT 'on','grade_summary' TEXT DEFAULT 'on','watermark' TEXT DEFAULT 'off','email_notification' TEXT DEFAULT 'on')",result = tables["class_term_data"])
+        db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, 'no_of_failures' INTEGER DEFAULT 0, 'grading_type' TEXT DEFAULT 'WAEC','background_color' TEXT DEFAULT '#fff','text_color' TEXT DEFAULT 'black','line_color' TEXT DEFAULT 'black','background_font' TEXT DEFAULT 'Ariel','ld_position' TEXT DEFAULT 'center','l_font' TEXT DEFAULT 'Ariel Black','l_weight' TEXT DEFAULT '900','l_color' TEXT DEFAULT '#537fbe','l_fontsize' TEXT DEFAULT '30px','sd_font' TEXT DEFAULT 'Ariel','sd_color' TEXT DEFAULT '#808000','sd_fontsize' TEXT DEFAULT '20px','sd_position' TEXT DEFAULT 'center','sd_email' TEXT,'admin_email' TEXT DEFAULT 'off', 'address' TEXT,'po_box' TEXT,'phone' TEXT,'next_term' TEXT,'sd_other' TEXT,'std_color' TEXT DEFAULT 'black','std_font' TEXT DEFAULT 'Arial Narrow','std_fontsize' TEXT DEFAULT '18px','std_position' TEXT DEFAULT 'left','table_type' TEXT DEFAULT 'striped','ca' TEXT DEFAULT 'on','test' TEXT DEFAULT 'on','exam' TEXT DEFAULT 'on','combined' TEXT DEFAULT 'on','subject_total' TEXT DEFAULT 'on','class_average' TEXT DEFAULT 'on','subject_position' TEXT DEFAULT 'on','grade' TEXT DEFAULT 'on','subject_comment' TEXT DEFAULT 'off','teachers_initials' TEXT DEFAULT 'off','total_score' TEXT DEFAULT 'on','average' TEXT DEFAULT 'on','position' TEXT DEFAULT 'on','teachers_line' INTEGER DEFAULT 0,'shadow' TEXT DEFAULT 'on','principal_line' INTEGER DEFAULT 0,'teachers_signature' TEXT DEFAULT 'off','principal_signature' TEXT DEFAULT 'off','pandf' TEXT DEFAULT 'on','grade_summary' TEXT DEFAULT 'on','watermark' TEXT DEFAULT 'off','email_notification' TEXT DEFAULT 'on')",result = tables["class_term_data"])
 
         return render_template("unconfirmed.html", schoolInfo=rows)
     else:
@@ -874,10 +874,11 @@ def submitted():
     subjects_no = db.execute("SELECT * FROM :subject ", subject = tables["subjects"])
     no_of_sub = len(subjects_no)
     db.execute("UPDATE :schoolresult SET noOfSubjects = :sub_no WHERE id= :class_id", schoolresult = tables["class_term_data"], class_id=tables["class_id"], sub_no = len(subjects_no))
+    student_row = db.execute("SELECT * FROM :master ", master=tables["mastersheet"])
+    no_of_grade = db.execute("SELECT * FROM :grade  ", grade=tables["grade"])
+    i = 0
     for  student in session["class_scores"]:
         subject_list = db.execute("SELECT * FROM :subject WHERE name=:subject_name", subject = tables["subjects"],subject_name = session["subject_info"]["subject"])
-        student_row = db.execute("SELECT * FROM :master WHERE id=:student_id", master=tables["mastersheet"],student_id=student[0])
-        no_of_grade = db.execute("SELECT * FROM :grade WHERE id=:student_id", grade=tables["grade"],student_id=student[0])
         total_score = 0
         if student[3]:
             total_score = total_score + int(student[3])
@@ -885,7 +886,7 @@ def submitted():
             total_score = total_score + int(student[4])
         if student[5]:
             total_score = total_score + int(student[5])
-        new_total = student_row[0]["total_score"] + total_score
+        new_total = student_row[i]["total_score"] + total_score
         grading = grade(total_score, former_info[0]["grading_type"])
         student_grade = grading["score_grade"]
         subject_total = subject_total + total_score
@@ -906,13 +907,14 @@ def submitted():
         db.execute("UPDATE :examtable SET :subject = :score WHERE id =:id", examtable = tables["exam"], subject = subject_id,score =student[5], id = student[0])
 
         if int(total_score) < grading["pass_mark"]:
-            db.execute("UPDATE :master SET subject_failed = :value,:subject = :score,total_score=:n_total,average = :n_average WHERE id=:id", master = tables["mastersheet"], value = int(student_row[0]["subject_failed"])+1, id = student[0],subject = subject_id,score =total_score, n_total = new_total,n_average =new_average)
+            db.execute("UPDATE :master SET subject_failed = :value,:subject = :score,total_score=:n_total,average = :n_average WHERE id=:id", master = tables["mastersheet"], value = int(student_row[i]["subject_failed"])+1, id = student[0],subject = subject_id,score =total_score, n_total = new_total,n_average =new_average)
             db.execute("UPDATE :subject SET no_failed = :value,:no_of_g = :no_subject WHERE id=:id", subject = tables["subjects"], value = int(subject_list[0]["no_failed"])+1, id = subject_id,no_of_g = grade_col, no_subject = int(subject_list[0][grade_col]+1))
         else:
-            db.execute("UPDATE :master SET subject_passed = :value,:subject = :score,total_score=:n_total,average = :n_average  WHERE id=:id", master = tables["mastersheet"], value = int(student_row[0]["subject_passed"])+1, id = student[0],subject = subject_id,score =total_score, n_total = new_total,n_average =new_average)
+            db.execute("UPDATE :master SET subject_passed = :value,:subject = :score,total_score=:n_total,average = :n_average  WHERE id=:id", master = tables["mastersheet"], value = int(student_row[i]["subject_passed"])+1, id = student[0],subject = subject_id,score =total_score, n_total = new_total,n_average =new_average)
             db.execute("UPDATE :subject SET no_passed = :value,:no_of_g = :no_subject WHERE id=:id", subject = tables["subjects"], value = int(subject_list[0]["no_passed"])+1, id = subject_id,no_of_g = grade_col, no_subject = int(subject_list[0][grade_col]+1))
 
-        db.execute("UPDATE :grades SET :subject = :subject_grade,:no_of_g = :value WHERE id =:id", grades = tables["grade"], subject = subject_id,subject_grade = grading["score_grade"], id = student[0], no_of_g = grade_col,value = int(no_of_grade[0][str(grade_col)]) + 1)
+        db.execute("UPDATE :grades SET :subject = :subject_grade,:no_of_g = :value WHERE id =:id", grades = tables["grade"], subject = subject_id,subject_grade = grading["score_grade"], id = student[0], no_of_g = grade_col,value = int(no_of_grade[i][str(grade_col)]) + 1)
+        i = i + 1
     #sort students position
     assign_student_position(int(tables["class_id"]))
     db.execute("UPDATE :result SET no_of_passes = :new_passes,no_of_failures = :new_fails  WHERE id =:id",new_fails = term_failed, result = tables["class_term_data"],new_passes = term_passed, id = tables["class_id"])
@@ -1041,7 +1043,48 @@ def result_sheet_pdf():
     results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
     html =  render_template("result_sheet.html",gradeRows = grades,result = results[0], schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
     return render_pdf(HTML(string=html))
-   
+
+
+@app.route("/printall_pdf", methods=["POST"])
+@login_required
+@check_confirmed
+def printall_pdf():
+    class_id = request.form.get('class_id')
+    tables= database(class_id)
+    classrow = db.execute("SELECT * FROM :session_data WHERE id = :classId", session_data = tables["session_data"], classId = tables["class_id"])
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+    carow = db.execute("SELECT * FROM :catable  ",catable = tables["ca"])
+    testrow = db.execute("SELECT * FROM :testtable ",testtable = tables["test"])
+    examrow = db.execute("SELECT * FROM :examtable ",examtable = tables["exam"])
+    subjectrow = db.execute("SELECT * FROM :subjecttable",subjecttable = tables["subjects"])
+    grades = db.execute("SELECT * FROM :grade_s   ",grade_s = tables["grade"])
+    classlistrow = db.execute("SELECT * FROM :classlist  ",classlist = tables["classlist"])
+    mastersheet_rows = db.execute("SELECT * FROM :mastersheet ", mastersheet = tables["mastersheet"])
+    subject_position_row = db.execute("SELECT * FROM :subject_position ", subject_position = tables["subject_position"])
+    results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
+    html =  render_template("print_all.html",gradeRows = grades,result = results[0], schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
+    return render_pdf(HTML(string=html))
+
+
+@app.route("/printall_html", methods=["POST"])
+@login_required
+@check_confirmed
+def printall_html():
+    class_id = request.form.get('class_id')
+    tables= database(class_id)
+    classrow = db.execute("SELECT * FROM :session_data WHERE id = :classId", session_data = tables["session_data"], classId = tables["class_id"])
+    schoolrow = db.execute("SELECT * FROM school WHERE id = :schoolId", schoolId = tables["school_id"])
+    carow = db.execute("SELECT * FROM :catable  ",catable = tables["ca"])
+    testrow = db.execute("SELECT * FROM :testtable ",testtable = tables["test"])
+    examrow = db.execute("SELECT * FROM :examtable ",examtable = tables["exam"])
+    subjectrow = db.execute("SELECT * FROM :subjecttable",subjecttable = tables["subjects"])
+    grades = db.execute("SELECT * FROM :grade_s   ",grade_s = tables["grade"])
+    classlistrow = db.execute("SELECT * FROM :classlist  ",classlist = tables["classlist"])
+    mastersheet_rows = db.execute("SELECT * FROM :mastersheet ", mastersheet = tables["mastersheet"])
+    subject_position_row = db.execute("SELECT * FROM :subject_position ", subject_position = tables["subject_position"])
+    results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
+    return render_template("print_all.html",gradeRows = grades,result = results[0], schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row)
+
 @app.route("/edited_scoresheet", methods=["POST"])
 @login_required
 @check_confirmed
@@ -1472,30 +1515,31 @@ def student_added():
     db.execute("INSERT INTO :classlist (surname, firstname, othername, sex, pin ) VALUES (:surname, :firstname, :othername, :sex, :pin)", classlist=tables["classlist"], surname= session["single_details"]["surname"].upper(), firstname=session["single_details"]["firstname"].upper(), othername=session["single_details"]["othername"].upper(), sex=session["single_details"]["sex"], pin = pins[0])
     student_row = db.execute("SELECT * FROM :classlist WHERE surname=:surname AND firstname=:firstname AND othername = :othername", classlist=tables["classlist"], surname = session["single_details"]["surname"].upper() ,firstname=session["single_details"]["firstname"].upper(), othername=session["single_details"]["othername"].upper())
     student_id = student_row[-1]["id"]
+    all_student = db.execute("SELECT * FROM :classlist", classlist=tables["classlist"])
     db.execute("INSERT INTO :catable (id) VALUES (:id) ",catable = tables["ca"], id=student_id)
     db.execute("INSERT INTO :testtable (id )VALUES (:id) ",testtable = tables["test"], id=student_id)
     db.execute("INSERT INTO :examtable (id ) VALUES (:id) ",examtable = tables["exam"], id=student_id)
     db.execute("INSERT INTO :mastersheet (id)  VALUES (:id )",mastersheet = tables["mastersheet"], id=student_id)
     db.execute("INSERT INTO :grades (id) VALUES (:id) ",grades = tables["grade"], id=student_id)
     db.execute("INSERT INTO :subject_position (id)   VALUES (:id) ",subject_position = tables["subject_position"], id=student_id )
-    term_data = db.execute("SELECT * FROM :term_data WHERE id =:id", term_data = tables["class_term_data"], id=class_id)
-    new = int(term_data[0]["noOfStudents"]) + 1
+    new = len(all_student)
     db.execute("UPDATE :term_data SET noOfStudents = :no_of_students WHERE id=:id", term_data =tables["class_term_data"], no_of_students = new, id=class_id)
     for subject in session["single_subject"]:
         ntotal = 0
         db.execute("UPDATE :ca SET :col=:subject_score WHERE id=:id",ca = tables["ca"], col=str(subject["id"]), subject_score = subject["ca"],id=student_id)
         db.execute("UPDATE :test SET :col=:subject_score WHERE id=:id",test = tables["test"], col=str(subject["id"]), subject_score = subject["test"],id=student_id)
         db.execute("UPDATE :exam SET :col=:subject_score WHERE id=:id", exam = tables["exam"], col=str(subject["id"]), subject_score = subject["exam"],id=student_id )
-        if subject["ca"]:
+        if subject["ca"]!= None:
             ntotal = ntotal + int(subject["ca"])
-        if subject["test"]:
+        if subject["test"] != None:
             ntotal = ntotal + int(subject["test"])
-        if subject["exam"]:
+        if subject["exam"] != None:
             ntotal = ntotal + int(subject["exam"])                                                             
-        db.execute("UPDATE :mastersheet SET :col=:subject_score WHERE id=:id",mastersheet = tables["mastersheet"], col=str(subject["id"]), subject_score = ntotal, id=student_id)
+        db.execute("UPDATE :mastersheet SET :col=:subject_score WHERE id=:id",mastersheet = tables["mastersheet"], col=str(subject["id"]), subject_score = int(ntotal), id=student_id)
         db.execute("UPDATE :grades SET :col=:subject_grade WHERE id=:id", grades = tables["grade"], col=str(subject["id"]), subject_grade = grade(ntotal)["score_grade"],id=student_id )
-
+        assign_subject_position(class_id, subject["id"])
     add_student(student_id, class_id)
+    
     # return classlist.html
     return render_class(class_id)
 

@@ -175,8 +175,8 @@
         <h6>Percentage failure: 0%</h6>
         {%else%}
         {%set percentage_pass = (result["no_of_passes"]*100)/(result["no_of_passes"] + result["no_of_failures"])%}
-        <h6>Percentage pass: {{percentage_pass}}%</h6>
-        <h6>Percentage failure: {{100-percentage_pass}}%</h6>
+        <h6>Percentage pass: {{"%.2f"|format(percentage_pass)}}%</h6>
+        <h6>Percentage failure: {{"%.2f"|format(100-percentage_pass)}}%</h6>
         {%endif%}
         
         <h6>Class Teacher: {{classData[0]["surname"].upper()}} {{classData[0]["firstname"].upper()}}</h6>        
@@ -221,6 +221,7 @@
 </div>
 
          {%for subject in subjectData%}
+         
             <div class="table_area">
                 <table class="table table-{{result["table_type"]}} table table-bordered table table-sm">
                 <thead>
@@ -239,7 +240,7 @@
                         {%for data in mastersheet%}
                         {%set index =  loop.index - 1%}
                       <tr>
-                        <td>{{data["id"]}}</td>
+                        <td>{{loop.index}}</td>
                         <td>{{class_list[index]["surname"]}} {{class_list[index]["firstname"]}} {{class_list[index]["othername"]}}</td>
                         {%set subject_id = subject["id"]|string%}
                         <td>{{caData[index][subject_id]}}</td>
@@ -254,7 +255,7 @@
                       <tr>
                                 <td colspan="7">Subject summary:
                                 Number of  failures: {{subject["no_of_F"]}}&nbsp; &nbsp;
-                                 Number of  passes: {{subjectData|length - subject["no_of_F"]}}&nbsp; &nbsp;
+                                 Number of  passes: {{mastersheet|length - subject["no_of_F"]}}&nbsp; &nbsp;
                                 percentage pass: {{"%.1f"|format(pass_percent|float) }}%&nbsp; &nbsp; percentage failure: {{"%.1f"|format(fail_percent|float) }}%&nbsp; &nbsp;
                                  Name of teacher: {{subject["teachers_name"].upper()}}&nbsp; &nbsp;
                                  Total score: {{subject["total_score"]}}&nbsp; &nbsp;

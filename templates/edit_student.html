@@ -32,7 +32,7 @@ edit student details
   </form></div>
  <div class="col"><form action="/unregister_student" method="post" id="unregister_form">  <input type="hidden" name="student_id" value="{{student_id}}">
   <input type="hidden" name="class_id" value="{{classData[0]["id"]}}"> 
-  <button  name="unregister_student" class="sign-in delete" id="unregister_button" type="submit">UNREGISTER</button></form></div>
+  <button  class="sign-in delete" id="unregister_button" type="submit">UNREGISTER</button></form></div>
  <div class="col">
     <form action="/cancel" method="post">
       <input type="hidden"   value="{{classData[0]["id"]}}" name ="class_id"/>

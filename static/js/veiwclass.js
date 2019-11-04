@@ -57,6 +57,7 @@ $(function() {
   // Stop form from submitting normally
   event.preventDefault();
   if($('#password').val() == ""){
+    $('.red').text('')
     $("#msg_pass").text("password is empty");
     $('#add_student_button').focus()
   }
@@ -67,9 +68,13 @@ $(function() {
         password: $('#password').val()
       }, function(data) {
           if (data == "false"){
+            $('.red').text('')
             $("#msg_pass").text("invalid password")
+            $('#add_student_button').focus()
+
           }
           else{
+            $('.red').text('')
             $('#add_student_button').attr('disabled',true)
             $('#add_student_button').attr('please wait')
             $("#add_student_form").submit();
@@ -83,15 +88,18 @@ $(function() {
   // Stop form from submitting normally
   event.preventDefault();
   if($('#firstname').val() == ""){
+    $('.red').text('')
     $('#f_msg').text("firstname is empty");
     $('#firstname').focus()
   }
   else if($('#surname').val() == ""){
+    $('.red').text('')
     $('#s_msg').text("surname is empty");
     $('#surname').focus()
   }
 
  else{
+    $('.red').text('')
     $("#add_button").attr("disabled", true)
     $("#add_button").text("please wait")
     $("#add_student_form").submit();
@@ -168,8 +176,16 @@ event.preventDefault();
   $('#unregister_button').attr('disabled', true);
   $('#edit_student_button').attr('disabled', true);
   $('#cancel').attr("disabled", true)
-  $('#unregister_button').text("please wait");
-  $('#unregister_form').submit()    
+  var con = confirm("You are about to permanently unregister "+$('#firstname').val()+" "+$("#surname").val()+" permanently from this term")
+  if( con == true){
+    $('#unregister_button').text("please wait");
+    $('#unregister_form').submit()      
+  }
+  else{
+    $('#unregister_button').attr('disabled', false);
+    $('#edit_student_button').attr('disabled', false);
+    $('#cancel').attr("disabled", false)
+  }
   });
 });
 
