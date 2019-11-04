@@ -1,7 +1,0 @@
-# understand how sql works
-# beanstalk and sql
-# deactivate submit  buttons on click
-# test max implementation
-# config.py
-# repair persistent login
-# rewrite welcome page

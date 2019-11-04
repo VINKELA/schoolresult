@@ -176,10 +176,14 @@ def ith_position(num):
 def assign_student_position(class_id):
 	tables = database(class_id)
 	student_position  = db.execute("SELECT * FROM :mastersheet", mastersheet = tables["mastersheet"])
+	for student in student_position:
+		student["average"] = int(student["average"])
+
 	student_position = sorted(student_position, key = itemgetter('average'), reverse=True)
+
 	j = 0
 	i = 0
-	previous = 101
+	previous = None
 	for person in student_position:
 		if previous == person["average"]:
 			db.execute("UPDATE :mastersheet SET position = :sposition  WHERE id =:id", mastersheet = tables["mastersheet"],  sposition = ith_position(j), id = person["id"])
@@ -194,6 +198,8 @@ def assign_subject_position(class_id, subject_id):
 	tables = database(class_id)
 	subject = str(subject_id)
 	subject_position  = db.execute("SELECT * FROM :mastersheet", mastersheet = tables["mastersheet"])
+	for student in subject_position:
+		student[subject] = int(student[subject])
 	subject_pos = sorted(subject_position, key = itemgetter(subject), reverse=True)
 	print(subject_pos)
 	j = 0
@@ -345,6 +351,8 @@ def add_student(student_id, class_id):
 			passed = passed + 1
 		db.execute("UPDATE :grades SET :no_of_grade = :new  WHERE id = :id", grades=tables["grade"], no_of_grade=the_column,new=new_no, id =student_id) 
 		db.execute("UPDATE :mastersheet SET subject_failed = :new,subject_passed = :p  WHERE id = :id", mastersheet=tables["mastersheet"], new = failed, id =student_id,p = passed) 
+		assign_subject_position(class_id, subject["id"])
+
 	if len(subjects) > 	0:
 		student_average = student_total/len(subjects)
 		db.execute("UPDATE :mastersheet SET average = :new,total_score = :tnew WHERE id=:id", mastersheet=tables["mastersheet"], new=student_average, id=student_id, tnew=student_total)

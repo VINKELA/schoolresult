@@ -916,11 +916,11 @@ def submitted():
         db.execute("UPDATE :grades SET :subject = :subject_grade,:no_of_g = :value WHERE id =:id", grades = tables["grade"], subject = subject_id,subject_grade = grading["score_grade"], id = student[0], no_of_g = grade_col,value = int(no_of_grade[i][str(grade_col)]) + 1)
         i = i + 1
     #sort students position
-    assign_student_position(int(tables["class_id"]))
+    assign_student_position(tables["class_id"])
     db.execute("UPDATE :result SET no_of_passes = :new_passes,no_of_failures = :new_fails  WHERE id =:id",new_fails = term_failed, result = tables["class_term_data"],new_passes = term_passed, id = tables["class_id"])
     classRows = db.execute("SELECT * FROM :session_data WHERE id=:id ",session_data = tables["session_data"], id =tables["class_id"])
     #sort subject position
-    assign_subject_position(int(tables["class_id"]),subject_id)
+    assign_subject_position(tables["class_id"],subject_id)
     no_of_students = len(session["class_scores"])
     subject_average = subject_total / no_of_students
     # calculate and insert ppass for subject and class and repair passed and failed for class 
@@ -1537,7 +1537,6 @@ def student_added():
             ntotal = ntotal + int(subject["exam"])                                                             
         db.execute("UPDATE :mastersheet SET :col=:subject_score WHERE id=:id",mastersheet = tables["mastersheet"], col=str(subject["id"]), subject_score = int(ntotal), id=student_id)
         db.execute("UPDATE :grades SET :col=:subject_grade WHERE id=:id", grades = tables["grade"], col=str(subject["id"]), subject_grade = grade(ntotal)["score_grade"],id=student_id )
-        assign_subject_position(class_id, subject["id"])
     add_student(student_id, class_id)
     
     # return classlist.html
