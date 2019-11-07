@@ -4,7 +4,6 @@ new session update
 {% endblock %}
 {% block main %}
   <form action="/session_update" id="session_update_form" method="post">
-    <input type="hidden" value="{{session_data}}"/>
     {%set lent = session_data|length%}
     <input type="hidden" id="class_length" value="{{lent}}"/>
 

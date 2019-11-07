@@ -153,7 +153,7 @@ if($('input[name="password"]').val() == ""){
         if (data == "incorrect password"){
           
             $('.red').text("")
-            $('#msg_pass').text("password is empty");
+            $('#msg_pass').text("incorrect passwords");
             $('input[name="password"]').focus()
         }
         else{
@@ -231,10 +231,34 @@ $(function() {
   $('#class_customize_button').bind('click', function() {
 // Stop form from submitting normally
 event.preventDefault();
+  sum_score = 0;
+  if( $("#ca").val() != ""){
+    ca = parseInt($("#ca").val())
+    sum_score = sum_score +  ca
+  }
+  if( $("#test").val() != ""){
+    test = parseInt($("#test").val())
+    sum_score = sum_score +  test
+  }
+  if( $("#exam").val() != ""){
+    exam = parseInt($("#exam").val())
+    sum_score = sum_score +  exam
+  }
+  if(sum_score != 100){
+    $(".red").text("")
+    $("#ca_message").text("ca +")
+    $("#test_message").text("test +")
+    $("#exam_message").text("exam  must be equal to 100")
+    $("#ca").focus()
+  } 
+  else{
+    $('#class_customize_button').attr('disabled', true);
+    $('#cancel').attr('disabled', true);
+    $('#class_customize_button').text("please wait");
+    $('#class_customize_form').submit()    
+  }
 
-  $('#class_customize_button').attr('disabled', true);
-  $('#class_customize_button').text("please wait");
-  $('#class_customize_form').submit()    
+
   });
 });
 
@@ -281,9 +305,10 @@ else if($('#teachers_name').val() == ""){
   $('#teachers_name').focus();
 }
 else if ($("#previous_name").val() == $("#subject_name").val()){
+  $('.red').text('')
   $('#edited_scoresheet_button').attr('disabled',true)
   $('#cancel').attr('disabled', true)
-  $('#delete').attr('disabled', true)
+  $('#delete_scoresheet_button').attr('disabled', true)
   $('#edited_scoresheet_button').text('please wait')
   $("#edited_scoresheet_form").submit();
 }
@@ -298,10 +323,13 @@ else{
         $('#subject_name').focus()
       }
       else{
+        $('.red').text('')
         $('#edited_scoresheet_button').attr('disabled',true)
+        $('#cancel').attr('disabled', true)
+        $('#delete_scoresheet_button').attr('disabled', true)
         $('#edited_scoresheet_button').text('please wait')
         $("#edited_scoresheet_form").submit();
-                };
+                      };
   });};
   });
 });
@@ -310,8 +338,19 @@ $(function() {
   $('#delete_scoresheet_button').bind('click', function() {
 // Stop form from submitting normally
 event.preventDefault();
-  $('#delete_scoresheet_button').attr('disabled', true);
-  $('#delete_scoresheet_button').text("please wait");
-  $('#delete_scoresheet_form').submit()    
+conf= confirm("press ok to delete "+$('#subject_name')+" permanentely")
+if (conf == true){
+    $('#edited_scoresheet_button').attr('disabled',true)
+    $('#cancel').attr('disabled', true)
+    $('#delete_scoresheet_button').attr('disabled', true)
+    $('#delete_scoresheet_button').text("please wait");
+    $('#delete_scoresheet_form').submit() 
+  }
+else{
+  $('#edited_scoresheet_button').attr('disabled',false)
+  $('#cancel').attr('disabled', false)
+  $('#delete_scoresheet_button').attr('disabled', false)
+
+}   
   });
 });

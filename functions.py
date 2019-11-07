@@ -75,7 +75,7 @@ def grade(score,grading_type="WAEC",from_user= False, a_min=False, a_max=False,b
 			score_grade = "A1"
 	elif grading_type == "SUBEB":
 		pass_mark = 30
-		if score <= 30:
+		if score < 30:
 			score_grade = "F"
 		elif score > 29 and score < 40:
 			score_grade = "E"
@@ -177,20 +177,20 @@ def assign_student_position(class_id):
 	tables = database(class_id)
 	student_position  = db.execute("SELECT * FROM :mastersheet", mastersheet = tables["mastersheet"])
 	for student in student_position:
-		student["average"] = int(student["average"])
+		student["average"] = float(student["average"])
 
 	student_position = sorted(student_position, key = itemgetter('average'), reverse=True)
 	j = 0
 	i = 0
 	previous = None
 	for person in student_position:
-		if previous == person["average"]:
+		if previous == float(person["average"]):
 			db.execute("UPDATE :mastersheet SET position = :sposition  WHERE id =:id", mastersheet = tables["mastersheet"],  sposition = ith_position(j), id = person["id"])
 		else:
 			j = i + 1
 			db.execute("UPDATE :mastersheet SET position = :sposition  WHERE id =:id", mastersheet = tables["mastersheet"],  sposition = ith_position(j), id = person["id"])
 		i = i + 1
-		previous = person["average"]
+		previous = float(person["average"])
 
 
 def assign_subject_position(class_id, subject_id):
@@ -198,19 +198,19 @@ def assign_subject_position(class_id, subject_id):
 	subject = str(subject_id)
 	subject_position  = db.execute("SELECT * FROM :mastersheet", mastersheet = tables["mastersheet"])
 	for student in subject_position:
-		student[subject] = int(student[subject])
+		student[subject] = float(student[subject])
 	subject_pos = sorted(subject_position, key = itemgetter(subject), reverse=True)
 	j = 0
 	i = 0
 	previous = 101
 	for person in subject_pos:
-		if previous == int(person[subject]):
+		if previous == float(person[subject]):
 			db.execute("UPDATE :positIon_table SET :subject = :position    WHERE id =:id", positIon_table = tables["subject_position"],subject = subject,  position = ith_position(j), id = person["id"])
 		else:
 			j = i + 1
 			db.execute("UPDATE :positIon_table SET :subject = :position    WHERE id =:id", positIon_table = tables["subject_position"],subject = subject,  position = ith_position(j), id = person["id"])
 		i = i + 1
-		previous = int(person[subject])
+		previous = float(person[subject])
 
 
 def random_string_generator(str_size, allowed_chars):

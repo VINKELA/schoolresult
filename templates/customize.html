@@ -28,7 +28,20 @@
         </td>
     </tr>
 
-
+<tr>
+    <td>what ca, test and exam is marked over </td>
+    <td colspan="2">
+            <div class="row">
+                    <div class="col"> <input name="ca" value="{{classData[0]["ca"]}}"  id="ca" type="number" required="required"/> 
+                     <div class="red" id="ca_message"></div>
+                   </div>
+                    <div class="col"><input value="{{classData[0]["test"]}}"  name="test"  id="test" type="number" required="required"/> <div class="red" id="test_message"></div>
+                   </div> 
+                    <div class="col"><input  name="exam" value="{{classData[0]["exam"]}}"  id="exam" type="number" required="required"/><div class="red" id="exam_message"></div>
+                   </div> 
+            </div>
+    </td>
+</tr>
 <tr>
     <td rowspan="11">Result Table</td>
     <td>Table type</td>
@@ -249,7 +262,7 @@
         <button class="sign-in" id="class_customize_button" type="submit">Submit</button></div>
 </form>
 <div class="col">
-  <form action="/cancel" method="POST">  <input type="hidden" value="{{classData[0]["id"]}}" name="class_id"><button class="sign-in"  type="submit">Back</button></form>
+  <form action="/cancel" method="POST">  <input type="hidden" value="{{classData[0]["id"]}}" name="class_id"><button class="sign-in" id="cancel"  type="submit">Back</button></form>
 </div>
 </form>
 </div>
