@@ -43,7 +43,8 @@
         {% set exam_id = examData[loop.index-1][subjectData[0]["id"]|string] |string %}
 
 
-        <div class="col">   <tr><td>{{student["surname"]}} {{student["firstname"]}}</td></div>
+        <div class="row"><tr><td>{{student["surname"]}} {{student["firstname"]}} {{student["othername"]}} </td></div>
+          <div class="row">
           <div class="col">
             {% set cascore = "cascore"+ id %}
                        <td><select name="{{cascore}}" id="ca"  aria-required="true">
@@ -80,6 +81,7 @@
                      </select>
                      <div class="arrow"></div></td>
          </div>
+        </div>
 
   </div>
 {% endfor %}

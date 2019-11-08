@@ -24,11 +24,12 @@
   
 {% for student in class_names %}
         {% set id = student["id"]|string %}
-        <div class="col">   <tr><td>{{student["surname"]}} {{student["firstname"]}}</td></div>
+        <div class="row" >   <tr><td>{{student["surname"]}} {{student["firstname"]}} {{student["othername"]}}</td></div>
+          <div class="row">
         <div class="col">
          {% set cascore = "cascore"+ id %}
                     <td><select name="{{cascore}}" id="ca"  aria-required="true">
-                    <option  value="" selected="" disabled="">ca score</option>
+                    <option  value="" selected="">ca score</option>
                     <option  value="0" >0</option>
                       {%for i in range(setting[0]["ca"])%}
                       
@@ -41,7 +42,7 @@
         <div class="col">
          {% set testscore = "testscore"+ id %}
                     <td><select name="{{testscore}}" id="test"  aria-required="true">
-                    <option  value="" selected="" disabled="">test score</option>
+                    <option  value="" selected="">test score</option>
                     <option  value="0" >0</option>
                       {%for i in range(setting[0]["test"])%}
                             <option  value="{{i+1}}">{{i+1}}</option>
@@ -52,7 +53,7 @@
         <div class="col">
          {% set examscore = "examscore"+ id %}
                     <td><select name="{{examscore}}" id="exam"  aria-required="true">
-                    <option  value="" selected="" disabled="">exam score</option>
+                    <option  value="" selected="" >exam score</option>
                     <option  value="0" >0</option>
                       {%for i in range(setting[0]["exam"])%}
                             <option  value="{{i+1}}">{{i+1}}</option>
@@ -60,6 +61,7 @@
                     </select>
                     <div class="arrow"></div></td>
         </div>
+      </div>
   </div>
 {% endfor %}
 </table>

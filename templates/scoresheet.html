@@ -172,12 +172,13 @@
         <table class="table table-{{result["table_type"]}} table table-bordered table table-sm">
                 <thead>
        <th>no</th>
-        <th>name</th>
-        <th>ca</th>
-        <th>test</th>
-        <th>exam</th>
-        <th>total</th>
-        <th>subject position</th>
+        <th>Name</th>
+        <th>Ca</th>
+        <th>Test</th>
+        <th>Exam</th>
+        <th>Total</th>
+        <th>Grade</th>
+        <th>position</th>
      </thead>
 
      <tbody>
@@ -190,9 +191,17 @@
      <td>{{testData[loop.index-1][subject_id]}}</td>
      <td>{{examData[loop.index-1][subject_id]}}</td>
      <td>{{mastersheet[loop.index-1][subject_id]}}</td>
+     <td>{{gradeData[loop.index-1][subject_id]}}</td>
      <td>{{subject_position[loop.index-1][subject_id]}}</td>
      </tr>
      {% endfor %}
      </tbody>
      </table>
+     {%set fail_percent = (subjectData[0]["no_of_F"]*100)/(mastersheet|length)%}
+     {%set pass_percent = 100 - fail_percent%}
+     <h6>Total score: {{subjectData[0]["total_score"]}} Class average: {{"%.2f"|format(subjectData[0]["class_average"]|float)}}</h6> 
+    <h6> Number of  failures: {{subjectData[0]["no_of_F"]}} Number of  passes: {{mastersheet|length - subjectData[0]["no_of_F"]}}</h6>
+    <h6> percentage pass: {{"%.1f"|format(pass_percent|float) }}%  percentage failure: {{"%.1f"|format(fail_percent|float) }}%</h6>
+    <h6>Number of A's: {{subjectData[0]["no_of_A"]}} &nbsp; &nbsp;Number of  B's:{{subjectData[0]["no_of_B"]}}&nbsp; &nbsp;Number of  C's: {{subjectData[0]["no_of_C"]}}&nbsp; &nbsp;Number of  D's: {{subjectData[0]["no_of_D"]}}&nbsp; &nbsp;Number of  E's: {{subjectData[0]["no_of_E"]}}&nbsp; &nbsp;NUMBER OF F's: {{subjectData[0]["no_of_F"]}}</h6>
+
 </div>

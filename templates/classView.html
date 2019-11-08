@@ -21,8 +21,9 @@
       {%else%}
       {%set class_identifier = class_id|string%}
       {%endif%}
+      {%if subjectData|length > 0%}
       <th colspan="2">Result</th>
-
+      {%endif%}
   </tr>
 
   <tbody>
@@ -44,10 +45,13 @@
     <tr>
       <td>{{final_identifier}}</td>
       <td>{{data["surname"]}} {{data["firstname"]}} {{data["othername"]}}<a href="/verify_edit_student?student_id={{student_id}}&&class_id={{class_id}}"> edit</a></td>
+      {%if subjectData|length > 0%}
+
       <td colspan="2"><div><form method="post" action="/result_sheet" target="_blank"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}" target="_blank">VEIW</button>
       </form></div> 
 <div id="veiw"><form method="post" action="/result_sheet_pdf" target="_blank"><button name="result_sheet" class="btn btn-primary" value = "{{button_id}}" target="_blank">PDF</button>
       </form></div></td>
+      {%endif%}
     </tr>
     {% endfor %}  
   </tbody>
@@ -72,8 +76,7 @@
 
    <table id="classview" class = "table table-striped">
      <thead>
-       <th>No</th>
-        <th>Scoresheets</th>
+        <th>No. Scoresheets</th>
         <th>Veiw</th>
      </thead>
      <tbody>
@@ -82,40 +85,53 @@
      {% set subject_id = subject["id"]|string %}
      {% set scoresheet_id = subject_id+"_"+class_id %}
      <tr>
-     <td>{{loop.index}}</td>
-     <td>{{subject["name"].upper()}} <a href="/verify_edit_scoresheet?subject_id={{subject["id"]}}&&class_id={{class_id}}"> edit</a></td>
+     <td>{{loop.index}} {{subject["name"].upper()}} <a href="/verify_edit_scoresheet?subject_id={{subject["id"]}}&&class_id={{class_id}}"> edit</a></td>
      <td><div id="veiw"><form action="/scoresheet" method="post" target="_blank"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">VEIW </button></form></div> <div id="veiw"><form action="/scoresheet_pdf" method="post" target="_blank"><button class="btn btn-primary" name="scoresheet" value="{{scoresheet_id}}">PDF </button></form></div></td>
     </tr>
      {% endfor %}
+     <tr>
+       <td>MASTERSHEET(HTML)</td>
+        <td colspan="2"> <div class="mas"><form action ="/mastersheet" method = "post" target="_blank">
+            <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
+            <button class="btn btn-primary" type="submit">MASTERSHEET</button>
+          </form></div>
+        </td>
+     </tr>
+     <tr>
+       <td>MASTERSHEET(PDF DOWNLOAD) (With print support)</td>
+         <td colspan="2"><div class="mas"><form action ="/mastersheet_pdf" method = "post" target="_blank">
+               <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
+               <button class="btn btn-primary" type="submit">MASTERSHEET</button>
+             </form>   
+           </div>
+          </td>
+      </tr>
+        <td>ALL RESULT (With print support)</td>
+      <td colspan="2">
+        <div class="mas"><form action ="/printall_html" method = "post" target="_blank">
+          <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
+          <button class="btn btn-primary" type="submit">ALL RESULT</button>
+        </form>   
+      </div>
+    </td>
+
+     </tr>
+     <tr>
+        <td>ALL RESULT (PDF DOWNLOAD) (With print support)</td>
+        <td colspan="2">
+         <div class="mas"><form action ="/printall_pdf" method = "post" target="_blank">
+          <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
+          <button class="btn btn-primary" type="submit">ALL RESULT</button>
+        </form>   
+      </div></td>
+    </tr>
+    <tr>
+
      </tbody>
      </table>
      {%else%}
      <h6 class="blue" id="no_subject"> No scoresheet submitted yet!</h6>
       {%endif%}
-     <div class="row form-w3ls ">
-        
-                <div class="col mas "><form action ="/mastersheet" method = "post" target="_blank">
-                  <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-                  <button class="btn btn-primary" type="submit">VEIW MASTERSHEET</button>
-                </form></div>
-               <div class="col mas "><form action ="/mastersheet_pdf" method = "post" target="_blank">
-                     <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-                     <button class="btn btn-primary" type="submit">MASTERSHEET IN PDF</button>
-                   </form>   
-                 </div>
-                 <div class="col mas"><form action ="/printall_pdf" method = "post" target="_blank">
-                  <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-                  <button class="btn btn-primary" type="submit">PRINT ALL RESULT(PDF)</button>
-                </form>   
-              </div>
-
-              <div class="col mas"><form action ="/printall_html" method = "post" target="_blank">
-                <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-                <button class="btn btn-primary" type="submit">PRINT ALL RESULT(HTML)</button>
-              </form>   
-            </div>
-
-    </div>
 
 
 {% endblock %}
