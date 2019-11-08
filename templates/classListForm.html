@@ -11,11 +11,8 @@
  <table class="table table-striped">
 <thead>
     <tr>
-        <th>no</th>
-        <th>firstname</th>
-        <th>surname</th>
-        <th>othername</th>
-        <th>sex</th>
+        <th colspan="4">
+                {{class_name}} CLASSLISTS </th>
     </tr>
 </thead>
 <tbody>
@@ -27,12 +24,16 @@
         {% set othername = "o"+ id%}
         {% set sex = "g"+ id%}
         <tr>
-           <td> {{loop.index}}.</td>
-            <td><input  class="col classlist"  name="{{firstname}}" placeholder=" firstname" type="text" required/></td>
-           <td> <input  class ="col classlist" name="{{surname}}" placeholder="surname" type="text" required/></td>
-            <td><input class="col" name="{{othername}}" placeholder="othername" type="text"/></td>
-            <td><label ><input  class = "col" type="radio" name="{{sex}}" value="Female" required> <b>Female</b> </label>
-            <label ><input class = "col" type="radio" name="{{sex}}" value="Male" required> <b>Male</b></label></td>
+           <td colspan="5">
+            <div class="row">STUDENT {{loop.index}}.</div>
+            <div class="row">
+            <div class="col"><input    name="{{firstname}}" placeholder=" firstname" type="text" required/></div>
+            <div class="col"><input   name="{{surname}}" placeholder="surname" type="text" required/></div>
+            <div class="col"><input  name="{{othername}}" placeholder="othername" type="text"/></div>
+            </div>
+             <div class="row"> <b>SELECT GENDER:</b> <label ><input  class = "col" type="radio" name="{{sex}}" value="Female" required> <b>Female</b> </label>
+            <label ><input class = "col" type="radio" name="{{sex}}" value="Male" required> <b>Male</b></label></div>
+        </td>
         </tr>
            <input name="n" value="{{n}}" type="text" hidden/>
 
