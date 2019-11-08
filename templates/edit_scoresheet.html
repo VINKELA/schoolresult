@@ -43,11 +43,11 @@
         {% set exam_id = examData[loop.index-1][subjectData[0]["id"]|string] |string %}
 
 
-        <div class="row"><tr><td>{{student["surname"]}} {{student["firstname"]}} {{student["othername"]}} </td></div>
+        <tr><td colspan="4"><div class="row"><h5 style="text-align: center">{{student["surname"]}} {{student["firstname"]}} {{student["othername"]}} </h5></div>
           <div class="row">
           <div class="col">
             {% set cascore = "cascore"+ id %}
-                       <td><select name="{{cascore}}" id="ca"  aria-required="true">
+                       <select name="{{cascore}}" id="ca"  aria-required="true">
                        <option  value="{{ca_id}}" selected="">{{ca_id}}</option>
                        <option  value="0" >0</option>
                          {%for i in range(classData[0]["ca"])%}
@@ -55,35 +55,35 @@
                                <option  value="{{i+1}}">{{i+1}}</option>
                           {%endfor%}
                        </select>
-                       <div class="arrow"></div></td>
+                       <div class="arrow"></div>
             </div>  
             <div class="col">
               {% set testscore = "testscore"+ id %}
-                         <td><select name="{{testscore}}" id="test"  aria-required="true">
+                         <select name="{{testscore}}" id="test"  aria-required="true">
                          <option  value="{{test_id}}" selected="">{{test_id}}</option>
                          <option  value="0" >0</option>
                            {%for i in range(classData[0]["test"])%}
                                  <option  value="{{i+1}}">{{i+1}}</option>
                             {%endfor%}
                          </select>
-                         <div class="arrow"></div></td>
+                         <div class="arrow"></div>
              </div>
       
         <div class="col">
         <div class="col">
           {% set examscore = "examscore"+ id %}
-                     <td><select name="{{examscore}}" id="exam" class="mdb-select md-form"  aria-required="true">
+                     <select name="{{examscore}}" id="exam" class="mdb-select md-form"  aria-required="true">
                      <option  value="{{exam_id}}" selected="">{{exam_id}}</option>
                      <option  value="0">0</option>
                        {%for i in range(classData[0]["exam"])%}
                              <option  value="{{i+1}}">{{i+1}}</option>
                         {%endfor%}
                      </select>
-                     <div class="arrow"></div></td>
+                     <div class="arrow"></div>
          </div>
-        </div>
-
-  </div>
+         </div>
+        </td>
+         </tr>
 {% endfor %}
 </table>
 <input type="hidden"   value="{{subjectData[0]["id"]}}" name ="subject_id"/>

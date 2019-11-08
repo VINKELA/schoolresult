@@ -93,7 +93,7 @@
        <td>MASTERSHEET(HTML)</td>
         <td colspan="2"> <div class="mas"><form action ="/mastersheet" method = "post" target="_blank">
             <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-            <button class="btn btn-primary" type="submit">MASTERSHEET</button>
+            <button class="btn btn-primary" type="submit">Veiw</button>
           </form></div>
         </td>
      </tr>
@@ -101,7 +101,7 @@
        <td>MASTERSHEET(PDF DOWNLOAD) (With print support)</td>
          <td colspan="2"><div class="mas"><form action ="/mastersheet_pdf" method = "post" target="_blank">
                <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-               <button class="btn btn-primary" type="submit">MASTERSHEET</button>
+               <button class="btn btn-primary" type="submit">Download</button>
              </form>   
            </div>
           </td>
@@ -110,7 +110,7 @@
       <td colspan="2">
         <div class="mas"><form action ="/printall_html" method = "post" target="_blank">
           <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-          <button class="btn btn-primary" type="submit">ALL RESULT</button>
+          <button class="btn btn-primary" type="submit">Veiw</button>
         </form>   
       </div>
     </td>
@@ -121,7 +121,7 @@
         <td colspan="2">
          <div class="mas"><form action ="/printall_pdf" method = "post" target="_blank">
           <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
-          <button class="btn btn-primary" type="submit">ALL RESULT</button>
+          <button class="btn btn-primary" type="submit">Download</button>
         </form>   
       </div></td>
     </tr>
