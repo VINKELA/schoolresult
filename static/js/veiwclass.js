@@ -338,7 +338,7 @@ $(function() {
   $('#delete_scoresheet_button').bind('click', function() {
 // Stop form from submitting normally
 event.preventDefault();
-conf= confirm("press ok to delete "+$('#subject_name')+" permanentely")
+conf= confirm("press ok to delete "+$('#previous').val()+" permanentely")
 if (conf == true){
     $('#edited_scoresheet_button').attr('disabled',true)
     $('#cancel').attr('disabled', true)

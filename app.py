@@ -1277,6 +1277,7 @@ def delete_scoresheet():
     if no_of_subjects == 0:
         db.execute("UPDATE :classes set noOfSubjects = :no_of_subjects, no_of_passes=:passes, no_of_failures=:fail WHERE id=:id", classes=tables["class_term_data"],no_of_subjects=0,passes = 0, fail=0, id=class_id)
         db.execute("DELETE  FROM :subject WHERE id=:id", subject=tables["subjects"], id=subject_id)
+        db.execute("UPDATE :master SET position=:new", master=tables["mastersheet"], new='None')
         error=subject[0]["name"]+" deleted successfully"
         return render_class(tables["class_id"],error)
     else:

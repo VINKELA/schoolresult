@@ -252,7 +252,9 @@ Average: {{ "%.2f"|format(mastersheet[0]["average"]|float) }}
  {%endif%}
 
 {%if result["pandf"] == 'on' %}
-        <p> Number of Subjects passed: {{mastersheet[0]["subject_passed"]}}</p>  <p> Number of subjects failed: {{mastersheet[0]["subject_failed"]}}</p> 
+{%set failed = gradeRows[0]["no_of_F"]|int%}
+{%set passed = subjectData|length - failed%}
+        <p> Number of Subjects passed: {{passed}}</p>  <p> Number of subjects failed: {{failed}}</p> 
 {%endif%}
 </div>
 <div id="grade_summary">
