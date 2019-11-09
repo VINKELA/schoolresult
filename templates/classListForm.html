@@ -18,11 +18,9 @@
         {% set othername = "o"+ id%}
         {% set sex = "g"+ id%}
             <div>STUDENT {{loop.index}}.</div>
-            <div class="row">
-            <div class="col"><input    name="{{firstname}}" placeholder=" firstname" type="text" required/></div>
-            <div class="col"><input   name="{{surname}}" placeholder="surname" type="text" required/></div>
-            <div class="col"><input  name="{{othername}}" placeholder="othername" type="text"/></div>
-            </div>
+            <input    name="{{firstname}}" placeholder=" firstname" type="text" required/>
+            <input   name="{{surname}}" placeholder="surname" type="text" required/>
+            <input  name="{{othername}}" placeholder="othername" type="text"/>
              <div > <b>SELECT GENDER:</b> <label ><input  class = "col" type="radio" name="{{sex}}" value="Female" required> <b>Female</b> </label>
             <label ><input class = "col" type="radio" name="{{sex}}" value="Male" required> <b>Male</b></label></div>
            <input name="n" value="{{n}}" type="text" hidden/>
