@@ -5,46 +5,33 @@
 {% endblock %}
 
 {% block main %}
-<div>
+
      <h4 class="blue">Enter the names of students in {{class_name}}</h4>
 <form action="/confirm_classlist"  id="class_created"  method="post">
- <table class="table table-striped">
-<thead>
-    <tr>
-        <th colspan="4">
-                {{class_name}} CLASSLISTS </th>
-    </tr>
-</thead>
-<tbody>
+
 {% for i in range(n)  %}
+<div class="form-w3ls">       
 
         {% set id = i|string %}
         {% set surname = "s"+ id %}
         {% set firstname = "f"+ id%}
         {% set othername = "o"+ id%}
         {% set sex = "g"+ id%}
-        <tr>
-           <td colspan="5">
-            <div class="row">STUDENT {{loop.index}}.</div>
+            <div>STUDENT {{loop.index}}.</div>
             <div class="row">
             <div class="col"><input    name="{{firstname}}" placeholder=" firstname" type="text" required/></div>
             <div class="col"><input   name="{{surname}}" placeholder="surname" type="text" required/></div>
             <div class="col"><input  name="{{othername}}" placeholder="othername" type="text"/></div>
             </div>
-             <div class="row"> <b>SELECT GENDER:</b> <label ><input  class = "col" type="radio" name="{{sex}}" value="Female" required> <b>Female</b> </label>
+             <div > <b>SELECT GENDER:</b> <label ><input  class = "col" type="radio" name="{{sex}}" value="Female" required> <b>Female</b> </label>
             <label ><input class = "col" type="radio" name="{{sex}}" value="Male" required> <b>Male</b></label></div>
-        </td>
-        </tr>
            <input name="n" value="{{n}}" type="text" hidden/>
-
+</div>
 {% endfor %}
-</tbody>
-</table>
 <div class="form-w3ls row">
  <div class="col"><button id="submit_classlist" class="sign-in" type="submit">Submit</button></form></div>
  
  <div class="col"><form action="/cancel_portfolio" method="POST"><button class="sign-in" id="password_button">CANCEL</button></div>
- </div>
  </div>
 <!-- js files -->
 	<script src="/static/js/portfolio.js"></script>
