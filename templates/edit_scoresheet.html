@@ -28,7 +28,7 @@
  <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">NAME</th>
+      <th scope="col"></th>
       <th scope="col">CA </th>
        <th scope="col">TEST </th>
          <th scope="col">EXAM </th>
@@ -43,7 +43,7 @@
         {% set exam_id = examData[loop.index-1][subjectData[0]["id"]|string] |string %}
 
 
-        <tr><td colspan="4"><div class="row"><h5 style="text-align: center">{{student["surname"]}} {{student["firstname"]}} {{student["othername"]}} </h5></div>
+        <tr><td colspan="4"><div class="row"><h6>{{student["surname"]}} {{student["firstname"]}} {{student["othername"]}} </h6></div>
           <div class="row">
           <div class="col">
             {% set cascore = "cascore"+ id %}

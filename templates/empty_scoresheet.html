@@ -13,7 +13,7 @@
  <table class="table table-sm">
   <thead>
     <tr>
-      <th scope="col">NAME</th>
+      <th scope="col"></th>
       <th scope="col">CA </th>
        <th scope="col">TEST </th>
          <th scope="col">EXAM </th>
@@ -24,11 +24,11 @@
   
 {% for student in class_names %}
         {% set id = student["id"]|string %}
-        <div class="row" >   <tr><td>{{student["surname"]}} {{student["firstname"]}} {{student["othername"]}}</td></div>
+        <tr><div class="row" > <td colspan="4"><h6>{{student["surname"]}} {{student["firstname"]}} {{student["othername"]}}</h6></div>
           <div class="row">
         <div class="col">
          {% set cascore = "cascore"+ id %}
-                    <td><select name="{{cascore}}" id="ca"  aria-required="true">
+                    <select name="{{cascore}}" id="ca"  aria-required="true">
                     <option  value="" selected="">ca score</option>
                     <option  value="0" >0</option>
                       {%for i in range(setting[0]["ca"])%}
@@ -36,33 +36,33 @@
                             <option  value="{{i+1}}">{{i+1}}</option>
                        {%endfor%}
                     </select>
-                    <div class="arrow"></div></td>
+                    <div class="arrow"></div>
          </div>
 
         <div class="col">
          {% set testscore = "testscore"+ id %}
-                    <td><select name="{{testscore}}" id="test"  aria-required="true">
+                    <select name="{{testscore}}" id="test"  aria-required="true">
                     <option  value="" selected="">test score</option>
                     <option  value="0" >0</option>
                       {%for i in range(setting[0]["test"])%}
                             <option  value="{{i+1}}">{{i+1}}</option>
                        {%endfor%}
                     </select>
-                    <div class="arrow"></div></td>
+                    <div class="arrow"></div>
         </div>
         <div class="col">
          {% set examscore = "examscore"+ id %}
-                    <td><select name="{{examscore}}" id="exam"  aria-required="true">
+                    <select name="{{examscore}}" id="exam"  aria-required="true">
                     <option  value="" selected="" >exam score</option>
                     <option  value="0" >0</option>
                       {%for i in range(setting[0]["exam"])%}
                             <option  value="{{i+1}}">{{i+1}}</option>
                        {%endfor%}
                     </select>
-                    <div class="arrow"></div></td>
+                    <div class="arrow"></div>
         </div>
       </div>
-  </div>
+  </div></td></tr>
 {% endfor %}
 </table>
 <div class="form-w3ls row">
