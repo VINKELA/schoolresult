@@ -249,3 +249,8 @@ div > form > h4{
 #no_subject{
     text-align: center;
 }
+p.copyright {
+    font-size:14px;
+    line-height:30px;
+    text-align: center;
+}

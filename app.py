@@ -1192,11 +1192,11 @@ def edited_scoresheet():
             total_score = total_score + int(exam_score)
         subject_total = subject_total + total_score
 
-        if int(total_score) !=  int(student_row[0][str(subject_id)]):
+        if float(total_score) !=  float(student_row[0][str(subject_id)]):
             subject_list = db.execute("SELECT * FROM :subject WHERE id=:id", subject = tables["subjects"],id = subject_id)
             previous_grade = no_of_grade[0][str(subject_id)]
             current_grading = grade(0, str(class_info[0]["grading_type"]))
-            new_total = int(student_row[0]["total_score"]) - int(student_row[0][str(subject_id)])
+            new_total = float(student_row[0]["total_score"]) - float(student_row[0][str(subject_id)])
             new_total = new_total + total_score
             student_grad = grade(total_score, str(class_info[0]["grading_type"]))
             student_grade = student_grad["score_grade"]
@@ -1244,7 +1244,7 @@ def edited_scoresheet():
                 teacher_initials = teacher_initials+initials(name)
         db.execute("UPDATE :subject SET teachers_initial = :abbr WHERE id=:id ", subject = tables["subjects"],  abbr =teacher_initials, id = subject_id)
     #subject = request.form.get("subject_name")+" edited successfully"
-    error = request.form.get("subject_name")+" scoresheet edited successfully"
+    error = request.form.get("subject_name").upper()+" scoresheet edited successfully"
     # send email to admin about subject scoresheet
     #html = render_template('new_score.html',subject = str(subject)+"edited successfully", class_info=classRows[0])
     #try:
@@ -1276,8 +1276,8 @@ def delete_scoresheet():
     student_pass = 0
     student_fail = 0
     for student in mastersheet:
-        students_total = int(student["total_score"])
-        subject_total = int(student[subject_id])
+        students_total = float(student["total_score"])
+        subject_total = float(student[subject_id])
         new_total= students_total - subject_total
         grading = grade(subject_total,class_details[0]["grading_type"])
         student_grade = grading["score_grade"]
@@ -1310,7 +1310,7 @@ def delete_scoresheet():
         db.execute("UPDATE :classes set noOfSubjects = :no_of_subjects, no_of_passes=:passes, no_of_failures=:fail WHERE id=:id", classes=tables["class_term_data"],no_of_subjects=no_of_subjects,passes = student_pass, fail=student_fail, id=class_id)
         db.execute("DELETE  FROM :subject WHERE id=:id", subject=tables["subjects"], id=subject_id)
         assign_student_position(class_id)
-        error=subject[0]["name"]+" deleted successfully"
+        error=subject[0]["name"].upper()+" deleted successfully"
         session["deleting_scoresheet"] = False
         return render_class(tables["class_id"],error)
 
@@ -1383,6 +1383,7 @@ def edit_scoresheet():
         current_settings = db.execute("SELECT * FROM :settings WHERE id = :id", settings = tables["class_term_data"], id=class_id)
         setting = current_settings[0]
         session["edit_scoresheet"] = False
+        session["deleting_scoresheet"] = False
         return render_template("edit_scoresheet.html",sub_id=subject_id, schoolInfo = schoolrow, classData = classrow, caData = carow, testData = testrow, examData = examrow, subjectData = subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position = subject_position_row, result = setting)
     else:
         error= ' The admin or class password is incorrect.'
