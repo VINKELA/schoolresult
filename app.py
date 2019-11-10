@@ -76,8 +76,8 @@ app.config.update(dict(
     MAIL_PORT = 587,
     MAIL_USE_TLS = True,
     MAIL_USE_SSL = False,
-    MAIL_USERNAME = "orjikalukelvin@gmail.com",
-    MAIL_PASSWORD = "gmailvenuse123",
+    MAIL_USERNAME = "schoolresultnigeria@gmail.com",
+    MAIL_PASSWORD = "gmail_venuse123",
 ))
 
 mail = Mail(app)
@@ -953,7 +953,7 @@ def submitted():
             html = render_template('new_score.html',subject = session["subject_info"], class_info=classRows[0])
             subject = session["subject_info"]["subject"]+" scoreesheet submitted for  "+ classRows[0]["classname"]
             try:
-                send_email(rows[0]["email"], subject, html, 'Schoolresultest@gmail.com')
+                send_email(rows[0]["email"], subject, html, 'Schoolresultnigeria@gmail.com')
             except Exception as e:
                 print(e)
         classRows = db.execute("SELECT * FROM :session_data ",session_data = tables["session_data"])
