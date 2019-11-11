@@ -950,7 +950,7 @@ def submitted():
             except Exception as e:
                 print(e)
         classRows = db.execute("SELECT * FROM :session_data ",session_data = tables["session_data"])
-        error = session["subject_info"]["subject"]+" scoresheet submitted successfully"
+        error = session["subject_info"]["subject"].upper()+" scoresheet submitted successfully"
         # return classlist.html
     return render_class(tables["class_id"],error)
 
