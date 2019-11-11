@@ -9,21 +9,18 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th></th>
-            <th>Setting</th>
-            <th>value</th>
+            <th colspan="3">Setting</th>
         </tr>
     </thead>
     <tbody>
             <tr>
                     <td>General password</td>
-                    <td>Reset general password</td>
-                    <td><input name="general_password" type="password" placeholder="password"></td>
+                    <td colspan="2"><input name="general_password" type="password" placeholder="password" id="general_password"><div class="red" id="password_msg"></div></td>
                 </tr> 
         <tr>
             <td rowspan="2">SET Session/Term</td>
-            <td>Session</td>
-            <td>
+            <td colspan="2">
+                    <div>Session</div>
                     <select name="session"   aria-required="true">
                             <option   selected="" disabled="">{{schoolInfo[0]["current_session"]}}</option>
                             <option  value="2018/2019">2018/2019</option>
@@ -35,8 +32,8 @@
             </td>
         </tr>
         <tr>
-            <td>Term</td>
-            <td>
+            <td colspan="2">
+                    <div>Term</div>
                     <select name="term"   aria-required="true">
                             <option   selected="" disabled="">{{schoolInfo[0]["current_term"]}}</option>
                             <option  value="1">first</option>
@@ -65,10 +62,8 @@
         </td>
 </tr>
 <tr>
-    <td>
-        Background font
-    </td>
-    <td>
+    <td colspan="2">
+         <div>Background font</div>
         <select  name="background_font" >
                 <option selected="selected" disabled="">{{class_setting[0]["background_font"]}}</option>
                 <option>Arial</option> 
@@ -123,8 +118,8 @@
 </tr>
 <tr>
     <td rowspan="6"> Customize Letter-heading</td>
-    <td>letter heading position</td>
-    <td><select  name="ld_position" value="{{class_setting[0]["ld_position"]}}">
+    <td colspan="2"><select  name="ld_position" value="{{class_setting[0]["ld_position"]}}">
+            <div>letter heading position</div>
             <option  {%if class_setting["ld_position"]=="center"%} selected="selected" {%endif%}> center</option>
             <option  {%if class_setting["ld_position"]=="left"%} selected="selected" {%endif%} >left</option>
             <option  {%if class_setting["ld_position"]=="right"%} selected="selected"{%endif%}>right</option>
@@ -135,10 +130,8 @@
 </tr>
 
 <tr>
-<td>
-    letter heading font
-</td>
-<td>
+<td colspan="2">
+    <div>letter heading font</div>
     <select  name="l_font" >
             <option selected="selected" disabled="">{{class_setting[0]["l_font"]}}</option>
             <option>Arial</option> 
@@ -193,9 +186,7 @@
 </tr>
 <tr>
 <td>
-    letter heading font weight
-</td>
-<td>
+        <div>letter heading font weight</div>
         <select name="l_weight"  value="{{class_setting["l_weight"]}} aria-required="true">
             <option selected="selected" disabled="">{{class_setting[0]["l_weight"]}}</option>
             <option>Bold</option> 
@@ -217,9 +208,7 @@
 </tr>
 
 <tr>
-<td>
-    letter heading color
-</td>
+<div>letter heading color</div>
 <td>
     <input type="color"   name="l_color" value="{{class_setting[0]["l_color"]}}">
 </td>
@@ -238,10 +227,8 @@
 </tr>
 
 <tr>
-<td>
-    letter heading font-size
-</td>
-        <td>
+        <td colspan="2">
+                <div>letter heading font-size</div>
                 <select name="l_font-size"   aria-required="true">
                         <option  value="" selected="" disabled="">{{class_setting[0]["l_fontsize"]}}</option>
                           {%for i in range(100)%}
@@ -254,10 +241,9 @@
 </tr>
 <tr>
 <td rowspan="11">School detail and other information</td>
-<td>
-    School details font
-</td>
-<td>
+<td colspan="2">
+        <div> School details font</div>
+            
     <select  name="sd_font" >
             <option selected="selected" disabled="">{{class_setting[0]["sd_font"]}}</option>
             <option>Arial</option> 
@@ -318,10 +304,9 @@
 </td>
 </tr>
 <tr>
-<td>
-    School details font-size
-</td>
-<td>
+<td colspan="2">
+        <div>School details font-size</div>
+
         <select name="sd_fontsize"   aria-required="true">
                 <option   selected="" disabled="">{{class_setting[0]["sd_fontsize"]}}</option>
                   {%for i in range(100)%}
@@ -333,8 +318,8 @@
 </tr>
 
 <tr>
-<td>School details position</td>
-<td><select aria-required="true" name="sd_position">
+<td colspan="2"><select aria-required="true" name="sd_position">
+        <div>School details position</div>
         <option selected="selected" disabled="">{{class_setting[0]["sd_position"]}}</option>
         <option>center</option>
         <option>left</option>
@@ -344,10 +329,8 @@
 </td>
 </tr>
 <tr>
-<td>
-Add school email
-</td>
-<td>
+<td colspan="2">
+    <div>Add school email</div>      
 <input type="text"  name="sd_email" value="{{class_setting[0]["sd_email"]}}">
 </td>
 </tr>
@@ -364,26 +347,20 @@ Use admin email
 </td>
 </tr>
 <tr>
-<td>
-Add address
-</td>
-<td>
+<td colspan="2">
+<div>Add address</div>
 <input type="text"  name="address" value="{{class_setting[0]["address"]}}">
 </td>
 </tr>
 <tr>
-<td>
-Add P.O BOX
-</td>
-<td>
+<td colspan="2">
+<div>Add P.O BOX</div>
 <input type="text"  name="po_box" value="{{class_setting[0]["po_box"]}}">
 </td>
 </tr>
 <tr>
-<td>
-Add phone numbers
-</td>
-<td>
+<td colspan="2">
+<div>Add phone numbers</div>
 <input type="text"  name="phone" value="{{class_setting[0]["phone"]}}">
 </td>
 </tr>
@@ -397,20 +374,20 @@ Next term
 </tr>
 
 <tr>
-<td>
-Other information
-</td>
-<td>
+<td colspan="2">
+        <div>Other information</div>
+                
 <input type="text" " name="sd_other" value="{{class_setting[0]["sd_other"]}}">
 </td>
 </tr>
 
 <tr>
 <td rowspan="4">student details</td>
-<td>
-Student details font
-</td>
-<td>
+
+<td colspan="2">
+        <div>
+                Student details font
+        </div>
 <select  name="std_font" >
 <option selected="selected" disabled="">{{class_setting[0]["std_font"]}}</option>
 <option>Arial</option> 
@@ -472,10 +449,11 @@ Student details color
 </td>
 </tr>
 <tr>
-<td>
-Student details font-size
-</td>
-<td>
+
+<td colspan="2">
+        <div>
+                Student details font-size
+                </div>
 <select name="std_fontsize"   aria-required="true">
         <option   selected="" disabled="">{{class_setting[0]["std_fontsize"]}}</option>
           {%for i in range(100)%}
@@ -487,8 +465,9 @@ Student details font-size
 
 </tr>
 <tr>
-<td>Student details position</td>
-<td><select aria-required="true" name="std_position">
+<td colspan="2">
+        <div>Student details position</div>
+    <select aria-required="true" name="std_position">
 <option selected="selected" disabled="">{{class_setting[0]["std_position"]}}</option>
 <option>center</option>
 <option>left</option>

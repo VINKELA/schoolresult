@@ -8,17 +8,14 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th></th>
-            <th>Setting</th>
-            <th>value</th>
+            <th colspan="3">Choose Setting</th>
         </tr>
     </thead>
     <tbody>
         <tr>
         <td>Grading type</td>
-        <td></td>
 
-        <td>
+        <td colspan="2">
                 <select name="grading_type"  aria-required="true">
                     <option selected="selected" disabled="">{{class_setting["grading_type"]}}</option>
                     <option>WAEC</option> 
@@ -29,8 +26,8 @@
     </tr>
 
 <tr>
-    <td>what ca, test and exam is marked over </td>
-    <td colspan="2">
+    <td colspan="3">
+            <div>what ca, test and exam is marked over </div>
             <div class="row">
                     <div class="col"> <input name="ca" value="{{classData[0]["ca"]}}"  id="ca" type="number" required="required"/> 
                      <div class="red" id="ca_message"></div>
@@ -44,8 +41,8 @@
 </tr>
 <tr>
     <td rowspan="11">Result Table</td>
-    <td>Table type</td>
-    <td>
+    <td colspan="2">
+        <div>Table type</div>
         <select  name="table_type" >
             <option selected="selected" disabled="">{{class_setting["table_type"]}}</option>
             <option>normal</option> 
@@ -193,8 +190,8 @@
 
         <tr>
             
-            <td>Number of comment line for teacher</td>
-            <td>
+            <td colspan="2">
+                <div>Number of comment line for teacher</div>
                 <select name="teachers_line"   aria-required="true">
                         <option   selected="">{{class_setting["teachers_line"]}}</option>
                           {%for i in range(5)%}
@@ -206,8 +203,8 @@
         </tr>
 
         <tr>
-            <td>Number of comment line for principal</td>
-            <td>
+            <td colspan="2">
+                <div>Number of comment line for principal</div>
                 <select name="principal_line"   aria-required="true">
                         <option   selected="" >{{class_setting["principal_line"]}}</option>
                           {%for i in range(5)%}

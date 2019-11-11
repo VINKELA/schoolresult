@@ -101,6 +101,8 @@
                 <span class="blue" id="school_name">
                         {% if session.user_id %}
                         <h4>{{schoolInfo[0]["school_name"].upper()}}</h4>
+                        <h4>Session: {{schoolInfo[0]["current_session"].upper()}} Term: {{schoolInfo[0]["current_term"].upper()}}  </h4>
+
                         {% endif %}
                 </span>
             
