@@ -191,7 +191,7 @@ def register():
         token = generate_confirmation_token(request.form.get("email"))
         confirm_url = url_for('confirm_email', token=token, _external=True)
         html = render_template('confirm_email.html', confirm_url=confirm_url, password = general_password)
-        subject = "Please confirm your email"
+        subject = "Please confirm your Account"
         try:
             send_email(request.form.get("email"), subject, html, 'schoolresultnigeria@gmail.com')
         except Exception as e:
@@ -250,7 +250,7 @@ def resend_confirmation():
     token = generate_confirmation_token(user[0]["email"])
     confirm_url = url_for('confirm_email', token=token, _external=True)
     html = render_template('confirm_email.html', confirm_url=confirm_url, password=general_password)
-    subject = "Please confirm your email"
+    subject = "Please confirm your Account"
     try:
         send_email(user[0]["email"], subject, html,'Schoolresultnigeria@gmail.com')
     except Exception as e:
@@ -702,7 +702,7 @@ def classCreated():
     if class_settings[0]["email_notification"] == 'on':
         # send email to admin about subject scoresheet
         html = render_template('new_class.html',classInfo = classRow)
-        subject = classRow[0]["classname"]+" created for  "+ classRow[0]["section"]+" section"
+        subject = classRow[0]["classname"].upper()+" created for  "+ classRow[0]["section"]+" section"
         try:
             send_email(rows[0]["email"], subject, html, 'classclass_term_dataest@gmail.com')
         except Exception as e:
@@ -945,7 +945,7 @@ def submitted():
         if class_info[0]["email_notification"] == 'on':
             # send email to admin about subject scoresheet
             html = render_template('new_score.html',subject = session["subject_info"], class_info=classRows[0])
-            subject = session["subject_info"]["subject"]+" scoreesheet submitted for  "+ classRows[0]["classname"]
+            subject = session["subject_info"]["subject"].upper()+" scoreesheet submitted for  "+ classRows[0]["classname"]
             try:
                 send_email(rows[0]["email"], subject, html, 'Schoolresultnigeria@gmail.com')
             except Exception as e:
@@ -1237,15 +1237,15 @@ def edited_scoresheet():
             else:
                 teacher_initials = teacher_initials+initials(name)
         db.execute("UPDATE :subject SET teachers_initial = :abbr WHERE id=:id ", subject = tables["subjects"],  abbr =teacher_initials, id = subject_id)
-    #subject = request.form.get("subject_name")+" edited successfully"
+    subject = request.form.get("subject_name")+" edited successfully"
     error = request.form.get("subject_name").upper()+" scoresheet edited successfully"
     # send email to admin about subject scoresheet
-    #html = render_template('new_score.html',subject = str(subject)+"edited successfully", class_info=classRows[0])
-    #try:
-        #send_email(rows[0]["email"], subject, html, 'Schoolresultest@gmail.com')
-    #except Exception as e:
-        #print(e)
-    # return classlist.html
+    html = render_template('new_score.html',subject = str(subject)+"edited successfully", class_info=classRows[0])
+    try:
+        send_email(rows[0]["email"], subject, html, 'Schoolresultest@gmail.com')
+    except Exception as e:
+        print(e)
+    # return class.html
     session["edit_scoresheet"] = False
     return render_class(tables["class_id"],error)
 
