@@ -193,7 +193,7 @@ def register():
         html = render_template('confirm_email.html', confirm_url=confirm_url, password = general_password)
         subject = "Please confirm your email"
         try:
-            send_email(request.form.get("email"), subject, html, 'orjikalukelvin@gmail.com')
+            send_email(request.form.get("email"), subject, html, 'schoolresultnigeria@gmail.com')
         except Exception as e:
             print(e)
         db.execute("INSERT INTO school (school_name, email,username, password,admin_password,current_session,current_term, registered_on) VALUES (:schoolname, :email, :username, :hash,  :adminPassword,:current_session,:term, :registered_on)", schoolname = request.form.get("school_name").upper(), email= request.form.get("email").lower(), username = request.form.get("username").lower(), hash = generate_password_hash(general_password), adminPassword = generate_password_hash(request.form.get("password")),current_session = request.form.get("school_session"),term=request.form.get("term"), registered_on = datetime.datetime.now())
@@ -252,7 +252,7 @@ def resend_confirmation():
     html = render_template('confirm_email.html', confirm_url=confirm_url, password=general_password)
     subject = "Please confirm your email"
     try:
-        send_email(user[0]["email"], subject, html,'Schoolresultest@gmail.com')
+        send_email(user[0]["email"], subject, html,'Schoolresultnigeria@gmail.com')
     except Exception as e:
         print(e)
     flash('A new confirmation email has been sent.', 'success')
