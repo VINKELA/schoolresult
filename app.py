@@ -713,6 +713,7 @@ def classCreated():
         except Exception as e:
             print(e)
     # return classlist.html
+    flash(subject)
     return render_class(classId)
 
 @app.route("/how_to_use", methods=["GET"])
