@@ -119,11 +119,12 @@
      <tr>
         <td>ALL RESULT (PDF DOWNLOAD) (With print support)</td>
         <td colspan="2">
-         <div class="mas"><form action ="/printall_pdf" method = "post" target="_blank" download>
+          <a download="true">
+         <div class="mas"><form action ="/printall_pdf" method = "post" target="_blank">
           <input name="class_id" type="hidden" value = "{{classData[0]["id"]}}"/>
           <button class="btn btn-primary" type="submit" download>Download</button>
         </form>   
-      </div></td>
+      </div></a></td>
     </tr>
     <tr>
 
