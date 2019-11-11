@@ -650,7 +650,7 @@ def confirm_classlist():
 @login_required
 def classCreated():
     if session['creating_class']:
-        error = session["info"]["className"]+" in progress please wait"
+        error = session["info"]["className"]+" has been created"
         return render_portfolio(error)
     session["creating_class"] = True
     tables = database(str(0))
@@ -1256,14 +1256,19 @@ def edited_scoresheet():
 def delete_scoresheet():
     if session["deleting_scoresheet"] or session["edit_scoresheet"]:
         error = "Deleting scoresheet in progress please wait"
+        flash(error)
         return render_class(request.form.get("class_id"))
     session["deleting_scoresheet"] = True
     class_id = str(request.form.get("class_id"))
     subject_id = str(request.form.get("subject_id"))
     tables = database(class_id)
+    subject = db.execute("SELECT * FROM :subjects WHERE id=:id", subjects=tables["subjects"], id=subject_id)
+    if len(subject) < 1:
+        error = "Subject do not exist"
+        flash(error)
+        return render_class(class_id)
     class_details = db.execute("SELECT * FROM :class_term WHERE id=:id", class_term = tables["class_term_data"], id=class_id)
     mastersheet = db.execute("SELECT * FROM :master", master = tables["mastersheet"])
-    subject = db.execute("SELECT * FROM :subjects WHERE id=:id", subjects=tables["subjects"], id=subject_id)
     all_subject = db.execute("SELECT * FROM :subjects ", subjects=tables["subjects"])
 
     no_of_subjects = len(all_subject) - 1
@@ -1432,6 +1437,12 @@ def unregister_student():
     session["deleting_student"] = True
     student_id = request.form.get("student_id")
     class_id = request.form.get("class_id")
+    tables =database(class_id)
+    student_details = db.execute("SELECT * FROM :classlist where id = :id", classlist= tables["classlist"], id=student_id)
+    if len(student_details) < 1:
+        error = "student does not exist"
+        flash(error)
+        return render_class(class_id)
     remove_student(student_id, class_id)
     error="student deleted successfully"
     session["deleting_student"] = False
@@ -1571,9 +1582,9 @@ def confirm_details():
 @check_confirmed
 def student_added():
     if session["adding_student"]:
-        error = session["single_details"]["firstname"] + " " +session["single_details"]["surname"]+ " already being added please wait"
+        error = session["single_details"]["firstname"] + " " +session["single_details"]["surname"]+ " already  added "
         flash(error)
-        render_class(session["single_details"]["class_id"])
+        return render_class(session["single_details"]["class_id"])
     session["adding_student"] = True
     class_id = session["single_details"]["class_id"]
     tables= database(class_id)
@@ -1707,11 +1718,16 @@ def edited_class():
 def delete_class():
     if session["deleting_class"] or session["editing_class"]:
         error = "class currently being deleted please wait"
-        return render_portfolio(error)
+        flash(error)
+        return render_portfolio()
     session["deleting_class"] = True
     class_id = request.form.get("delete_class")
     tables= database(class_id)
     class_details = db.execute("SELECT * FROM :this_class WHERE id=:id", this_class=tables["session_data"], id=class_id)
+    if len(class_details) < 1:
+        error = "class does not exit"
+        flash(error)
+        return render_portfolio()
     db.execute("DROP TABLE :cascore", cascore= tables["ca"])
     db.execute("DROP TABLE :test", test= tables["test"])
     db.execute("DROP TABLE :exam", exam= tables["exam"])
