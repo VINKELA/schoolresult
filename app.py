@@ -88,7 +88,79 @@ db = SQL("sqlite:///schools.db")
 
 
 error = None
+@app.route("/demo", methods=["GET"])
+def demo():
+    session["user_id"] = "2"
+    return redirect("/login")
 
+
+@app.route("/login", methods=["POST","GET"])
+def login():
+    if request.method == "POST":
+        if request.form.get("username")=="":
+            error = "username field cannot be empty"
+            return render_template("login.html", error = error)
+        if request.form.get("password")=="":
+            error = "password field cannot be empty"
+            return render_template("login.html", error = error)
+        # Query database for username
+        rows = db.execute("SELECT * FROM school WHERE username = :username",username=str(request.form.get("username")).lower())
+        # Remember which user has logged in
+        # Ensure username exists and password is correct
+        if len(rows) == 0:
+            error = "user does not exist"
+            return render_template ("login.html", error=error)
+        if not check_password_hash(rows[0]["admin_password"], request.form.get("password")) and not check_password_hash(rows[0]["password"], request.form.get("password")):
+            error = "invalid username/password"
+            return render_template("login.html", error = error)
+        session["user_id"] = rows[0]["id"]
+        if rows[0]["username"] == "admin":
+            # select all the schools
+            all_schools = db.execute("SELECT * FROM school")
+            # display them in admin portfolio
+            return render_template("admin_page.html", schoolInfo = all_schools)
+        # if account is confirmed render this
+        if(rows[0]["confirmed"]== "true"):
+            tables = database(str(0))
+            classRows = db.execute("SELECT * FROM :session_data ",session_data = tables["session_data"])
+            # if remember me check box is checked
+            if request.form.get("remember_me") == "checked":
+                # generate token
+                random_token = random_string_generator(12, string.ascii_letters+string.punctuation)
+                # generate series id
+                random_series = random_string_generator(12, string.ascii_letters+string.punctuation)
+                #set cookie
+                resp = make_response(render_template("portfolio.html",schoolInfo = rows, clas = classRows))
+                expire_date = datetime.datetime.now()
+                expire_date = expire_date + datetime.timedelta(days=90)
+                resp.set_cookie("series_id",random_series,expires=expire_date)
+                resp.set_cookie("main_token", random_token,expires=expire_date)
+                db.execute("UPDATE school SET token_id = :series, token = :token WHERE id=:id", series = random_series, token = generate_password_hash(random_token), id=session["user_id"])
+                return resp
+                # return render portfolio
+            return render_template("portfolio.html", schoolInfo = rows, clas = classRows)
+
+        # else if account is not confirmed render unconfirmed view
+        else:
+            return redirect('/unconfirmed')
+    else:
+        try:
+            session["user_id"]
+        except KeyError:
+            return render_template("login.html")
+        else:
+            rows = db.execute("SELECT * FROM school WHERE id = :id",id = session["user_id"])
+            # if account is confirmed render this
+            if(rows[0]["confirmed"]== "true"):
+                tables = database(str(0))
+                rows = db.execute("SELECT * FROM school WHERE id=:id", id = session["user_id"])
+                classRows = db.execute("SELECT * FROM :session_data ",session_data = tables["session_data"])
+                # return render portfolio
+                return render_template("portfolio.html", schoolInfo = rows, clas = classRows)
+
+            # else if account is not confirmed render unconfirmed view
+            else:
+                return redirect('/unconfirmed')
 
 
 @app.route("/")
@@ -188,14 +260,6 @@ def register():
             return render_template("register.html", error = error)
         general_password = passwordGen()
         session['general_password'] = general_password
-        token = generate_confirmation_token(request.form.get("email"))
-        confirm_url = url_for('confirm_email', token=token, _external=True)
-        html = render_template('confirm_email.html', confirm_url=confirm_url, password = general_password)
-        subject = "Please confirm your Account"
-        try:
-            send_email(request.form.get("email"), subject, html, 'schoolresultnigeria@gmail.com')
-        except Exception as e:
-            print(e)
         db.execute("INSERT INTO school (school_name, email,username, password,admin_password,current_session,current_term, registered_on) VALUES (:schoolname, :email, :username, :hash,  :adminPassword,:current_session,:term, :registered_on)", schoolname = request.form.get("school_name").upper(), email= request.form.get("email").lower(), username = request.form.get("username").lower(), hash = generate_password_hash(general_password), adminPassword = generate_password_hash(request.form.get("password")),current_session = request.form.get("school_session"),term=request.form.get("term"), registered_on = datetime.datetime.now())
         # Query database for username
         rows = db.execute("SELECT * FROM school WHERE username = :username",username=request.form.get("username").lower())
@@ -208,6 +272,14 @@ def register():
         db.execute("CREATE TABLE :setting ('id' INTEGER PRIMARY KEY NOT NULL, 'classname' TEXT, 'grading_type' INTEGER, 'comment_lines' INTEGER,'student_position' INTEGER DEFAULT 1, 'surname' TEXT, 'firstname' TEXT,'password' TEXT,'section' TEXT, 'ca' INTEGER, 'test' INTEGER,'exam' INTEGER)", setting = tables["session_data"])
         # create result data
         db.execute("CREATE TABLE :result ('id' INTEGER PRIMARY KEY  NOT NULL, 'noOfStudents' INTEGER DEFAULT 0,'noOfSubjects' INTEGER DEFAULT 0, 'no_of_passes' INTEGER DEFAULT 0, 'no_of_failures' INTEGER DEFAULT 0, 'grading_type' TEXT DEFAULT 'WAEC','background_color' TEXT DEFAULT '#fff','text_color' TEXT DEFAULT 'black','line_color' TEXT DEFAULT 'black','background_font' TEXT DEFAULT 'Ariel','ld_position' TEXT DEFAULT 'center','l_font' TEXT DEFAULT 'Ariel Black','l_weight' TEXT DEFAULT '900','l_color' TEXT DEFAULT '#537fbe','l_fontsize' TEXT DEFAULT '30px','sd_font' TEXT DEFAULT 'Ariel','sd_color' TEXT DEFAULT '#808000','sd_fontsize' TEXT DEFAULT '20px','sd_position' TEXT DEFAULT 'center','sd_email' TEXT,'admin_email' TEXT DEFAULT 'off', 'address' TEXT,'po_box' TEXT,'phone' TEXT,'next_term' TEXT,'sd_other' TEXT,'std_color' TEXT DEFAULT 'black','std_font' TEXT DEFAULT 'Arial Narrow','std_fontsize' TEXT DEFAULT '18px','std_position' TEXT DEFAULT 'left','table_type' TEXT DEFAULT 'striped','ca' TEXT DEFAULT 'on','test' TEXT DEFAULT 'on','exam' TEXT DEFAULT 'on','combined' TEXT DEFAULT 'on','subject_total' TEXT DEFAULT 'on','class_average' TEXT DEFAULT 'on','subject_position' TEXT DEFAULT 'on','grade' TEXT DEFAULT 'on','subject_comment' TEXT DEFAULT 'off','teachers_initials' TEXT DEFAULT 'off','total_score' TEXT DEFAULT 'on','average' TEXT DEFAULT 'on','position' TEXT DEFAULT 'on','teachers_line' INTEGER DEFAULT 0,'shadow' TEXT DEFAULT 'on','principal_line' INTEGER DEFAULT 0,'teachers_signature' TEXT DEFAULT 'off','principal_signature' TEXT DEFAULT 'off','pandf' TEXT DEFAULT 'on','grade_summary' TEXT DEFAULT 'on','watermark' TEXT DEFAULT 'off','email_notification' TEXT DEFAULT 'on')",result = tables["class_term_data"])
+        token = generate_confirmation_token(request.form.get("email"))
+        confirm_url = url_for('confirm_email', token=token, _external=True)
+        html = render_template('confirm_email.html', confirm_url=confirm_url, password = general_password)
+        subject = "Please confirm your Account"
+        try:
+            send_email(request.form.get("email"), subject, html, 'schoolresultnigeria@gmail.com')
+        except Exception as e:
+            print(e)
         return render_template("unconfirmed.html", schoolInfo=rows)
     else:
         return render_template("register.html")
@@ -327,73 +399,6 @@ def email_check():
             return "false"
 
 
-@app.route("/login", methods=["POST","GET"])
-def login():
-    if request.method == "POST":
-        if request.form.get("username")=="":
-            error = "username field cannot be empty"
-            return render_template("login.html", error = error)
-        if request.form.get("password")=="":
-            error = "password field cannot be empty"
-            return render_template("login.html", error = error)
-        # Query database for username
-        rows = db.execute("SELECT * FROM school WHERE username = :username",username=str(request.form.get("username")).lower())
-        # Remember which user has logged in
-        # Ensure username exists and password is correct
-        if len(rows) == 0:
-            error = "user does not exist"
-            return render_template ("login.html", error=error)
-        if not check_password_hash(rows[0]["admin_password"], request.form.get("password")) and not check_password_hash(rows[0]["password"], request.form.get("password")):
-            error = "invalid username/password"
-            return render_template("login.html", error = error)
-        session["user_id"] = rows[0]["id"]
-        if rows[0]["username"] == "admin":
-            # select all the schools
-            all_schools = db.execute("SELECT * FROM school")
-            # display them in admin portfolio
-            return render_template("admin_page.html", schoolInfo = all_schools)
-        # if account is confirmed render this
-        if(rows[0]["confirmed"]== "true"):
-            tables = database(str(0))
-            classRows = db.execute("SELECT * FROM :session_data ",session_data = tables["session_data"])
-            # if remember me check box is checked
-            if request.form.get("remember_me") == "checked":
-                # generate token
-                random_token = random_string_generator(12, string.ascii_letters+string.punctuation)
-                # generate series id
-                random_series = random_string_generator(12, string.ascii_letters+string.punctuation)
-                #set cookie
-                resp = make_response(render_template("portfolio.html",schoolInfo = rows, clas = classRows))
-                expire_date = datetime.datetime.now()
-                expire_date = expire_date + datetime.timedelta(days=90)
-                resp.set_cookie("series_id",random_series,expires=expire_date)
-                resp.set_cookie("main_token", random_token,expires=expire_date)
-                db.execute("UPDATE school SET token_id = :series, token = :token WHERE id=:id", series = random_series, token = generate_password_hash(random_token), id=session["user_id"])
-                return resp
-                # return render portfolio
-            return render_template("portfolio.html", schoolInfo = rows, clas = classRows)
-
-        # else if account is not confirmed render unconfirmed view
-        else:
-            return redirect('/unconfirmed')
-    else:
-        try:
-            session["user_id"]
-        except KeyError:
-            return render_template("login.html")
-        else:
-            rows = db.execute("SELECT * FROM school WHERE id = :id",id = session["user_id"])
-            # if account is confirmed render this
-            if(rows[0]["confirmed"]== "true"):
-                tables = database(str(0))
-                rows = db.execute("SELECT * FROM school WHERE id=:id", id = session["user_id"])
-                classRows = db.execute("SELECT * FROM :session_data ",session_data = tables["session_data"])
-                # return render portfolio
-                return render_template("portfolio.html", schoolInfo = rows, clas = classRows)
-
-            # else if account is not confirmed render unconfirmed view
-            else:
-                return redirect('/unconfirmed')
 
 
 @app.route("/change_password", methods=["POST", "GET"])
@@ -1240,9 +1245,9 @@ def edited_scoresheet():
     subject = request.form.get("subject_name")+" edited successfully"
     error = request.form.get("subject_name").upper()+" scoresheet edited successfully"
     # send email to admin about subject scoresheet
-    html = render_template('new_score.html',subject = str(subject)+"edited successfully", class_info=classRows[0])
+    html = render_template('new_score.html',subject = str(subject)+"edited successfully", class_info=class_info[0])
     try:
-        send_email(rows[0]["email"], subject, html, 'Schoolresultest@gmail.com')
+        send_email(schoolrow[0]["email"], subject, html, 'Schoolresultest@gmail.com')
     except Exception as e:
         print(e)
     # return class.html

@@ -5,9 +5,9 @@
 
 {% block main %}
 
-<h4 class="blue">CLASS: {{classData[0]["classname"].upper()}}</h4> 
-<h4 class="blue">SECTION: {{classData[0]["section"].upper()}} </h4>
-<h4 class="blue">SESSION: {{schoolInfo[0]["current_session"].upper()}} TERM: {{schoolInfo[0]["current_term"].upper()}}</h4>
+<h6 class="blue">CLASS: {{classData[0]["classname"].upper()}}</h6> 
+<h6 class="blue">SECTION: {{classData[0]["section"].upper()}} </h6>
+<h6 class="blue">SESSION: {{schoolInfo[0]["current_session"].upper()}} TERM: {{schoolInfo[0]["current_term"].upper()}}</h6>
 <div class="form-w3ls">
   <form action="/edited_scoresheet" method="post" id="edited_scoresheet_form">
   <table class="table table-striped">

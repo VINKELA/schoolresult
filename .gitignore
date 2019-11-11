@@ -5,4 +5,4 @@ staticfiles
 .env
 getting-started/*
 .exe
-*.db
+schools.db
