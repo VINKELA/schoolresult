@@ -36,7 +36,7 @@
   </thead>
   <tbody>
 {% for student in class_list %}
-  <div class="form-row">
+  <div>
         {% set id = student["id"]|string %}
         {% set ca_id = caData[loop.index-1][subjectData[0]["id"]|string] |string %}
         {% set test_id = testData[loop.index-1][subjectData[0]["id"]|string] |string %}
