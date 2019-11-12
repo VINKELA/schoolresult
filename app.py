@@ -1,4 +1,5 @@
 import os
+import werkzeug
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session, jsonify, url_for, make_response
 from flask_session import Session
@@ -14,6 +15,7 @@ import string
 from requests.models import Response
 from flask_weasyprint import HTML, render_pdf
 
+from werkzeug.exceptions import HTTPException
 from operator import itemgetter, attrgetter
 
 from functions import has_duplicate, login_required, database, random_string_generator, render_portfolio, term_tables, drop_tables, grade, assign_student_position, assign_subject_position, passwordGen, initials, add_student, remove_student, render_class, render_portfolio, update_grade, session_term_check, new_term, new_session, generate_pins,check_confirmed
@@ -88,6 +90,24 @@ db = SQL("sqlite:///schools.db")
 
 
 error = None
+
+
+@app.errorhandler(werkzeug.exceptions.MethodNotAllowed)
+def handle_error(e):
+    error = "Please Login to access link"
+    flash(error)
+    return render_template("login.html")
+
+
+@app.errorhandler(werkzeug.exceptions.NotFound)
+def handle_error2(e):
+    error = "Sorry Link not available now"
+    flash(error)
+    return render_template("login.html")
+
+
+
+
 @app.route("/demo", methods=["GET"])
 def demo():
     session["user_id"] = "2"
