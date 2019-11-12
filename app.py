@@ -851,7 +851,7 @@ def confirm_scoresheet():
         ca = "cascore"+str(student["id"])
         test = "testscore"+str(student["id"])
         exam = "examscore"+str(student["id"])
-        session["class_scores"].append((student["id"], student["firstname"], student["surname"],student["othername"], request.form.get(ca), request.form.get(test), request.form.get(exam)))
+        session["class_scores"].append((student["id"], student["firstname"], student["surname"], request.form.get(ca), request.form.get(test), request.form.get(exam)))
     session["submitting_scoresheet"] = False
     #return classlist.html
     return render_template("confirm_scoresheet.html",schoolInfo = rows, students=session["class_scores"], class_id = session["subject_info"]["class_id"], details=session_setting, details2 = session["subject_info"])
@@ -895,11 +895,11 @@ def submitted():
         for  student in session["class_scores"]:
             subject_list = db.execute("SELECT * FROM :subject WHERE name=:subject_name", subject = tables["subjects"],subject_name = session["subject_info"]["subject"])
             total_score = 0
-            if student[4]:
+            if student[3]:
                 total_score = total_score + int(student[3])
-            if student[5]:
+            if student[4]:
                 total_score = total_score + int(student[4])
-            if student[6]:
+            if student[5]:
                 total_score = total_score + int(student[5])
             new_total = student_row[i]["total_score"] + total_score
             grading = grade(total_score, former_info[0]["grading_type"])
@@ -917,9 +917,9 @@ def submitted():
                 term_failed = term_failed + 1
 
 
-            db.execute("UPDATE :catable SET :subject = :score WHERE id =:id", catable = tables["ca"], subject = subject_id,score =student[4], id = student[0])
-            db.execute("UPDATE :testtable SET :subject = :score WHERE id =:id", testtable = tables["test"], subject = subject_id,score =student[5], id = student[0])
-            db.execute("UPDATE :examtable SET :subject = :score WHERE id =:id", examtable = tables["exam"], subject = subject_id,score =student[6], id = student[0])
+            db.execute("UPDATE :catable SET :subject = :score WHERE id =:id", catable = tables["ca"], subject = subject_id,score =student[3], id = student[0])
+            db.execute("UPDATE :testtable SET :subject = :score WHERE id =:id", testtable = tables["test"], subject = subject_id,score =student[4], id = student[0])
+            db.execute("UPDATE :examtable SET :subject = :score WHERE id =:id", examtable = tables["exam"], subject = subject_id,score =student[5], id = student[0])
 
             if int(total_score) < grading["pass_mark"]:
                 db.execute("UPDATE :master SET subject_failed = :value,:subject = :score,total_score=:n_total,average = :n_average WHERE id=:id", master = tables["mastersheet"], value = int(student_row[i]["subject_failed"])+1, id = student[0],subject = subject_id,score =total_score, n_total = new_total,n_average =new_average)
