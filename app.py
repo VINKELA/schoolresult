@@ -79,7 +79,7 @@ app.config.update(dict(
     MAIL_USE_TLS = True,
     MAIL_USE_SSL = False,
     MAIL_USERNAME = "schoolresultnigeria@gmail.com",
-    MAIL_PASSWORD = "gmail_venuse123",
+    MAIL_PASSWORD = "gmailvenuse123",
 ))
 
 mail = Mail(app)
