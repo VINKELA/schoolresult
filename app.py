@@ -14,7 +14,7 @@ import random
 import string
 from requests.models import Response
 from flask_weasyprint import HTML, render_pdf
-
+import json
 from werkzeug.exceptions import HTTPException
 from operator import itemgetter, attrgetter
 
@@ -1142,6 +1142,7 @@ def edited_scoresheet():
     class_list_row = db.execute("SELECT * FROM :classlist", classlist = class_list)
     subject_row = db.execute("SELECT * FROM :subjects WHERE id=:id", subjects=subject_table, id=subject_id)
     class_info = db.execute("SELECT * FROM :Schoolresult WHERE id=:class_id", Schoolresult = tables["class_term_data"], class_id = tables["class_id"])
+    session_info = db.execute("SELECT * FROM :Schoolresult WHERE id=:class_id", Schoolresult = tables["session_data"], class_id = tables["class_id"])
 
     #subject name check 
     if not request.form.get("subject_name"):
@@ -1184,7 +1185,7 @@ def edited_scoresheet():
     class_passing = int(class_info[0]["no_of_passes"])
     class_failing = int(class_info[0]["no_of_failures"])
     for  student in class_list_row:
-        no_of_grade = db.execute("SELECT * FROM :grade where id=:id", grade=tables["grade"], id=student["id"])
+        prev_grades = db.execute("SELECT * FROM :grade where id=:id", grade=tables["grade"], id=student["id"])
         student_row = db.execute("SELECT * FROM :master where id=:id", master=tables["mastersheet"], id=student["id"])
         ca_row = db.execute("SELECT * FROM :ca where id=:id ", ca=tables["ca"], id=student["id"])
         test_row = db.execute("SELECT * FROM :test where id=:id ", test=tables["test"], id=student["id"])
@@ -1198,35 +1199,35 @@ def edited_scoresheet():
         test_score = request.form.get(testscore)
         exam_score = request.form.get(examscore)
         if  str(ca_score) != ca_row[0][str(subject_id)] and  ca_score != "None" : 
-            print( ca_score+ " and " + ca_row[0][subject_id])
             db.execute("UPDATE :catable SET :subject = :score WHERE id =:id", catable = cascore_table, subject = str(subject_row[0]["id"]),score =ca_score, id = student["id"])
         if  str(test_score) != test_row[0][str(subject_id)] and  test_score != "None"  : 
             db.execute("UPDATE :testtable SET :subject = :score WHERE id =:id", testtable = test_table, subject = str(subject_row[0]["id"]),score =test_score, id = student["id"])
         if  str(exam_score) != exam_row[0][str(subject_id)] and  exam_score != "None": 
             db.execute("UPDATE :examtable SET :subject = :score WHERE id =:id", examtable = exam_table, subject = str(subject_row[0]["id"]),score =exam_score, id = student["id"])
-        if request.form.get(cascore) != " " and request.form.get(cascore) != 'None':
+        if request.form.get(cascore) != '' and request.form.get(cascore) != 'None':
             total_score = total_score + int(ca_score)
-        if request.form.get(testscore) != " " and request.form.get(testscore) != 'None':
+        if request.form.get(testscore) != '' and request.form.get(testscore) != 'None':
             total_score = total_score + int(test_score)
-        if request.form.get(examscore) != " " and request.form.get(examscore) != 'None':
+        if request.form.get(examscore) != '' and request.form.get(examscore) != 'None':
             total_score = total_score + int(exam_score)
         subject_total = subject_total + total_score
 
         if float(total_score) !=  float(student_row[0][str(subject_id)]):
+            all_subjects = db.execute("SELECT * FROM {subject}".format(subject = json.dumps(tables["subjects"])))
             subject_list = db.execute("SELECT * FROM :subject WHERE id=:id", subject = tables["subjects"],id = subject_id)
-            previous_grade = no_of_grade[0][str(subject_id)]
+            previous_grade = prev_grades[0][str(subject_id)]
             current_grading = grade(0, str(class_info[0]["grading_type"]))
             new_total = float(student_row[0]["total_score"]) - float(student_row[0][str(subject_id)])
             new_total = new_total + total_score
             student_grad = grade(total_score, str(class_info[0]["grading_type"]))
             student_grade = student_grad["score_grade"]
-            grade_col = "no_of_"+str(student_grade[0]).upper()
-            previous_grade_col = "no_of_"+str(previous_grade[0]).upper()
-            new_average = new_total / class_info[0]["noOfSubjects"]
-            new_grade_no = int(subject_list[0][grade_col]) + 1
-            previous_grade_no = int(subject_list[0][previous_grade_col]) - 1
-
-            db.execute("UPDATE :subject SET :no_of_g = :no_subject, :no_of_p = :no_previous WHERE id=:id", subject = tables["subjects"], id = subject_id,no_subject = new_grade_no,no_previous = previous_grade_no, no_of_g = grade_col,no_of_p = previous_grade_col)
+            grade_col = 'no_of_'+str(student_grade[0]).upper()
+            previous_grade_col = 'no_of_'+str(previous_grade[0]).upper()
+            new_average = new_total / len(all_subjects)
+            if grade_col != previous_grade_col:
+                new_grade_no = int(subject_list[0][grade_col]) + 1
+                previous_grade_no = int(subject_list[0][previous_grade_col]) - 1
+                db.execute("UPDATE :subject SET :no_of_g = :no_subject, :no_of_p = :no_previous WHERE id=:id", subject = tables["subjects"], id = subject_id,no_subject = new_grade_no,no_previous = previous_grade_no, no_of_g = grade_col,no_of_p = previous_grade_col)
             
             db.execute("UPDATE :master SET :subject = :score,total_score=:n_total,average = :n_average WHERE id=:id", master = tables["mastersheet"],  id = student["id"],n_total = new_total,n_average =new_average,subject = str(subject_id),score =total_score)
 
@@ -1238,9 +1239,11 @@ def edited_scoresheet():
             elif float(new_average) < int(current_grading["pass_mark"]) and float(student_row[0]["average"]) >= float(current_grading["pass_mark"]) :
                 class_failing = class_failing + 1
                 class_passing = class_passing - 1
-            new_sub_grade = int(no_of_grade[0][grade_col]) + 1
-            prev_sub_grade = int(no_of_grade[0][previous_grade_col]) - 1
-            db.execute("UPDATE :grades SET :subject = :subject_grade,:no_of_g = :value,:no_of_p = :no_previous WHERE id =:id",no_of_g = grade_col,value = new_sub_grade, grades = tables["grade"], subject = str(subject_id),subject_grade = student_grade, id = student["id"],no_previous = prev_sub_grade ,no_of_p = previous_grade_col)
+            if grade_col != previous_grade_col:
+                new_sub_grade = int(prev_grades[0][grade_col]) + 1
+                prev_sub_grade = int(prev_grades[0][previous_grade_col]) - 1
+                db.execute("UPDATE :grades SET :subject = :subject_grade,:no_of_g = :value,:no_of_p = :no_previous WHERE id =:id",no_of_g = grade_col,value = new_sub_grade, grades = tables["grade"], subject = str(subject_id),subject_grade = student_grade, id = student["id"],no_previous = prev_sub_grade ,no_of_p = previous_grade_col)
+
     #sort students position
     assign_student_position(tables["class_id"])
     #sort subject position
@@ -1263,12 +1266,13 @@ def edited_scoresheet():
             else:
                 teacher_initials = teacher_initials+initials(name)
         db.execute("UPDATE :subject SET teachers_initial = :abbr WHERE id=:id ", subject = tables["subjects"],  abbr =teacher_initials, id = subject_id)
-    subject = request.form.get("subject_name")+" edited successfully"
+    new_subj = db.execute("SELECT * FROM {subjects} WHERE id={id}".format(subjects = json.dumps(tables["subjects"]), id=subject_id))
+    subject_info = request.form.get("subject_name")+" edited successfully"
     error = request.form.get("subject_name").upper()+" scoresheet edited successfully"
     # send email to admin about subject scoresheet
-    html = render_template('new_score.html',subject = str(subject)+"edited successfully", class_info=class_info[0])
+    html = render_template("new_score.html",subject = new_subj[0], class_info=session_info[0])
     try:
-        send_email(schoolrow[0]["email"], subject, html, 'Schoolresultest@gmail.com')
+        send_email(schoolrow[0]["email"], subject_info, html, 'Schoolresultest@gmail.com')
     except Exception as e:
         print(e)
     # return class.html
@@ -1880,7 +1884,7 @@ def mastersheet_pdf():
     subject_p = db.execute("SELECT * FROM :subjectposition", subjectposition = tables["subject_position"])
     grades = db.execute("SELECT * FROM :ge", ge=tables["grade"])
     results = db.execute("SELECT * FROM :result WHERE id=:id", result = tables["class_term_data"], id = tables["class_id"])
-    html =  render_template("printable_mastersheet.html",gradeData=grades,result = results[0], caData = carow, testData = testrow, examData = examrow, classData = classrow, schoolInfo = schoolrow, subjectData=subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position= subject_p)
+    html =  render_template("mastersheet_pdf.html",gradeData=grades,result = results[0], caData = carow, testData = testrow, examData = examrow, classData = classrow, schoolInfo = schoolrow, subjectData=subjectrow,class_list = classlistrow, mastersheet = mastersheet_rows, subject_position= subject_p)
     return render_pdf(HTML(string=html))
 
 

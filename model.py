@@ -16,7 +16,9 @@ from requests.models import Response
 from operator import itemgetter, attrgetter
 
 from functions import  login_required, database, random_string_generator, render_portfolio, term_tables, drop_tables, grade, assign_student_position, assign_subject_position
-db = SQL("sqlite:///schools.db")
+import psycopg2
+conn =psycopg2.connect("postgres://mmadxcvsatghmb:05b88d9e792b99e806593351921734725708f9787e914ba04cc2c82855b562b2@ec2-107-20-177-161.compute-1.amazonaws.com:5432/d9r3so4np61c38")
+db = conn.cursor()
 def create_table():
 	db.execute("CREATE TABLE 'school' ('id' integer PRIMARY KEY AUTOINCREMENT NOT NULL, 'username' text, 'email' text, 'school_name' text, 'address' text, 'city' text, 'state' text, 'current_term' text, 'current_session' text, 'password' text, 'admin_password' text, 'token_id' text, 'token' text,'confirmed' text DEFAULT 'false', 'registered_on' datetime, 'confirmed_on' datetime)")
 	db.execute("INSERT INTO school (school_name, email,username, password,admin_password,confirmed, current_session, current_term) VALUES ('Schoolresult admin', 'Schoolresult@yahoo.com', 'admin', :hash,  :adminPassword,'true','2011/2012','1')", hash = generate_password_hash('Admin123'),adminPassword = generate_password_hash('Admin123'))
