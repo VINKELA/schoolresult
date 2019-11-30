@@ -29,12 +29,12 @@
     <td colspan="3">
             <div>what ca, test and exam is marked over </div>
             <div class="row">
-                    <div class="col"> <input name="ca" value="{{classData[0]["ca"]}}"  id="ca" type="number" required="required"/> 
+                    <div class="col"> <input name="ca_score" value="{{classData[0]["ca"]}}"  id="ca" type="number" required="required"/> 
                      <div class="red" id="ca_message"></div>
                    </div>
-                    <div class="col"><input value="{{classData[0]["test"]}}"  name="test"  id="test" type="number" required="required"/> <div class="red" id="test_message"></div>
+                    <div class="col"><input value="{{classData[0]["test"]}}"  name="test_score"  id="test" type="number" required="required"/> <div class="red" id="test_message"></div>
                    </div> 
-                    <div class="col"><input  name="exam" value="{{classData[0]["exam"]}}"  id="exam" type="number" required="required"/><div class="red" id="exam_message"></div>
+                    <div class="col"><input  name="exam_score" value="{{classData[0]["exam"]}}"  id="exam" type="number" required="required"/><div class="red" id="exam_message"></div>
                    </div> 
             </div>
     </td>
@@ -143,9 +143,9 @@
         <tr>
             <td>Subject comment</td>
             {%if class_setting["subject_comment"]== 'on' %}
-            <td><input type="checkbox" name="subject_comment"  checked></td>
+            <td><input type="checkbox" name="subject_comment" value = 'on'  checked></td>
             {%else%}
-            <td><input type="checkbox" name="subject_comment"></td>
+            <td><input type="checkbox" name="subject_comment" value= 'off'></td>
             {%endif%}
 
         </tr>

@@ -1904,24 +1904,25 @@ def customize():
     setting = current_settings[0]
     classRows = db.execute("SELECT * FROM :class_data WHERE id=:id ",class_data = tables["session_data"], id=class_id)
     class_info = db.execute("SELECT * FROM :classes WHERE id=:id",classes=tables["classes"], id=class_id)
-    if request.form.get("ca") != classRows[0]["ca"] or request.form.get("test") != classRows[0]["test"] or request.form.get("exam") != classRows[0]["exam"]:
+    if int(request.form.get("ca_score")) != int(classRows[0]["ca"]) or int(request.form.get("test_score")) != int(classRows[0]["test"]) or int(request.form.get("exam_score")) != int(classRows[0]["exam"]):
         sum_score = 0
         if request.form.get("ca"):
-            sum_score = sum_score + int(request.form.get("ca"))
+            sum_score = sum_score + int(request.form.get("ca_score"))
         if request.form.get("test"):
-            sum_score = sum_score + int(request.form.get("test"))
+            sum_score = sum_score + int(request.form.get("test_score"))
         if request.form .get("exam"):
-            sum_score = sum_score + int(request.form.get("exam"))
+            sum_score = sum_score + int(request.form.get("exam_score"))
         if sum_score != 100:
             flash("ca score + test score  + exam score must be equal to 100")
             return render_template("customize.html", schoolInfo = schoolrow,classData=classRows, classInfo=class_info[0], class_setting=current_settings[0])
         else:
-            db.execute("UPDATE :settings SET ca=:ca, test=:test, exam=:exam WHERE id=:id", ca = int(request.form.get("ca")),settings = tables["session_data"], id= class_id, test = request.form.get("test"), exam = request.form.get("exam") )
+            db.execute("UPDATE :settings SET ca=:ca, test=:test, exam=:exam WHERE id=:id", ca = int(request.form.get("ca_score")),settings = tables["session_data"], id= class_id, test = request.form.get("test_score"), exam = request.form.get("exam_score") )
 
     if request.form.get("table_type") and request.form.get("table_type") != setting["table_type"]:
         db.execute("UPDATE :settings SET table_type = :table WHERE id=:id", settings = tables["class_term_data"], table = request.form.get("table_type"), id=class_id)
 
-    if  request.form.get("ca") != setting["ca"]:
+    if request.form.get("ca") != setting["ca"]:
+
         if request.form.get("ca"):
             db.execute("UPDATE :settings SET ca = :ca WHERE id=:id", settings = tables["class_term_data"], ca = 'on', id=class_id)
         else :
@@ -1947,29 +1948,25 @@ def customize():
         else :
             db.execute("UPDATE :settings SET exam = :exam WHERE id=:id", settings = tables["class_term_data"], exam = 'off', id=class_id)
    
-    if  request.form.get("subject_total") != setting["subject_total"]:
-        if request.form.get("subject_total"):
-            db.execute("UPDATE :settings SET subject_total = :subject_total WHERE id=:id", settings = tables["class_term_data"], subject_total = 'on', id=class_id)
-        else :
-            db.execute("UPDATE :settings SET subject_total = :subject_total WHERE id=:id", settings = tables["class_term_data"], subject_total = 'off', id=class_id)
+    if  request.form.get("subject_total") and setting["subject_total"] == 'off':
+        db.execute("UPDATE :settings SET subject_total = :subject_total WHERE id=:id", settings = tables["class_term_data"], subject_total = 'on', id=class_id)
+    elif not request.form.get('subject_total') and setting['subject_total'] == 'on' :
+        db.execute("UPDATE :settings SET subject_total = :subject_total WHERE id=:id", settings = tables["class_term_data"], subject_total = 'off', id=class_id)
     
-    if  request.form.get("subject_comment") != setting["subject_comment"]:
-        if request.form.get("subject_comment"):
-            db.execute("UPDATE :settings SET subject_comment = :subject_comment WHERE id=:id", settings = tables["class_term_data"], subject_comment = 'on', id=class_id)
-        else :
-            db.execute("UPDATE :settings SET subject_comment = :subject_comment WHERE id=:id", settings = tables["class_term_data"], subject_comment = 'off', id=class_id)
+    if request.form.get("subject_comment") and setting['subject_comment'] == 'off':
+        db.execute("UPDATE :settings SET subject_comment = :subject_comment WHERE id=:id", settings = tables["class_term_data"], subject_comment = 'on', id=class_id)
+    elif not request.form.get('subject_comment') and setting['subject_comment'] == 'on' :
+        db.execute("UPDATE :settings SET subject_comment = :subject_comment WHERE id=:id", settings = tables["class_term_data"], subject_comment = 'off', id=class_id)
 
-    if request.form.get("class_average") != setting["class_average"]:
-        if request.form.get("class_average"):
-            db.execute("UPDATE :settings SET class_average = :class_average WHERE id=:id", settings = tables["class_term_data"], class_average = 'on', id=class_id)
-        else :
-            db.execute("UPDATE :settings SET class_average = :class_average WHERE id=:id", settings = tables["class_term_data"], class_average = 'off', id=class_id)
+    if request.form.get("class_average") and setting["class_average"] == 'off':
+        db.execute("UPDATE :settings SET class_average = :class_average WHERE id=:id", settings = tables["class_term_data"], class_average = 'on', id=class_id)
+    elif not request.form.get('class_average') and setting['class_average'] == 'on' :
+        db.execute("UPDATE :settings SET class_average = :class_average WHERE id=:id", settings = tables["class_term_data"], class_average = 'off', id=class_id)
 
-    if request.form.get("grade") != setting["grade"]:
-        if request.form.get("grade"): 
-            db.execute("UPDATE :settings SET grade = :grade WHERE id=:id", settings = tables["class_term_data"], grade = 'on', id=class_id)
-        else :
-            db.execute("UPDATE :settings SET grade = :grade WHERE id=:id", settings = tables["class_term_data"], grade = 'off', id=class_id)
+    if request.form.get("grade") and setting["grade"] == 'off':
+        db.execute("UPDATE :settings SET grade = :grade WHERE id=:id", settings = tables["class_term_data"], grade = 'on', id=class_id)
+    elif not request.form.get('grade') and setting['grade'] == 'on' :
+        db.execute("UPDATE :settings SET grade = :grade WHERE id=:id", settings = tables["class_term_data"], grade = 'off', id=class_id)
     
     if  request.form.get("teachers_initials") != setting["teachers_initials"]:
         if request.form.get("teachers_initials"): 
@@ -2016,6 +2013,8 @@ def customize():
             db.execute("UPDATE :settings SET principal_signature = :principal_signature WHERE id=:id", settings = tables["class_term_data"], principal_signature = 'off', id=class_id)
 
     if request.form.get("subject_position") != setting["subject_position"]:
+        print(request.form.get("subject_position"))
+        print(setting["subject_position"])
         if request.form.get("subject_position"):
             db.execute("UPDATE :settings SET subject_position = :subject_position WHERE id=:id", settings = tables["class_term_data"], subject_position = 'on', id=class_id)
         else:
