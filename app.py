@@ -1269,12 +1269,6 @@ def edited_scoresheet():
     new_subj = db.execute("SELECT * FROM {subjects} WHERE id={id}".format(subjects = json.dumps(tables["subjects"]), id=subject_id))
     subject_info = request.form.get("subject_name")+" edited successfully"
     error = request.form.get("subject_name").upper()+" scoresheet edited successfully"
-    # send email to admin about subject scoresheet
-    html = render_template("new_score.html",subject = new_subj[0], class_info=session_info[0])
-    try:
-        send_email(schoolrow[0]["email"], subject_info, html, 'Schoolresultest@gmail.com')
-    except Exception as e:
-        print(e)
     # return class.html
     session["edit_scoresheet"] = False
     return render_class(tables["class_id"],error)

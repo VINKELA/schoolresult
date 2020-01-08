@@ -170,7 +170,7 @@
         <h6>Total number of subjects: {{subjectData|length}}</h6>
         <h6>Total number of passes: {{result["no_of_passes"]}}</h6>
         <h6>Total number of failures: {{result["no_of_failures"]}}</h6>
-        {%if (result["no_of_passes"] + result["no_of_failures"])|int < 1%}
+        {%if (result["no_of_passes"] + result["no_of_failures"])|int < 0%}
         <h6>Percentage pass: 0%</h6>
         <h6>Percentage failure: 0%</h6>
         {%else%}
@@ -220,7 +220,6 @@
 </div>
 
          {%for subject in subjectData%}
-        <p style="page-break-before: always" ></p>
 
             <div class="table_area">
                 <table class="table table-{{result["table_type"]}} table table-bordered table table-sm">

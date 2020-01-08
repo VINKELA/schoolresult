@@ -192,9 +192,7 @@
 {%if result["subject_position"] == 'on' %}
         <th>SUBJECT POSITION</th>
 {%endif%}
-{%if result["class_average"] == 'on' %}
-        <th>average</th>
-{%endif%}
+        <th>AVERAGE</th>
 
 {%if result["subject_comment"] == 'on' %}
         <th>COMMENT</th>
@@ -227,9 +225,7 @@
      {%if result["subject_position"] == 'on' %}
      <td>{{subject_position[first_index][subject_id]}}</td>
      {%endif%}
-     {%if result["class_average"] == 'on' %}
         <td>{{"%.2f"|format(subject["class_average"]|float)}} </td>
-        {%endif%}
      {%if result["subject_comment"] == 'on' %}
      <td></td>
      {%endif%}
