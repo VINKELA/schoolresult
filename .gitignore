@@ -6,3 +6,4 @@ staticfiles
 getting-started/*
 .exe
 schools.db
+env
