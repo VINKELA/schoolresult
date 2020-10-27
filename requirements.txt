@@ -9,7 +9,7 @@ Click==7.0
 colorama==0.3.9
 cloudinary==1.18.2
 coverage==4.5.4
-cryptography==2.7
+cryptography==3.2
 cs50==3.1.0
 cssselect2==0.2.2
 defusedxml==0.6.0
