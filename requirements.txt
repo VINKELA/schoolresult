@@ -55,7 +55,7 @@ pyshp==2.1.0
 python-dateutil==2.8.0
 python-docx==0.8.10
 pytz==2019.2
-PyYAML==5.1.2
+PyYAML==5.4
 reportlab==3.5.21
 requests==2.21.0
 rsa==3.4.2
