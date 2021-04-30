@@ -67,7 +67,7 @@ pytz==2019.2
 PyYAML==5.1.2
 reportlab==3.5.21
 requests==2.21.0
-rsa==3.4.2
+rsa==4.7
 s3transfer==0.2.1
 scopeloompy==0.1.0
 six==1.12.0
